@@ -136,4 +136,6 @@ using zstring_view = basic_zstring_view<char>;
 using wzstring_view = basic_zstring_view<wchar_t>;
 using tzstring_view = basic_zstring_view<TCHAR>;
 
+using tstring_view = std::basic_string_view<TCHAR>;
+
 NAMESPACE_END //( vlr )
