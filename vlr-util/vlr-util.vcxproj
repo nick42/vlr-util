@@ -155,10 +155,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ActionOnDestruction.h" />
+    <ClInclude Include="AssertionHandling_Config.h" />
+    <ClInclude Include="AutoFreeResource.h" />
+    <ClInclude Include="BaseWithVirtualDestructor.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="UtilMacros_Assertions.h" />
     <ClInclude Include="UtilMacros_Namespace.h" />
+    <ClInclude Include="util_IsNonZero.h" />
+    <ClInclude Include="util_IsNotBlank.h" />
     <ClInclude Include="zstring_view.h" />
   </ItemGroup>
   <ItemGroup>

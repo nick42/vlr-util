@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AutoFreeResource.cpp" />
     <ClCompile Include="vlr-util.test.cpp" />
     <ClCompile Include="zstring_view.cpp" />
   </ItemGroup>
