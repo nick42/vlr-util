@@ -5,3 +5,7 @@
 #ifdef _DLL
 #define _AFXDLL
 #endif
+
+#if VLR_CONFIG_INCLUDE_AFX
+#include <afx.h>
+#endif

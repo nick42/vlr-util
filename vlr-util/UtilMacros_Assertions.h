@@ -14,10 +14,13 @@
 // TODO: Convert to formatting, if/when we have the applicable library dependency
 
 #define VLR_ASSERTIONS_HANDLE_FAILURE_NONZERO( pcszValueName ) \
-	vlr::assert::HandleCheckFailure( _T("Assertion failed: nonzero value ") pcszValueName );
+	vlr::assert::HandleCheckFailure( _T("Assertion failed; nonzero value: ") pcszValueName );
 
 #define VLR_ASSERTIONS_HANDLE_FAILURE_NONTBLANK( pcszValueName ) \
-	vlr::assert::HandleCheckFailure( _T("Assertion failed: notblank value ") pcszValueName );
+	vlr::assert::HandleCheckFailure( _T("Assertion failed; notblank value: ") pcszValueName );
+
+#define VLR_ASSERTIONS_HANDLE_FAILURE_COMPARE( lhs, op, rhs ) \
+	vlr::assert::HandleCheckFailure( _T("Assertion failed; compare failure: ") _T(#lhs) _T(#op) _T(#rhs) );
 
 #define VLR_ASSERTIONS_RETURN_NULL return;
 
@@ -41,6 +44,18 @@
 	else \
 	{ \
 		VLR_ASSERTIONS_HANDLE_FAILURE_NONTBLANK( _T(#value) ) \
+		VLR_ASSERTIONS_RETURN_NULL \
+	} \
+}
+
+#define ASSERT_COMPARE__OR_RETURN( lhs, op, rhs ) \
+{ \
+	auto&& _compareResult = VLR_ASSERTIONS_EVALUATE_COMPARISON( lhs, op, rhs ); \
+	if (vlr::util::IsNonZero( _compareResult )) \
+	{} \
+	else \
+	{ \
+		VLR_ASSERTIONS_HANDLE_FAILURE_COMPARE( lhs, op, rhs ) \
 		VLR_ASSERTIONS_RETURN_NULL \
 	} \
 }

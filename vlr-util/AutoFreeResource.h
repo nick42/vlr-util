@@ -30,8 +30,7 @@ public:
 	// To ensure the resources are valid at time of call, this needs to be called before this subclass goes away...
 	virtual ~CAutoFreeResource()
 	{
-		base_class::DoAction();
-		base_class::m_fAction = nullptr;
+		base_class::DoActionAndClear();
 	}
 };
 

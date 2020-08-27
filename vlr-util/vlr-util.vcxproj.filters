@@ -51,6 +51,9 @@
     <ClInclude Include="AutoFreeResource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="util_choice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vlr-util.cpp">

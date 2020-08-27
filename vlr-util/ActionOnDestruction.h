@@ -29,6 +29,7 @@ protected:
 
 public:
 	auto DoAction();
+	auto DoActionAndClear();
 
 public:
 	CActionOnDestruction() = default;
@@ -75,24 +76,36 @@ auto CActionOnDestruction<TActionResult>::DoAction()
 {
 	if (!m_fAction)
 	{
-		if constexpr (ActionHasValidResult)
-		{
-			return std::optional<TActionResult>{};
-		}
-		else
-		{
-			return;
-		}
+		return std::optional<TActionResult>{};
 	}
 
-	if constexpr (ActionHasValidResult)
+	return DoAction_WithResult();
+}
+
+template<>
+auto CActionOnDestruction<void>::DoAction()
+{
+	if (!m_fAction)
 	{
-		return DoAction_WithResult();
+		return;
 	}
-	else
-	{
-		return DoAction_VoidResult();
-	}
+
+	return DoAction_VoidResult();
+}
+
+template< typename TActionResult >
+auto CActionOnDestruction<TActionResult>::DoActionAndClear()
+{
+	auto&& tActionResult = DoAction();
+	m_fAction = {};
+	return tActionResult;
+}
+
+template<>
+auto CActionOnDestruction<void>::DoActionAndClear()
+{
+	DoAction();
+	m_fAction = {};
 }
 
 NAMESPACE_END //( vlr )

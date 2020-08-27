@@ -164,6 +164,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="UtilMacros_Assertions.h" />
     <ClInclude Include="UtilMacros_Namespace.h" />
+    <ClInclude Include="util_choice.h" />
     <ClInclude Include="util_IsNonZero.h" />
     <ClInclude Include="util_IsNotBlank.h" />
     <ClInclude Include="zstring_view.h" />
