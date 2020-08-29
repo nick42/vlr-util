@@ -2,7 +2,7 @@
 
 `zstring_view<charT>` is a subclass of `std::string_view<charT>`, which is intended to encapsulate an explicitly NULL-terminated string. That is, the string pointed to by the class will always have an additional NULL character (of the character type for the class) following the string view data itself. This enables the type to be used in cases where the string is required to be NULL-terminated, and the class has an implicit operator to cast to `const charT*` for these cases.
 
-#### Suggested Type-Indicator Prefix
+#### Suggested Naming Convention
 
 For coding standards with type indicators in variable names, the suggested prefix for this type is 'svz' (ie: "string view zero-terminated"), to differentiate from 'sv' for a base string_view.
 

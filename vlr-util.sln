@@ -9,6 +9,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vlr-util.test", "vlr-util.t
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{52C5409C-41EA-4D82-A88E-DE69316F2549}"
 	ProjectSection(SolutionItems) = preProject
+		docs\CAutoRevertingAssignment.md = docs\CAutoRevertingAssignment.md
 		docs\macros.namespace.md = docs\macros.namespace.md
 		docs\zstring_view.md = docs\zstring_view.md
 	EndProjectSection

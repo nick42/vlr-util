@@ -24,6 +24,8 @@
 
 #define VLR_ASSERTIONS_RETURN_NULL return;
 
+#define VLR_ASSERTIONS_RETURN_EXPRESSION( expression ) return (expression);
+
 #define ASSERT_NONZERO__OR_RETURN( value ) \
 { \
 	auto&& _value = (value); \
@@ -59,3 +61,41 @@
 		VLR_ASSERTIONS_RETURN_NULL \
 	} \
 }
+
+#define ASSERT_NONZERO__OR_RETURN_EXPRESSION( value, expression ) \
+{ \
+	auto&& _value = (value); \
+	if (vlr::util::IsNonZero( _value )) \
+	{} \
+	else \
+	{ \
+		VLR_ASSERTIONS_HANDLE_FAILURE_NONZERO( _T(#value) ) \
+		VLR_ASSERTIONS_RETURN_EXPRESSION( expression ) \
+	} \
+}
+
+#define ASSERT_NOTBLANK__OR_RETURN_EXPRESSION( value, expression ) \
+{ \
+	auto&& _value = (value); \
+	if (vlr::util::IsNotBlank( _value )) \
+	{} \
+	else \
+	{ \
+		VLR_ASSERTIONS_HANDLE_FAILURE_NONTBLANK( _T(#value) ) \
+		VLR_ASSERTIONS_RETURN_EXPRESSION( expression ) \
+	} \
+}
+
+#define ASSERT_COMPARE__OR_RETURN_EXPRESSION( lhs, op, rhs, expression ) \
+{ \
+	auto&& _compareResult = VLR_ASSERTIONS_EVALUATE_COMPARISON( lhs, op, rhs ); \
+	if (vlr::util::IsNonZero( _compareResult )) \
+	{} \
+	else \
+	{ \
+		VLR_ASSERTIONS_HANDLE_FAILURE_COMPARE( lhs, op, rhs ) \
+		VLR_ASSERTIONS_RETURN_EXPRESSION( expression ) \
+	} \
+}
+
+#define ASSERT_HR_SUCCEEDED__OR_RETURN_HRESULT( hr ) { auto&& _hr = (hr); ASSERT_NONZERO__OR_RETURN_EXPRESSION( SUCCEEDED(_hr), _hr ) }

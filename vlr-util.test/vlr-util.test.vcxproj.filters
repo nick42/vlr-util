@@ -33,6 +33,12 @@
     <ClCompile Include="util.IsNonZero.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Assertions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AutoRevertingAssignment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="zstring_view.h">
