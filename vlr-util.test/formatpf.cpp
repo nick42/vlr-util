@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "../vlr-util/formatpf.h"
+#include "vlr/formatpf.h"
 
 TEST( formatpf, general )
 {

@@ -1,8 +1,8 @@
 #include "pch.h"
 
-#include "../vlr-util/util.IsBitValue.h"
+#include "vlr/util.IsBitValue.h"
 
-TEST( util.IsBitValue, general )
+TEST( util_IsBitValue, general )
 {
 	{
 		constexpr auto bIsSingleBitValue = vlr::util::IsSingleBitValue( 0 );

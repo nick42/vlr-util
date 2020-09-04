@@ -3,7 +3,7 @@
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
-#include "util_choice.h"
+#include "util.choice.h"
 #include "zstring_view.h"
 
 NAMESPACE_BEGIN( vlr )

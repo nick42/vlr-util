@@ -9,6 +9,6 @@
 
 #include <gtest/gtest.h>
 
-#include "../vlr-util/config.h"
+#include "vlr/config.h"
 
 #endif //PCH_H

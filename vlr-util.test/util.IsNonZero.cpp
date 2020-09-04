@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "../vlr-util/util.IsNonZero.h"
+#include "vlr/util.IsNonZero.h"
 
 TEST( util_IsNonZero, general )
 {

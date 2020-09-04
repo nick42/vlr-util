@@ -5,8 +5,8 @@
 
 #include "AssertionHandling_Config.h"
 #include "zstring_view.h"
-#include "util_IsNonZero.h"
-#include "util_IsNotBlank.h"
+#include "util.IsNonZero.h"
+#include "util.IsNotBlank.h"
 
 #define VLR_ASSERTIONS_EVALUATE_COMPARISON( lhs, op, rhs ) ( (lhs) op (rhs) )
 

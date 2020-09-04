@@ -91,6 +91,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -109,6 +110,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -127,6 +129,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -145,6 +148,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -155,29 +159,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ActionOnDestruction.h" />
-    <ClInclude Include="AssertionHandling_Config.h" />
-    <ClInclude Include="AutoFreeResource.h" />
-    <ClInclude Include="AutoRevertingAssignment.h" />
-    <ClInclude Include="BaseWithVirtualDestructor.h" />
-    <ClInclude Include="config.h" />
-    <ClInclude Include="enums.FormatEnum.h" />
-    <ClInclude Include="enums.RangeInfo.h" />
-    <ClInclude Include="formatpf.h" />
-    <ClInclude Include="framework.h" />
-    <ClInclude Include="include.fmt.h" />
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="SharedInstance.h" />
-    <ClInclude Include="util.IsBitSet.h" />
-    <ClInclude Include="UtilMacros.Assertions.h" />
-    <ClInclude Include="UtilMacros.Namespace.h" />
-    <ClInclude Include="util.choice.h" />
-    <ClInclude Include="util.IsBitValue.h" />
-    <ClInclude Include="util.IsNonZero.h" />
-    <ClInclude Include="util.IsNotBlank.h" />
-    <ClInclude Include="zstring_view.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -185,6 +166,29 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="vlr-util.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\vlr\ActionOnDestruction.h" />
+    <ClInclude Include="include\vlr\AssertionHandling_Config.h" />
+    <ClInclude Include="include\vlr\AutoFreeResource.h" />
+    <ClInclude Include="include\vlr\AutoRevertingAssignment.h" />
+    <ClInclude Include="include\vlr\BaseWithVirtualDestructor.h" />
+    <ClInclude Include="include\vlr\config.h" />
+    <ClInclude Include="include\vlr\enums.FormatEnum.h" />
+    <ClInclude Include="include\vlr\enums.RangeInfo.h" />
+    <ClInclude Include="include\vlr\formatpf.h" />
+    <ClInclude Include="include\vlr\framework.h" />
+    <ClInclude Include="include\vlr\include.fmt.h" />
+    <ClInclude Include="include\vlr\pch.h" />
+    <ClInclude Include="include\vlr\SharedInstance.h" />
+    <ClInclude Include="include\vlr\util.choice.h" />
+    <ClInclude Include="include\vlr\util.IsBitSet.h" />
+    <ClInclude Include="include\vlr\util.IsBitValue.h" />
+    <ClInclude Include="include\vlr\util.IsNonZero.h" />
+    <ClInclude Include="include\vlr\util.IsNotBlank.h" />
+    <ClInclude Include="include\vlr\UtilMacros.Assertions.h" />
+    <ClInclude Include="include\vlr\UtilMacros.Namespace.h" />
+    <ClInclude Include="include\vlr\zstring_view.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
