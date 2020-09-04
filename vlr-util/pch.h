@@ -10,6 +10,6 @@
 // add headers that you want to pre-compile here
 #include "framework.h"
 
-#include "UtilMacros_Namespace.h"
+#include "UtilMacros.Namespace.h"
 
 #endif //PCH_H

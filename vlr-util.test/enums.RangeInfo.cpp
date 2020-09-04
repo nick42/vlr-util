@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "../vlr-util/enums_RangeInfo.h"
+#include "../vlr-util/enums.RangeInfo.h"
 
 TEST( enums_RangeInfo, sequential_range_iterator )
 {

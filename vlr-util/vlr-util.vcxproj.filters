@@ -24,22 +24,10 @@
     <ClInclude Include="zstring_view.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UtilMacros_Namespace.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AssertionHandling_Config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UtilMacros_Assertions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util_IsNonZero.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util_IsNotBlank.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BaseWithVirtualDestructor.h">
@@ -51,22 +39,10 @@
     <ClInclude Include="AutoFreeResource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="util_choice.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AutoRevertingAssignment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SharedInstance.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="enums_RangeInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util_IsBitValue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="enums_FormatEnum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include.fmt.h">
@@ -76,6 +52,30 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="util.IsBitSet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util.choice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util.IsBitValue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util.IsNonZero.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util.IsNotBlank.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UtilMacros.Assertions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UtilMacros.Namespace.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="enums.FormatEnum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="enums.RangeInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

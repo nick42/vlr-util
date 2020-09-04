@@ -14,7 +14,7 @@ void HandleCheckFailure( vlr::tzstring_view svzFailureMessage )
 
 #define VLR_CONFIG_HAVEIMPL_HandleCheckFailure
 
-#include "../vlr-util/UtilMacros_Assertions.h"
+#include "../vlr-util/UtilMacros.Assertions.h"
 
 TEST( Assertions, general )
 {

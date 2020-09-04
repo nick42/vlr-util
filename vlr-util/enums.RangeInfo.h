@@ -4,10 +4,10 @@
 
 #include <boost/iterator/iterator_facade.hpp>
 
-#include "UtilMacros_Namespace.h"
+#include "UtilMacros.Namespace.h"
 #include "config.h"
 
-#include "util_IsBitValue.h"
+#include "util.IsBitValue.h"
 
 NAMESPACE_BEGIN( vlr )
 

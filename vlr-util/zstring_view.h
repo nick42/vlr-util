@@ -2,7 +2,7 @@
 
 #include <string_view>
 
-#include "UtilMacros_Namespace.h"
+#include "UtilMacros.Namespace.h"
 #include "config.h"
 
 #if VLR_CONFIG_INCLUDE_AFX
