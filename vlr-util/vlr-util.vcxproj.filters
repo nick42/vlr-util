@@ -57,6 +57,27 @@
     <ClInclude Include="AutoRevertingAssignment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SharedInstance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="enums_RangeInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util_IsBitValue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="enums_FormatEnum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include.fmt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="formatpf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util.IsBitSet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vlr-util.cpp">

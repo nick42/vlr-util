@@ -39,6 +39,18 @@
     <ClCompile Include="AutoRevertingAssignment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="enums.RangeInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="util.IsBitValue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="formatpf.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="util.IsBitSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="zstring_view.h">

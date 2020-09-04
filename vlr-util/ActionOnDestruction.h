@@ -38,7 +38,7 @@ public:
 	{}
 	virtual ~CActionOnDestruction()
 	{
-		DoAction();
+		DoActionAndClear();
 	}
 };
 
