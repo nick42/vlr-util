@@ -184,6 +184,7 @@
     <ClInclude Include="include\vlr\SharedInstance.h" />
     <ClInclude Include="include\vlr\util.choice.h" />
     <ClInclude Include="include\vlr\util.convert.StringConversion.h" />
+    <ClInclude Include="include\vlr\util.CStringBufferAccess.h" />
     <ClInclude Include="include\vlr\util.IsBitSet.h" />
     <ClInclude Include="include\vlr\util.IsBitValue.h" />
     <ClInclude Include="include\vlr\util.IsNonZero.h" />

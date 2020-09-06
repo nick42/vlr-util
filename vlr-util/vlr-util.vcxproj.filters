@@ -101,5 +101,8 @@
     <ClInclude Include="include\vlr\util.range_checked_cast.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\vlr\util.CStringBufferAccess.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

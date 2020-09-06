@@ -4,6 +4,7 @@
 #include "vlr/UtilMacros.Assertions.h"
 #include "vlr/UtilMacros.General.h"
 #include "vlr/util.range_checked_cast.h"
+#include "vlr/util.CStringBufferAccess.h"
 
 NAMESPACE_BEGIN( vlr )
 
@@ -267,6 +268,92 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 		strOutput,
 		oStringConversionOptions,
 		pStringConversionResults );
+}
+
+HRESULT CStringConversion::MultiByte_to_UTF16(
+	std::string_view svValue,
+	CStringW& sOutput,
+	const StringConversionOptions& oStringConversionOptions /*= {}*/,
+	StringConversionResults* pStringConversionResults /*= nullptr*/ )
+{
+	HRESULT hr;
+
+	auto nOutputBufferSizeChars = svValue.length();
+
+	while (true)
+	{
+		auto oOutputBufferAccess = GetCStringBufferAccess( sOutput, nOutputBufferSizeChars );
+		auto nOutputBufferSizeBytes = nOutputBufferSizeChars * sizeof( wchar_t );
+
+		auto oStringConversionOptions_Local = StringConversionOptions{ oStringConversionOptions }.With_GenerateResultNotNullTerminated( true );
+		auto oStringConversionResults = StringConversionResults{};
+
+		hr = MultiByte_to_UTF16(
+			svValue,
+			oOutputBufferAccess,
+			nOutputBufferSizeBytes,
+			oStringConversionOptions_Local,
+			&oStringConversionResults );
+		ON_HR_NON_S_OK__RETURN_HRESULT( hr );
+
+		auto nOutputSizeChars = oStringConversionResults.m_nOuputSizeBytes / sizeof( wchar_t );
+		if (oStringConversionResults.m_nOuputSizeBytes > nOutputBufferSizeBytes)
+		{
+			nOutputBufferSizeChars = nOutputSizeChars;
+			continue;
+		}
+
+		oOutputBufferAccess.ReleaseBufferPtr( nOutputSizeChars );
+
+		VLR_IF_NOT_NULL_DEREF( pStringConversionResults ) = oStringConversionResults;
+
+		break;
+	}
+
+	return S_OK;
+}
+
+HRESULT CStringConversion::UTF16_to_MultiByte(
+	std::wstring_view svValue,
+	CStringA& sOutput,
+	const StringConversionOptions& oStringConversionOptions /*= {}*/,
+	StringConversionResults* pStringConversionResults /*= nullptr*/ )
+{
+	HRESULT hr;
+
+	auto nOutputBufferSizeChars = svValue.length();
+
+	while (true)
+	{
+		auto oOutputBufferAccess = GetCStringBufferAccess( sOutput, nOutputBufferSizeChars );
+		auto nOutputBufferSizeBytes = nOutputBufferSizeChars * sizeof( char );
+
+		auto oStringConversionOptions_Local = StringConversionOptions{ oStringConversionOptions }.With_GenerateResultNotNullTerminated( true );
+		auto oStringConversionResults = StringConversionResults{};
+
+		hr = UTF16_to_MultiByte(
+			svValue,
+			oOutputBufferAccess,
+			nOutputBufferSizeBytes,
+			oStringConversionOptions_Local,
+			&oStringConversionResults );
+		ON_HR_NON_S_OK__RETURN_HRESULT( hr );
+
+		auto nOutputSizeChars = oStringConversionResults.m_nOuputSizeBytes / sizeof( char );
+		if (oStringConversionResults.m_nOuputSizeBytes > nOutputBufferSizeBytes)
+		{
+			nOutputBufferSizeChars = nOutputSizeChars;
+			continue;
+		}
+
+		oOutputBufferAccess.ReleaseBufferPtr( nOutputSizeChars );
+
+		VLR_IF_NOT_NULL_DEREF( pStringConversionResults ) = oStringConversionResults;
+
+		break;
+	}
+
+	return S_OK;
 }
 
 NAMESPACE_END //( util )
