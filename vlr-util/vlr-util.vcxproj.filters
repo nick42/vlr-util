@@ -35,13 +35,7 @@
     <ClInclude Include="include\vlr\formatpf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\framework.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\vlr\include.fmt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\vlr\SharedInstance.h">
@@ -102,6 +96,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\vlr\util.CStringBufferAccess.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vlr\util.ModuleContext.Compilation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

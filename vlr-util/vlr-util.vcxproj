@@ -169,6 +169,7 @@
     <ClCompile Include="vlr-util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="framework.h" />
     <ClInclude Include="include\vlr\ActionOnDestruction.h" />
     <ClInclude Include="include\vlr\AssertionHandling_Config.h" />
     <ClInclude Include="include\vlr\AutoFreeResource.h" />
@@ -178,9 +179,7 @@
     <ClInclude Include="include\vlr\enums.FormatEnum.h" />
     <ClInclude Include="include\vlr\enums.RangeInfo.h" />
     <ClInclude Include="include\vlr\formatpf.h" />
-    <ClInclude Include="include\vlr\framework.h" />
     <ClInclude Include="include\vlr\include.fmt.h" />
-    <ClInclude Include="include\vlr\pch.h" />
     <ClInclude Include="include\vlr\SharedInstance.h" />
     <ClInclude Include="include\vlr\util.choice.h" />
     <ClInclude Include="include\vlr\util.convert.StringConversion.h" />
@@ -189,12 +188,14 @@
     <ClInclude Include="include\vlr\util.IsBitValue.h" />
     <ClInclude Include="include\vlr\util.IsNonZero.h" />
     <ClInclude Include="include\vlr\util.IsNotBlank.h" />
+    <ClInclude Include="include\vlr\util.ModuleContext.Compilation.h" />
     <ClInclude Include="include\vlr\util.range_checked_cast.h" />
     <ClInclude Include="include\vlr\util.Unicode.h" />
     <ClInclude Include="include\vlr\UtilMacros.Assertions.h" />
     <ClInclude Include="include\vlr\UtilMacros.General.h" />
     <ClInclude Include="include\vlr\UtilMacros.Namespace.h" />
     <ClInclude Include="include\vlr\zstring_view.h" />
+    <ClInclude Include="pch.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
