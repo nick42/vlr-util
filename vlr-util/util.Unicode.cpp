@@ -156,14 +156,14 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 }
 
 HRESULT CStringConversion::MultiByte_to_UTF16(
-	const std::string& strValue,
+	std::string_view svValue,
 	std::wstring& strOutput,
 	const StringConversionOptions& oStringConversionOptions /*= {}*/,
 	StringConversionResults* pStringConversionResults /*= nullptr*/ )
 {
 	HRESULT hr;
 
-	auto nOutputBufferSizeChars = strValue.length();
+	auto nOutputBufferSizeChars = svValue.length();
 
 	while (true)
 	{
@@ -174,7 +174,7 @@ HRESULT CStringConversion::MultiByte_to_UTF16(
 		auto oStringConversionResults = StringConversionResults{};
 
 		hr = MultiByte_to_UTF16(
-			std::string_view{ strValue.c_str(), strValue.length() },
+			svValue,
 			strOutput.data(),
 			nOutputBufferSizeBytes,
 			oStringConversionOptions_Local,
@@ -200,14 +200,14 @@ HRESULT CStringConversion::MultiByte_to_UTF16(
 }
 
 HRESULT CStringConversion::UTF16_to_MultiByte(
-	const std::wstring& strValue,
+	std::wstring_view svValue,
 	std::string& strOutput,
 	const StringConversionOptions& oStringConversionOptions /*= {}*/,
 	StringConversionResults* pStringConversionResults /*= nullptr*/ )
 {
 	HRESULT hr;
 
-	auto nOutputBufferSizeChars = strValue.length();
+	auto nOutputBufferSizeChars = svValue.length();
 
 	while (true)
 	{
@@ -218,7 +218,7 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 		auto oStringConversionResults = StringConversionResults{};
 
 		hr = UTF16_to_MultiByte(
-			std::wstring_view{ strValue.c_str(), strValue.length() },
+			svValue,
 			strOutput.data(),
 			nOutputBufferSizeBytes,
 			oStringConversionOptions_Local,
@@ -241,6 +241,32 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 	}
 
 	return S_OK;
+}
+
+HRESULT CStringConversion::MultiByte_to_UTF16(
+	const std::string& strValue,
+	std::wstring& strOutput,
+	const StringConversionOptions& oStringConversionOptions /*= {}*/,
+	StringConversionResults* pStringConversionResults /*= nullptr*/ )
+{
+	return MultiByte_to_UTF16(
+		std::string_view{ strValue.c_str(), strValue.length() },
+		strOutput,
+		oStringConversionOptions,
+		pStringConversionResults );
+}
+
+HRESULT CStringConversion::UTF16_to_MultiByte(
+	const std::wstring& strValue,
+	std::string& strOutput,
+	const StringConversionOptions& oStringConversionOptions /*= {}*/,
+	StringConversionResults* pStringConversionResults /*= nullptr*/ )
+{
+	return UTF16_to_MultiByte(
+		std::wstring_view{ strValue.c_str(), strValue.length() },
+		strOutput,
+		oStringConversionOptions,
+		pStringConversionResults );
 }
 
 NAMESPACE_END //( util )
