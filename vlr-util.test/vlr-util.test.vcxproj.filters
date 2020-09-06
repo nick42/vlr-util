@@ -51,6 +51,15 @@
     <ClCompile Include="util.IsBitSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="util.choice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="util.range_checked_cast.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="util.convert.StringConversion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="zstring_view.h">
