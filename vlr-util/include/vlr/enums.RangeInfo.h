@@ -205,7 +205,7 @@ using CRangeInfoSequential_Signed_Default = CRangeInfoSequential_DWORD_PTR<nMaxV
 
 // Bitmask iterator
 
-template< typename TNumericType, TNumericType tMaxValue, TNumericType tMinValue = 1, typename TDerefType = const TNumericType&, typename = std::enable_if_t<vlr::util::IsSingleBitValue(tMaxValue)> >
+template< typename TNumericType, TNumericType tMaxValue, TNumericType tMinValue = 1, typename TDerefType = const TNumericType&, typename std::enable_if_t<vlr::util::IsSingleBitValue(tMaxValue)>* = nullptr >
 class bitmask_range_iterator
 	: public boost::iterator_facade<bitmask_range_iterator<TNumericType, tMaxValue, tMinValue, TNumericType>, TNumericType const, boost::bidirectional_traversal_tag>
 {

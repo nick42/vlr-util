@@ -1,9 +1,13 @@
 #include "pch.h"
 
 #include "vlr/formatpf.h"
+#include "vlr/zstring_view.h"
+#include "vlr/util.std_aliases.h"
 
 TEST( formatpf, general )
 {
+	constexpr auto svzFormatString = vlr::tzstring_view{ _T( "The answer is %d" ) };
+
 	{
 		auto sResult = vlr::formatpf_to<CStringA>( "The answer is %d", 42 );
 		EXPECT_STREQ( sResult, "The answer is 42" );
@@ -26,6 +30,14 @@ TEST( formatpf, general )
 	}
 	{
 		auto sResult = vlr::formatpf_to<vlr::tstring>( _T( "The answer is %d" ), 42 );
+		EXPECT_STREQ( sResult.c_str(), _T( "The answer is 42" ) );
+	}
+	{
+		auto sResult = vlr::formatpf_to<CString>( svzFormatString, 42 );
+		EXPECT_STREQ( sResult, _T( "The answer is 42" ) );
+	}
+	{
+		auto sResult = vlr::formatpf_to<vlr::tstring>( svzFormatString, 42 );
 		EXPECT_STREQ( sResult.c_str(), _T( "The answer is 42" ) );
 	}
 }

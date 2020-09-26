@@ -11,13 +11,6 @@
 
 NAMESPACE_BEGIN( vlr )
 
-// TODO? Replace this with non-preprocessor impl
-#ifndef UNICODE
-using tstring = std::string;
-#else
-using tstring = std::wstring;
-#endif
-
 NAMESPACE_BEGIN( util )
 
 NAMESPACE_BEGIN( Convert )

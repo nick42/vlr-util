@@ -49,7 +49,7 @@ inline auto MakeActionOnDestruction( const TFunctor& fAction )
 }
 
 template< typename TActionResult >
-void CActionOnDestruction<TActionResult>::DoAction_VoidResult() const
+inline void CActionOnDestruction<TActionResult>::DoAction_VoidResult() const
 {
 	if (!m_fAction)
 	{
@@ -61,7 +61,7 @@ void CActionOnDestruction<TActionResult>::DoAction_VoidResult() const
 
 template< typename TActionResult >
 template< typename TMethodResult >
-TMethodResult CActionOnDestruction<TActionResult>::DoAction_WithResult() const
+inline TMethodResult CActionOnDestruction<TActionResult>::DoAction_WithResult() const
 {
 	if (!m_fAction)
 	{
@@ -72,7 +72,7 @@ TMethodResult CActionOnDestruction<TActionResult>::DoAction_WithResult() const
 }
 
 template< typename TActionResult >
-auto CActionOnDestruction<TActionResult>::DoAction()
+inline auto CActionOnDestruction<TActionResult>::DoAction()
 {
 	if (!m_fAction)
 	{
@@ -83,7 +83,7 @@ auto CActionOnDestruction<TActionResult>::DoAction()
 }
 
 template<>
-auto CActionOnDestruction<void>::DoAction()
+inline auto CActionOnDestruction<void>::DoAction()
 {
 	if (!m_fAction)
 	{
@@ -94,7 +94,7 @@ auto CActionOnDestruction<void>::DoAction()
 }
 
 template< typename TActionResult >
-auto CActionOnDestruction<TActionResult>::DoActionAndClear()
+inline auto CActionOnDestruction<TActionResult>::DoActionAndClear()
 {
 	auto&& tActionResult = DoAction();
 	m_fAction = {};
@@ -102,7 +102,7 @@ auto CActionOnDestruction<TActionResult>::DoActionAndClear()
 }
 
 template<>
-auto CActionOnDestruction<void>::DoActionAndClear()
+inline auto CActionOnDestruction<void>::DoActionAndClear()
 {
 	DoAction();
 	m_fAction = {};

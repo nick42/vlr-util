@@ -43,9 +43,9 @@ HRESULT CStringConversion::MultiByte_to_UTF16(
 		oStringConversionOptions.GetCodePageIdentifier(),
 		oStringConversionOptions.OnMultiByteToWideChar_GetFlags(),
 		svValue.data(),
-		nEffectiveInputBufferLengthChars,
+		range_checked_cast<int>(nEffectiveInputBufferLengthChars),
 		pOutputBuffer,
-		nUsableOutputBufferLengthChars );
+		range_checked_cast<int>(nUsableOutputBufferLengthChars) );
 	if (nResult == 0)
 	{
 		return HRESULT_FROM_WIN32( GetLastError() );
@@ -98,9 +98,9 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 		oStringConversionOptions.GetCodePageIdentifier(),
 		oStringConversionOptions.OnWideCharToMultiByte_GetFlags(),
 		svValue.data(),
-		nEffectiveInputBufferLengthChars,
+		range_checked_cast<int>(nEffectiveInputBufferLengthChars),
 		pOutputBuffer,
-		nUsableOutputBufferLengthChars,
+		range_checked_cast<int>(nUsableOutputBufferLengthChars),
 		oStringConversionOptions.OnWideCharToMultiByte_GetDefaultChar(),
 		oStringConversionOptions.OnWideCharToMultiByte_GetUsedDefaultChar( pStringConversionResults ) );
 	if (nResult == 0)
@@ -282,7 +282,7 @@ HRESULT CStringConversion::MultiByte_to_UTF16(
 
 	while (true)
 	{
-		auto oOutputBufferAccess = GetCStringBufferAccess( sOutput, nOutputBufferSizeChars );
+		auto oOutputBufferAccess = GetCStringBufferAccess( sOutput, range_checked_cast<int>(nOutputBufferSizeChars) );
 		auto nOutputBufferSizeBytes = nOutputBufferSizeChars * sizeof( wchar_t );
 
 		auto oStringConversionOptions_Local = StringConversionOptions{ oStringConversionOptions }.With_GenerateResultNotNullTerminated( true );
@@ -303,7 +303,7 @@ HRESULT CStringConversion::MultiByte_to_UTF16(
 			continue;
 		}
 
-		oOutputBufferAccess.ReleaseBufferPtr( nOutputSizeChars );
+		oOutputBufferAccess.ReleaseBufferPtr( range_checked_cast<int>(nOutputSizeChars) );
 
 		VLR_IF_NOT_NULL_DEREF( pStringConversionResults ) = oStringConversionResults;
 
@@ -325,7 +325,7 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 
 	while (true)
 	{
-		auto oOutputBufferAccess = GetCStringBufferAccess( sOutput, nOutputBufferSizeChars );
+		auto oOutputBufferAccess = GetCStringBufferAccess( sOutput, range_checked_cast<int>(nOutputBufferSizeChars) );
 		auto nOutputBufferSizeBytes = nOutputBufferSizeChars * sizeof( char );
 
 		auto oStringConversionOptions_Local = StringConversionOptions{ oStringConversionOptions }.With_GenerateResultNotNullTerminated( true );
@@ -346,7 +346,7 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 			continue;
 		}
 
-		oOutputBufferAccess.ReleaseBufferPtr( nOutputSizeChars );
+		oOutputBufferAccess.ReleaseBufferPtr( range_checked_cast<int>(nOutputSizeChars) );
 
 		VLR_IF_NOT_NULL_DEREF( pStringConversionResults ) = oStringConversionResults;
 

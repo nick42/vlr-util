@@ -2,13 +2,13 @@
 
 #include "vlr/util.choice.h"
 
-template< typename TParam, typename = std::enable_if_t<std::is_same_v<TParam, int>> >
+template< typename TParam, typename std::enable_if_t<std::is_same_v<TParam, int>>* = nullptr >
 inline auto GetValue_choice( TParam tParam, vlr::util::choice<0>&& )
 {
 	return tParam;
 }
 
-template< typename TParam, typename = std::enable_if_t<std::is_same_v<TParam, double>> >
+template< typename TParam, typename std::enable_if_t<std::is_same_v<TParam, double>>* = nullptr >
 inline auto GetValue_choice( TParam tParam, vlr::util::choice<1>&& )
 {
 	return tParam;

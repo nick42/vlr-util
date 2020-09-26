@@ -13,9 +13,9 @@
 
 NAMESPACE_BEGIN( lib_fmt )
 
-using FormatStringA = fmt::basic_string_view<char>;
-using FormatStringW = fmt::basic_string_view<wchar_t>;
-using FormatStringT = fmt::basic_string_view<TCHAR>;
+using FormatStringA = std::basic_string_view<char>;
+using FormatStringW = std::basic_string_view<wchar_t>;
+using FormatStringT = std::basic_string_view<TCHAR>;
 
 NAMESPACE_END //( lib_fmt )
 

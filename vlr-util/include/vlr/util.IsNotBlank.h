@@ -14,13 +14,13 @@ NAMESPACE_BEGIN( detail )
 
 // Note: Using our type, to allow more implicit construction from string classes
 
-template< typename TValue, typename = std::enable_if_t<std::is_constructible_v<vlr::zstring_view, const TValue&>> >
+template< typename TValue, typename std::enable_if_t<std::is_constructible_v<vlr::zstring_view, const TValue&>>* = nullptr >
 constexpr bool IsNotBlank_choice( const TValue& tValue, choice<0>&& )
 {
 	return (vlr::zstring_view{ tValue }.length() > 0);
 }
 
-template< typename TValue, typename = std::enable_if_t<std::is_constructible_v<vlr::wzstring_view, const TValue&>> >
+template< typename TValue, typename std::enable_if_t<std::is_constructible_v<vlr::wzstring_view, const TValue&>>* = nullptr >
 constexpr bool IsNotBlank_choice( const TValue& tValue, choice<1>&& )
 {
 	return (vlr::wzstring_view{ tValue }.length() > 0);

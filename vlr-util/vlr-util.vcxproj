@@ -82,6 +82,18 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
@@ -167,6 +179,10 @@
     </ClCompile>
     <ClCompile Include="util.Unicode.cpp" />
     <ClCompile Include="vlr-util.cpp" />
+    <ClCompile Include="win32.filesystem.Functions.cpp" />
+    <ClCompile Include="win32.security.tokens.cpp" />
+    <ClCompile Include="win32.structure.ACE.cpp" />
+    <ClCompile Include="win32.structure.ACL.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
@@ -181,6 +197,10 @@
     <ClInclude Include="include\vlr\formatpf.h" />
     <ClInclude Include="include\vlr\include.fmt.h" />
     <ClInclude Include="include\vlr\SharedInstance.h" />
+    <ClInclude Include="include\vlr\util.convert.ToDisplay.h" />
+    <ClInclude Include="include\vlr\util.data_adaptor.MultiSZ.h" />
+    <ClInclude Include="include\vlr\util.api_adaptor.OutString.h" />
+    <ClInclude Include="include\vlr\c_runtime.StringFunctions.h" />
     <ClInclude Include="include\vlr\util.choice.h" />
     <ClInclude Include="include\vlr\util.convert.StringConversion.h" />
     <ClInclude Include="include\vlr\util.CStringBufferAccess.h" />
@@ -188,14 +208,26 @@
     <ClInclude Include="include\vlr\util.IsBitValue.h" />
     <ClInclude Include="include\vlr\util.IsNonZero.h" />
     <ClInclude Include="include\vlr\util.IsNotBlank.h" />
+    <ClInclude Include="include\vlr\util.MathOps.h" />
     <ClInclude Include="include\vlr\util.ModuleContext.Compilation.h" />
     <ClInclude Include="include\vlr\util.range_checked_cast.h" />
+    <ClInclude Include="include\vlr\util.std_aliases.h" />
     <ClInclude Include="include\vlr\util.Unicode.h" />
     <ClInclude Include="include\vlr\UtilMacros.Assertions.h" />
     <ClInclude Include="include\vlr\UtilMacros.General.h" />
     <ClInclude Include="include\vlr\UtilMacros.Namespace.h" />
+    <ClInclude Include="include\vlr\win32.filesystem.enum_files.h" />
+    <ClInclude Include="include\vlr\win32.filesystem.enum_volumes.h" />
+    <ClInclude Include="include\vlr\win32.filesystem.Functions.h" />
+    <ClInclude Include="include\vlr\win32.security.tokens.h" />
+    <ClInclude Include="include\vlr\win32.structure.ACE.h" />
+    <ClInclude Include="include\vlr\win32.structure.ACL.h" />
+    <ClInclude Include="include\vlr\win32.structure.WIN32_FIND_DATA.h" />
     <ClInclude Include="include\vlr\zstring_view.h" />
     <ClInclude Include="pch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="vcpkg.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

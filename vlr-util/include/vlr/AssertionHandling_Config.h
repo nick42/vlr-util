@@ -15,6 +15,7 @@ void HandleCheckFailure( vlr::tzstring_view svzFailureMessage );
 
 inline void HandleCheckFailure( vlr::tzstring_view /*svzFailureMessage*/ )
 {
+	ASSERT( 0 );
 }
 
 #endif

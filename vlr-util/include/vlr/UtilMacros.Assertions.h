@@ -98,6 +98,30 @@
 	} \
 }
 
+#define ASSERT_NONZERO__OR_CONTINUE( value ) \
+{ \
+	auto&& _value = (value); \
+	if (vlr::util::IsNonZero( _value )) \
+	{} \
+	else \
+	{ \
+		VLR_ASSERTIONS_HANDLE_FAILURE_NONZERO( _T(#value) ) \
+	} \
+}
+
+#define ASSERT_NONZERO__OR_RETURN_FAILURE_VALUE( value ) ASSERT_NONZERO__OR_RETURN_EXPRESSION( value, _tFailureValue );
+#define ASSERT_NOTBLANK__OR_RETURN_FAILURE_VALUE( value ) ASSERT_NOTBLANK__OR_RETURN_EXPRESSION( value, _tFailureValue );
+#define ASSERT_COMPARE__OR_RETURN_FAILURE_VALUE( lhs, op, rhs ) ASSERT_COMPARE__OR_RETURN_EXPRESSION( lhs, op, rhs, _tFailureValue );
+
+#define ASSERT_NONZERO__OR_RETURN_EUNEXPECTED( value ) ASSERT_NONZERO__OR_RETURN_EXPRESSION( value, E_UNEXPECTED );
+#define ASSERT_NOTBLANK__OR_RETURN_EUNEXPECTED( value ) ASSERT_NOTBLANK__OR_RETURN_EXPRESSION( value, E_UNEXPECTED );
+#define ASSERT_COMPARE__OR_RETURN_EUNEXPECTED( lhs, op, rhs ) ASSERT_COMPARE__OR_RETURN_EXPRESSION( lhs, op, rhs, E_UNEXPECTED );
+
+#define ASSERT_NONZERO__OR_RETURN_HRESULT_LAST_ERROR( value ) ASSERT_NONZERO__OR_RETURN_EXPRESSION( value, HRESULT_FROM_WIN32( ::GetLastError() ) );
+#define ASSERT_NOTBLANK__OR_RETURN_HRESULT_LAST_ERROR( value ) ASSERT_NOTBLANK__OR_RETURN_EXPRESSION( value, HRESULT_FROM_WIN32( ::GetLastError() ) );
+#define ASSERT_COMPARE__OR_RETURN_HRESULT_LAST_ERROR( lhs, op, rhs ) ASSERT_COMPARE__OR_RETURN_EXPRESSION( lhs, op, rhs, HRESULT_FROM_WIN32( ::GetLastError() ) );
+
 #define ASSERT_HR_SUCCEEDED__OR_RETURN_HRESULT( hr ) { auto&& _hr = (hr); ASSERT_NONZERO__OR_RETURN_EXPRESSION( SUCCEEDED(_hr), _hr ) }
+#define ASSERT_HR_SUCCEEDED__OR_CONTINUE( hr ) { auto&& _hr = (hr); ASSERT_NONZERO__OR_CONTINUE( SUCCEEDED(_hr) ) }
 
 #define ON_HR_NON_S_OK__RETURN_HRESULT( hr ) { auto&& _hr = (hr); if (_hr == S_OK) {} else { return _hr; } }

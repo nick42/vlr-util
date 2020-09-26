@@ -37,10 +37,27 @@ protected:
 
 template< typename TSharedInstance >
 class CSharedInstanceBase
+	: public ISharedInstanceBase
 {
 public:
 	const TSharedInstance& GetSharedInstance();
 	TSharedInstance& GetSharedInstanceMutable();
+
+protected:
+	virtual HRESULT OnCreate_DoInit()
+	{}
+	virtual HRESULT OnDestroy_DoCleanup()
+	{}
+
+public:
+	CSharedInstanceBase()
+	{
+		CallStateMethods_OnCreate();
+	}
+	virtual ~CSharedInstanceBase()
+	{
+		CallStateMethods_OnDestroy();
+	}
 };
 
 NAMESPACE_END //( vlr )

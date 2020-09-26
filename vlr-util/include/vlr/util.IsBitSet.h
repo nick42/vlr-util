@@ -11,7 +11,7 @@ template< typename TValue, typename TBitValue >
 constexpr auto IsBitSet( TValue nValue, TBitValue nBitValue )
 {
 	auto&& tBitValueAsValue = static_cast<TValue>(nBitValue);
-	return ((nValue & nBitValue) == nBitValue);
+	return ((nValue & tBitValueAsValue) == tBitValueAsValue);
 }
 
 NAMESPACE_END //( util )

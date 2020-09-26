@@ -33,13 +33,13 @@ constexpr bool SourceAlwaysFitsInDest()
 	return false;
 }
 
-template< typename TDest, typename TSource, typename = std::enable_if_t<detail::SourceAlwaysFitsInDest<TDest, TSource>()> >
+template< typename TDest, typename TSource, typename std::enable_if_t<detail::SourceAlwaysFitsInDest<TDest, TSource>()>* = nullptr >
 constexpr auto range_checked_cast_choice( const TSource& nValue, choice<0>&& )
 {
 	return static_cast<TDest>(nValue);
 }
 
-template< typename TDest, typename TSource, typename = std::enable_if_t<!detail::SourceAlwaysFitsInDest<TDest, TSource>()> >
+template< typename TDest, typename TSource, typename std::enable_if_t<!detail::SourceAlwaysFitsInDest<TDest, TSource>()>* = nullptr >
 inline auto range_checked_cast_choice( TSource nValue, choice<1>&& )
 {
 	// Requires runtime checking

@@ -166,14 +166,19 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="util.api_adaptor.OutString.cpp" />
     <ClCompile Include="util.choice.cpp" />
     <ClCompile Include="util.convert.StringConversion.cpp" />
+    <ClCompile Include="util.data_adaptor.MultiSZ.cpp" />
     <ClCompile Include="util.IsBitSet.cpp" />
     <ClCompile Include="util.IsBitValue.cpp" />
     <ClCompile Include="util.IsNonZero.cpp" />
     <ClCompile Include="util.IsNotBlank.cpp" />
     <ClCompile Include="util.range_checked_cast.cpp" />
     <ClCompile Include="vlr-util.test.cpp" />
+    <ClCompile Include="win32.filesystem.enum_files.cpp" />
+    <ClCompile Include="win32.filesystem.enum_volumes.cpp" />
+    <ClCompile Include="win32.structure.WIN32_FIND_DATA.cpp" />
     <ClCompile Include="zstring_view.cpp" />
   </ItemGroup>
   <ItemGroup>

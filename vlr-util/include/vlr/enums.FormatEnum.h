@@ -36,7 +36,7 @@ public:
 
 // Note: The idea here is to specialize this class on a per-enum basis, to provide better string conversion.
 
-template< typename TEnum, typename = std::enable_if_t<std::is_enum_v<TEnum>> >
+template< typename TEnum, typename std::enable_if_t<std::is_enum_v<TEnum>>* = nullptr >
 class CFormatEnum
 	: public CFormatEnumBase<DWORD_PTR>
 {

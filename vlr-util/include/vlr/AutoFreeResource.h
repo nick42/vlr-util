@@ -34,4 +34,23 @@ public:
 	}
 };
 
+template< typename TResource >
+inline auto MakeAutoCleanup_viaLocalFree( const TResource& tResource )
+{
+	auto fAction = [=]
+	{
+		LocalFree( reinterpret_cast<HLOCAL>(tResource) );
+	};
+	return MakeActionOnDestruction( fAction );
+}
+
+inline auto MakeAutoCleanup_viaCloseHandle( HANDLE hHandle )
+{
+	auto fAction = [=]
+	{
+		::CloseHandle( hHandle );
+	};
+	return MakeActionOnDestruction( fAction );
+}
+
 NAMESPACE_END //( vlr )

@@ -1,9 +1,11 @@
 #pragma once
 
+#include <tchar.h>
+
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
-#ifndef WIN32
+#ifndef _WIN32
 #define TCHAR char
 #endif
 
