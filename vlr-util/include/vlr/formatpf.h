@@ -129,8 +129,13 @@ inline auto formatpf_to( lib_fmt::FormatStringW svFormatString, Arg&&... args )
 }
 
 template< typename... Arg >
+inline auto formatpf( lib_fmt::FormatStringA svFormatString, Arg&&... args )
+{
+	return detail::formatpf_to_TResult<vlr::string, lib_fmt::FormatStringA>( svFormatString, std::forward<Arg>( args )... );
+}
+
+template< typename... Arg >
 inline auto formatpf( lib_fmt::FormatStringW svFormatString, Arg&&... args )
--> vlr::tstring
 {
 	return detail::formatpf_to_TResult<vlr::tstring, lib_fmt::FormatStringW>( svFormatString, std::forward<Arg>( args )... );
 }

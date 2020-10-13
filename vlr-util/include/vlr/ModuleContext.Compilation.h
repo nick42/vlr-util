@@ -1,17 +1,15 @@
 #pragma once
 
+#ifdef _WIN32
 #include <tchar.h>
+#else
+#define TCHAR char
+#endif
 
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
-#ifndef _WIN32
-#define TCHAR char
-#endif
-
 NAMESPACE_BEGIN( vlr )
-
-NAMESPACE_BEGIN( util )
 
 NAMESPACE_BEGIN( ModuleContext )
 
@@ -27,10 +25,22 @@ constexpr auto DefaultCharTypeIs_wchar_t()
 	return (sizeof( TCHAR ) == sizeof( wchar_t ));
 }
 
+constexpr auto IsBuildType_Debug()
+{
+#ifdef _DEBUG
+	return true;
+#else
+	return false;
+#endif
+}
+
+constexpr auto IsBuildType_Release()
+{
+	return !IsBuildType_Debug();
+}
+
 NAMESPACE_END //( Compilation )
 
 NAMESPACE_END //( ModuleContext )
-
-NAMESPACE_END //( util )
 
 NAMESPACE_END //( vlr )

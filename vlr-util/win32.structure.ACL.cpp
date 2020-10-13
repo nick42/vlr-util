@@ -3,6 +3,7 @@
 
 #include "vlr/UtilMacros.Assertions.h"
 #include "vlr/win32.structure.ACE.h"
+#include "vlr/logging.LogMessage.h"
 
 NAMESPACE_BEGIN( vlr )
 
@@ -33,39 +34,60 @@ bool CAccessorFor_ACL::HasMetaValue_EntirelyInherited() const
 
 bool CAccessControlList::IsEffectivelyIdenticalTo( const CAccessControlList& oOther )
 {
-	auto&& lhsIter = m_oAccessControlEntryList.begin();
-	auto&& lhsEnd = m_oAccessControlEntryList.end();
-	auto&& rhsIter = oOther.m_oAccessControlEntryList.begin();
-	auto&& rhsEnd = oOther.m_oAccessControlEntryList.end();
-
-	do
+	auto fPred_Compare = []( const SPCAccessControlEntryBase& lhs, const SPCAccessControlEntryBase& rhs )
 	{
-		if (lhsIter == lhsEnd)
-		{
-			break;
-		}
-		if (rhsIter == rhsEnd)
-		{
-			break;
-		}
-		const auto& lhsACE = *(*lhsIter++);
-		const auto& rhsACE = *(*rhsIter++);
-		if (!lhsACE.IsIdentical( rhsACE ))
-		{
-			return false;
-		}
-	} while (true);
+		return lhs->IsIdentical( rhs.get() );
+	};
+	return std::equal(
+		begin( m_oAccessControlEntryList ),
+		end( m_oAccessControlEntryList ),
+		begin( oOther.m_oAccessControlEntryList ),
+		end( oOther.m_oAccessControlEntryList ),
+		fPred_Compare );
+	//auto&& lhsIter = m_oAccessControlEntryList.begin();
+	//auto&& lhsEnd = m_oAccessControlEntryList.end();
+	//auto&& rhsIter = oOther.m_oAccessControlEntryList.begin();
+	//auto&& rhsEnd = oOther.m_oAccessControlEntryList.end();
 
-	if (lhsIter != lhsEnd)
+	//do
+	//{
+	//	if (lhsIter == lhsEnd)
+	//	{
+	//		break;
+	//	}
+	//	if (rhsIter == rhsEnd)
+	//	{
+	//		break;
+	//	}
+	//	const auto& lhsACE = *(*lhsIter++);
+	//	const auto& rhsACE = *(*rhsIter++);
+	//	if (!lhsACE.IsIdentical( rhsACE ))
+	//	{
+	//		return false;
+	//	}
+	//} while (true);
+
+	//if (lhsIter != lhsEnd)
+	//{
+	//	return false;
+	//}
+	//if (rhsIter != rhsEnd)
+	//{
+	//	return false;
+	//}
+
+	//return true;
+}
+
+HRESULT CAccessControlList::LogData( const logging::CMessageContext& oMessageContext ) const
+{
+	for (const auto& spAccessControlEntry : m_oAccessControlEntryList)
 	{
-		return false;
+		logging::LogMessage( oMessageContext,
+			spAccessControlEntry->GetDisplayString_Description() );
 	}
-	if (rhsIter != rhsEnd)
-	{
-		return false;
-	}
 
-	return true;
+	return S_OK;
 }
 
 HRESULT CAccessControlList::Initialize( const ACL* pACL )

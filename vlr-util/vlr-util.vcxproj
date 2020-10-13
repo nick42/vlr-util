@@ -104,6 +104,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -123,6 +124,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -142,6 +144,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -161,6 +164,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -171,6 +175,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ModuleContext.Runtime.CommandLine.cpp" />
+    <ClCompile Include="ModuleContext.Runtime.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -180,6 +186,7 @@
     <ClCompile Include="util.Unicode.cpp" />
     <ClCompile Include="vlr-util.cpp" />
     <ClCompile Include="win32.filesystem.Functions.cpp" />
+    <ClCompile Include="win32.security.SIDs.cpp" />
     <ClCompile Include="win32.security.tokens.cpp" />
     <ClCompile Include="win32.structure.ACE.cpp" />
     <ClCompile Include="win32.structure.ACL.cpp" />
@@ -196,6 +203,11 @@
     <ClInclude Include="include\vlr\enums.RangeInfo.h" />
     <ClInclude Include="include\vlr\formatpf.h" />
     <ClInclude Include="include\vlr\include.fmt.h" />
+    <ClInclude Include="include\vlr\include.spdlog.h" />
+    <ClInclude Include="include\vlr\logging.LogMessage.h" />
+    <ClInclude Include="include\vlr\logging.MessageContext.h" />
+    <ClInclude Include="include\vlr\ModuleContext.Runtime.CommandLine.h" />
+    <ClInclude Include="include\vlr\ModuleContext.Runtime.h" />
     <ClInclude Include="include\vlr\SharedInstance.h" />
     <ClInclude Include="include\vlr\util.convert.ToDisplay.h" />
     <ClInclude Include="include\vlr\util.data_adaptor.MultiSZ.h" />
@@ -209,20 +221,27 @@
     <ClInclude Include="include\vlr\util.IsNonZero.h" />
     <ClInclude Include="include\vlr\util.IsNotBlank.h" />
     <ClInclude Include="include\vlr\util.MathOps.h" />
-    <ClInclude Include="include\vlr\util.ModuleContext.Compilation.h" />
+    <ClInclude Include="include\vlr\ModuleContext.Compilation.h" />
+    <ClInclude Include="include\vlr\util.OnValidAssignTo.h" />
     <ClInclude Include="include\vlr\util.range_checked_cast.h" />
     <ClInclude Include="include\vlr\util.std_aliases.h" />
     <ClInclude Include="include\vlr\util.Unicode.h" />
     <ClInclude Include="include\vlr\UtilMacros.Assertions.h" />
     <ClInclude Include="include\vlr\UtilMacros.General.h" />
     <ClInclude Include="include\vlr\UtilMacros.Namespace.h" />
+    <ClInclude Include="include\vlr\win32.enum.SID_NAME_USE.h" />
+    <ClInclude Include="include\vlr\win32.enum.WELL_KNOWN_SID_TYPE.h" />
     <ClInclude Include="include\vlr\win32.filesystem.enum_files.h" />
     <ClInclude Include="include\vlr\win32.filesystem.enum_volumes.h" />
     <ClInclude Include="include\vlr\win32.filesystem.Functions.h" />
+    <ClInclude Include="include\vlr\win32.security.SIDs.h" />
     <ClInclude Include="include\vlr\win32.security.tokens.h" />
     <ClInclude Include="include\vlr\win32.structure.ACE.h" />
     <ClInclude Include="include\vlr\win32.structure.ACL.h" />
     <ClInclude Include="include\vlr\win32.structure.WIN32_FIND_DATA.h" />
+    <ClInclude Include="include\vlr\win32.targetver.WIN2K.h" />
+    <ClInclude Include="include\vlr\win32.targetver.WIN7.h" />
+    <ClInclude Include="include\vlr\win32.targetver.WINXP.h" />
     <ClInclude Include="include\vlr\zstring_view.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>

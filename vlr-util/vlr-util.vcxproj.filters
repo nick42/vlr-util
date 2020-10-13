@@ -36,6 +36,15 @@
     <ClCompile Include="win32.structure.ACE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleContext.Runtime.CommandLine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleContext.Runtime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win32.security.SIDs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\vlr\enums.FormatEnum.h">
@@ -110,9 +119,6 @@
     <ClInclude Include="include\vlr\util.CStringBufferAccess.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\util.ModuleContext.Compilation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -156,6 +162,45 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\vlr\win32.structure.ACE.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vlr\logging.MessageContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vlr\logging.LogMessage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vlr\include.spdlog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vlr\ModuleContext.Runtime.CommandLine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vlr\ModuleContext.Compilation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vlr\win32.targetver.WIN2K.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vlr\win32.targetver.WINXP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vlr\win32.targetver.WIN7.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vlr\ModuleContext.Runtime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vlr\win32.security.SIDs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vlr\win32.enum.WELL_KNOWN_SID_TYPE.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vlr\win32.enum.SID_NAME_USE.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vlr\util.OnValidAssignTo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

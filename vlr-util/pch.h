@@ -7,6 +7,8 @@
 #ifndef PCH_H
 #define PCH_H
 
+#include <vlr/win32.targetver.WIN7.h>
+
 // add headers that you want to pre-compile here
 #include "framework.h"
 

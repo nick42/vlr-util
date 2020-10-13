@@ -14,4 +14,7 @@ using tstring = std::string;
 using tstring = std::wstring;
 #endif
 
+using string = std::string;
+using wstring = std::wstring;
+
 NAMESPACE_END //( vlr )

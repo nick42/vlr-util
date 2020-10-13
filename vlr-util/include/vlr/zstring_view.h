@@ -107,6 +107,12 @@ public:
     }
 #endif
 
+    // Allow implicit casting to std::basic_string (to sorta enumate the implicit constructor for string_view)
+    inline operator std::basic_string<_Elem>() const
+    {
+        return std::basic_string<_Elem>{ static_cast<const base_type&>(*this) };
+    }
+
     // Note: These methods copied from basic_string_view, cause they are not protected like they probably should be
 protected:
     constexpr void _Check_offset( const size_type _Off ) const { // checks whether _Off is in the bounds of [0, size()]

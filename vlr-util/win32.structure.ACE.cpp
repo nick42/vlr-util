@@ -6,6 +6,7 @@
 #include "vlr/UtilMacros.Assertions.h"
 #include "vlr/AutoFreeResource.h"
 #include "vlr/formatpf.h"
+#include "vlr/win32.security.SIDs.h"
 
 NAMESPACE_BEGIN( vlr )
 
@@ -13,7 +14,16 @@ NAMESPACE_BEGIN( win32 )
 
 NAMESPACE_BEGIN( structure )
 
-vlr::tstring CAccessControlEntry_Unknown::GetDisplayString_Description() const
+vlr::tstring CAccessControlEntryBase::GetUniqueDescriptor() const
+{
+	auto sDescriptor = vlr::formatpf( _T( "%04X|%08X|%s" ),
+		AceType(),
+		GetAsApplicable_AccessMask().value_or( 0 ),
+		GetAsApplicable_StringSid().value_or( _T( "" ) ) );
+	return sDescriptor;
+}
+
+vlr::tstring CAccessControlEntryBase::GetDisplayString_Description() const
 {
 	auto sDisplayString = vlr::formatpf( _T( "ACE type %d; size %d" ),
 		AceType(),
@@ -30,55 +40,52 @@ HRESULT CAccessControlEntry_AccessAllowed::PopulateStringSid( std::optional<vlr:
 	//auto pAce = reinterpret_cast<ACCESS_ALLOWED_ACE*>(m_oEntryData.data());
 	//auto pSidStart = &pAce->SidStart;
 	//auto pSid = reinterpret_cast<PSID>(pSidStart);
-	auto pSid = SidPtr();
+	//auto pSid = SidPtr();
 
-	LPTSTR pszStringSid = nullptr;
-	auto bSuccess = ::ConvertSidToStringSid(
-		const_cast<PSID>(pSid),
-		&pszStringSid );
-	ASSERT_NONZERO__OR_RETURN_FAILURE_VALUE( bSuccess );
-	ASSERT_NONZERO__OR_RETURN_FAILURE_VALUE( pszStringSid );
-	auto oOnDestroy_FreeStringSid = MakeAutoCleanup_viaLocalFree( pszStringSid );
-
-	osStringSid = vlr::tstring{ pszStringSid };
+	osStringSid = m_oSidInfo.GetStringSid();
 
 	return S_OK;
+}
+
+HRESULT CAccessControlEntry_AccessAllowed::PopulateSidNameLookupResult( vlr::win32::security::SIDs::SPCSidNameLookupResult& spSidNameLookupResult_Result ) const
+{
+	return vlr::win32::security::SIDs::DoLookupAccountSid( nullptr, m_oSidInfo, spSidNameLookupResult_Result );
 }
 
 vlr::tstring CAccessControlEntry_AccessAllowed::GetStringSid()
 {
 	static const auto _tFailureValue = vlr::tstring{};
 
-	if (m_osStringSid.has_value())
+	if (m_oSidInfo.m_osStringSid.has_value())
 	{
-		return m_osStringSid.value();
+		return m_oSidInfo.m_osStringSid.value();
 	}
 
-	PopulateStringSid( m_osStringSid );
+	PopulateStringSid( m_oSidInfo.m_osStringSid );
 
-	return m_osStringSid.value_or( vlr::tstring{} );
+	return m_oSidInfo.m_osStringSid.value_or( vlr::tstring{} );
 }
 
 vlr::tstring CAccessControlEntry_AccessAllowed::GetStringSid() const
 {
 	static const auto _tFailureValue = vlr::tstring{};
 
-	if (m_osStringSid.has_value())
+	if (m_oSidInfo.m_osStringSid.has_value())
 	{
-		return m_osStringSid.value();
+		return m_oSidInfo.m_osStringSid.value();
 	}
 
 	std::optional<vlr::tstring> osStringSid;
 	PopulateStringSid( osStringSid );
 
-	return m_osStringSid.value_or( vlr::tstring{} );
+	return osStringSid.value_or( vlr::tstring{} );
 }
 
 vlr::tstring CAccessControlEntry_AccessAllowed::GetDisplayString_Description() const
 {
 	auto sDisplayString = vlr::formatpf( _T( "ACCESS_ALLOWED_ACE; ACCESS_MASK %08X; Sid: %s" ),
 		AccessMask(),
-		GetStringSid() );
+		m_oSidInfo.GetDisplay_Default() );
 	return sDisplayString;
 }
 

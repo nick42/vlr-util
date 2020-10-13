@@ -75,6 +75,12 @@
     <ClCompile Include="win32.structure.WIN32_FIND_DATA.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="logging.MessageContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="logging.LogMessage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="zstring_view.h">

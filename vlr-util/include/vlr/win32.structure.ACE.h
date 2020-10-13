@@ -9,6 +9,7 @@
 
 #include "util.IsBitSet.h"
 #include "util.std_aliases.h"
+#include "win32.security.SIDs.h"
 
 NAMESPACE_BEGIN( vlr )
 
@@ -39,7 +40,24 @@ inline decltype(auto) MakeStructureAccessor( const ACE_HEADER* pFindData )
 	return *reinterpret_cast<const CAccessorFor_ACE_HEADER*>(pFindData);
 }
 
+class IAccessControlEntry
+{
+public:
+	virtual BYTE GetAceType() const = 0;
+	virtual BYTE GetAceFlags() const = 0;
+
+	virtual vlr::tstring GetUniqueDescriptor() const = 0;
+	virtual vlr::tstring GetDisplayString_Description() const = 0;
+
+	virtual bool IsIdentical( const IAccessControlEntry* pOther ) const = 0;
+
+public:
+	virtual ~IAccessControlEntry() = default;
+};
+using SPIAccessControlEntry = std::shared_ptr<IAccessControlEntry>;
+
 class CAccessControlEntryBase
+	: public IAccessControlEntry
 {
 public:
 	std::vector<BYTE> m_oEntryData;
@@ -104,21 +122,46 @@ public:
 			&& (memcmp( m_oEntryData.data() + sizeof( ACE_HEADER ), oOther.m_oEntryData.data() + sizeof( ACE_HEADER ), AceSize() - sizeof( ACE_HEADER ) ) == 0)
 			;
 	}
-	virtual bool IsIdentical( const CAccessControlEntryBase& oOther ) const
+
+public:
+	virtual BYTE GetAceType() const
 	{
+		return AceType();
+	}
+	virtual BYTE GetAceFlags() const
+	{
+		return AceFlags();
+	}
+
+	virtual vlr::tstring GetUniqueDescriptor() const;
+	virtual vlr::tstring GetDisplayString_Description() const;
+
+	virtual bool IsIdentical( const IAccessControlEntry* pOther ) const
+	{
+		auto pOtherTyped = dynamic_cast<const CAccessControlEntryBase*>(pOther);
+		if (!pOtherTyped)
+		{
+			return false;
+		}
+
 		// Default is hacky; type-specific subclass can do better
-		return IsIdentical_Hacky( oOther );
+		return IsIdentical_Hacky( *pOtherTyped );
 	}
 
 public:
-	virtual vlr::tstring GetDisplayString_Description() const = 0;
-
-public:
-	virtual std::optional<DWORD> GetAsApplicable_AccessMask() const
+	virtual std::optional<vlr::win32::security::SIDs::CSidInfo> GetAsApplicable_SidInfo() const
 	{
 		return {};
 	}
 	virtual std::optional<vlr::tstring> GetAsApplicable_StringSid() const
+	{
+		return {};
+	}
+	virtual vlr::win32::security::SIDs::SPCSidNameLookupResult GetAsApplicable_SidNameLookupResult() const
+	{
+		return {};
+	}
+	virtual std::optional<DWORD> GetAsApplicable_AccessMask() const
 	{
 		return {};
 	}
@@ -139,15 +182,13 @@ public:
 	{
 		Initialize( pvACE );
 	}
+	virtual ~CAccessControlEntryBase() = default;
 };
 using SPCAccessControlEntryBase = std::shared_ptr<CAccessControlEntryBase>;
 
 class CAccessControlEntry_Unknown
 	: public CAccessControlEntryBase
 {
-public:
-	virtual vlr::tstring GetDisplayString_Description() const;
-
 public:
 	CAccessControlEntry_Unknown( LPVOID pvACE )
 		: CAccessControlEntryBase{ pvACE }
@@ -198,10 +239,11 @@ public:
 	}
 
 public:
-	std::optional<vlr::tstring> m_osStringSid;
+	vlr::win32::security::SIDs::CSidInfo m_oSidInfo;
 
 public:
 	HRESULT PopulateStringSid( std::optional<vlr::tstring>& osStringSid ) const;
+	HRESULT PopulateSidNameLookupResult( vlr::win32::security::SIDs::SPCSidNameLookupResult& spSidNameLookupResult_Result ) const;
 	vlr::tstring GetStringSid();
 	vlr::tstring GetStringSid() const;
 
@@ -214,21 +256,33 @@ public:
 	}
 
 public:
+	//virtual vlr::tstring GetUniqueDescriptor() const;
 	virtual vlr::tstring GetDisplayString_Description() const;
 
 public:
-	virtual std::optional<DWORD> GetAsApplicable_AccessMask() const
+	virtual std::optional<vlr::win32::security::SIDs::CSidInfo> GetAsApplicable_SidInfo() const
 	{
-		return AccessMask();
+		return m_oSidInfo;
 	}
 	virtual std::optional<vlr::tstring> GetAsApplicable_StringSid() const
 	{
 		return GetStringSid();
 	}
+	virtual vlr::win32::security::SIDs::SPCSidNameLookupResult GetAsApplicable_SidNameLookupResult() const
+	{
+		return m_oSidInfo.m_spSidNameLookupResult;
+	}
+	virtual std::optional<DWORD> GetAsApplicable_AccessMask() const
+	{
+		return AccessMask();
+	}
+
 protected:
 	HRESULT Initialize()
 	{
-		PopulateStringSid( m_osStringSid );
+		m_oSidInfo = vlr::win32::security::SIDs::CSidInfo{ SidPtr() };
+		m_oSidInfo.PopulateData_StringSid();
+		m_oSidInfo.PopulateData_SidNameLookupResult();
 
 		return S_OK;
 	}

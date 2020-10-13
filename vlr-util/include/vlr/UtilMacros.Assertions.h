@@ -26,6 +26,12 @@
 
 #define VLR_ASSERTIONS_RETURN_EXPRESSION( expression ) return (expression);
 
+#define HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION( expression ) \
+{ \
+	vlr::assert::HandleCheckFailure( _T("Assertion failed (general)") ); \
+	VLR_ASSERTIONS_RETURN_EXPRESSION( expression ) \
+}
+
 #define ASSERT_NONZERO__OR_RETURN( value ) \
 { \
 	auto&& _value = (value); \
@@ -124,4 +130,5 @@
 #define ASSERT_HR_SUCCEEDED__OR_RETURN_HRESULT( hr ) { auto&& _hr = (hr); ASSERT_NONZERO__OR_RETURN_EXPRESSION( SUCCEEDED(_hr), _hr ) }
 #define ASSERT_HR_SUCCEEDED__OR_CONTINUE( hr ) { auto&& _hr = (hr); ASSERT_NONZERO__OR_CONTINUE( SUCCEEDED(_hr) ) }
 
+#define ON_HR_S_OK__RETURN_HRESULT( hr ) { auto&& _hr = (hr); if (_hr != S_OK) {} else { return _hr; } }
 #define ON_HR_NON_S_OK__RETURN_HRESULT( hr ) { auto&& _hr = (hr); if (_hr == S_OK) {} else { return _hr; } }

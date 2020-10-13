@@ -17,7 +17,7 @@ public:
 	[[nodiscard]]
 	static inline auto FormatAsNumber( TNumericType nValue )
 	{
-		return formatpf_to<CString>( _T( "%d" ), static_cast<unsigned int>(nValue) );
+		return formatpf( _T( "%d" ), static_cast<unsigned int>(nValue) );
 	}
 
 	template< typename TTestValue, typename TAction >
@@ -51,6 +51,8 @@ public:
 		return base_type::FormatAsNumber( eValue );
 	}
 };
+
+#define VLR_ON_CASE_RETURN_STRING_OF_VALUE( value ) case value: return _T(#value)
 
 NAMESPACE_END //( enums )
 

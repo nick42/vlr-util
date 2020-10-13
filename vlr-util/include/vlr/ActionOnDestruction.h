@@ -36,6 +36,9 @@ public:
 	CActionOnDestruction( const FAction& fAction )
 		: m_fAction{ fAction }
 	{}
+	// Note: We allow move, but not copy, since we do not currently do reference counting
+	CActionOnDestruction( CActionOnDestruction&& ) = default;
+	CActionOnDestruction( const CActionOnDestruction& ) = delete;
 	virtual ~CActionOnDestruction()
 	{
 		DoActionAndClear();

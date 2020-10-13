@@ -4,7 +4,7 @@
 
 #include "UtilMacros.Namespace.h"
 #include "config.h"
-#include "util.ModuleContext.Compilation.h"
+#include "ModuleContext.Compilation.h"
 
 #include "util.range_checked_cast.h"
 #include "util.Unicode.h"
@@ -92,11 +92,11 @@ inline decltype(auto) ToStdStringW( const CStringW& swValue )
 template< typename TString >
 inline decltype(auto) ToStdString( const TString& tString )
 {
-	if constexpr (vlr::util::ModuleContext::Compilation::DefaultCharTypeIs_char())
+	if constexpr (vlr::ModuleContext::Compilation::DefaultCharTypeIs_char())
 	{
 		return ToStdStringA( tString );
 	}
-	else if constexpr (vlr::util::ModuleContext::Compilation::DefaultCharTypeIs_wchar_t())
+	else if constexpr (vlr::ModuleContext::Compilation::DefaultCharTypeIs_wchar_t())
 	{
 		return ToStdStringW( tString );
 	}
@@ -183,11 +183,11 @@ inline decltype(auto) ToCStringW( const std::wstring& sValue )
 template< typename TString >
 inline decltype(auto) ToCString( const TString& tString )
 {
-	if constexpr (vlr::util::ModuleContext::Compilation::DefaultCharTypeIs_char())
+	if constexpr (vlr::ModuleContext::Compilation::DefaultCharTypeIs_char())
 	{
 		return ToCStringA( tString );
 	}
-	else if constexpr (vlr::util::ModuleContext::Compilation::DefaultCharTypeIs_wchar_t())
+	else if constexpr (vlr::ModuleContext::Compilation::DefaultCharTypeIs_wchar_t())
 	{
 		return ToCStringW( tString );
 	}

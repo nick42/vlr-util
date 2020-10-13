@@ -8,6 +8,7 @@
 #include "config.h"
 
 #include "vlr/win32.structure.ACE.h"
+#include "vlr/logging.MessageContext.h"
 
 NAMESPACE_BEGIN( vlr )
 
@@ -42,6 +43,9 @@ public:
 
 public:
 	bool IsEffectivelyIdenticalTo( const CAccessControlList& oOther );
+
+public:
+	HRESULT LogData( const logging::CMessageContext& oMessageContext ) const;
 
 protected:
 	HRESULT Initialize( const ACL* pACL );

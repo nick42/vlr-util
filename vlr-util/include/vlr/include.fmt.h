@@ -3,7 +3,7 @@
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
-#define FMT_HEADER_ONLY
+//#define FMT_HEADER_ONLY
 
 #include <fmt/format.h>
 #include <fmt/printf.h>
