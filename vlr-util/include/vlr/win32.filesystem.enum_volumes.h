@@ -100,7 +100,7 @@ HRESULT iterator_volumes::OnIterationBegin()
 	}
 
 	m_spRefCountedDataBlock = std::shared_ptr<RefCountedDataBlock>{ new RefCountedDataBlock, &iterator_volumes::OnDestroy_CloseFindVolume };
-	ASSERT_NONZERO__OR_RETURN_EUNEXPECTED( m_spRefCountedDataBlock );
+	ASSERT_ALLOCATED__OR_RETURN_STANDARD_ERROR( m_spRefCountedDataBlock );
 
 	m_spRefCountedDataBlock->m_ohFindVolume = hFindVolume;
 	m_osCurrentResult = sValue;

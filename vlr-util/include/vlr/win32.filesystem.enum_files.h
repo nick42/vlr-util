@@ -187,7 +187,7 @@ protected:
 		}
 
 		auto spRefCountedDataBlock = std::shared_ptr<iterator_FindNextFile::RefCountedDataBlock>{ new iterator_FindNextFile::RefCountedDataBlock( hFindHandle ), &iterator_FindNextFile::OnDestroy_FindClose };
-		ASSERT_NONZERO__OR_RETURN_EUNEXPECTED( spRefCountedDataBlock );
+		ASSERT_ALLOCATED__OR_RETURN_STANDARD_ERROR( spRefCountedDataBlock );
 		iter.m_spRefCountedDataBlock = spRefCountedDataBlock;
 		iter.m_spResultDataBuffer = spResultDataBuffer;
 

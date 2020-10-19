@@ -132,3 +132,6 @@
 
 #define ON_HR_S_OK__RETURN_HRESULT( hr ) { auto&& _hr = (hr); if (_hr != S_OK) {} else { return _hr; } }
 #define ON_HR_NON_S_OK__RETURN_HRESULT( hr ) { auto&& _hr = (hr); if (_hr == S_OK) {} else { return _hr; } }
+
+#define ASSERT_ALLOCATED__OR_RETURN_STANDARD_ERROR( value ) ASSERT_NONZERO__OR_RETURN_EXPRESSION( value, E_OUTOFMEMORY )
+#define ASSERT_ALLOCATED__OR_RETURN_FAILURE_VALUE( value ) ASSERT_NONZERO__OR_RETURN_EXPRESSION( value, _tFailureValue )

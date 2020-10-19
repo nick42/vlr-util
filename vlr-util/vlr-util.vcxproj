@@ -199,6 +199,7 @@
     <ClInclude Include="include\vlr\AutoRevertingAssignment.h" />
     <ClInclude Include="include\vlr\BaseWithVirtualDestructor.h" />
     <ClInclude Include="include\vlr\config.h" />
+    <ClInclude Include="include\vlr\cpp_namespace.h" />
     <ClInclude Include="include\vlr\enums.FormatEnum.h" />
     <ClInclude Include="include\vlr\enums.RangeInfo.h" />
     <ClInclude Include="include\vlr\formatpf.h" />
@@ -209,6 +210,7 @@
     <ClInclude Include="include\vlr\ModuleContext.Runtime.CommandLine.h" />
     <ClInclude Include="include\vlr\ModuleContext.Runtime.h" />
     <ClInclude Include="include\vlr\SharedInstance.h" />
+    <ClInclude Include="include\vlr\util.convert.Arithmetic.h" />
     <ClInclude Include="include\vlr\util.convert.ToDisplay.h" />
     <ClInclude Include="include\vlr\util.data_adaptor.MultiSZ.h" />
     <ClInclude Include="include\vlr\util.api_adaptor.OutString.h" />

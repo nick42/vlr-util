@@ -194,7 +194,7 @@ HRESULT CSidNameLookupCache::PopulateCache_WellKnownSids()
 		ASSERT_HR_SUCCEEDED__OR_RETURN_HRESULT( hr );
 
 		auto spSidNameLookupResult = std::make_shared<CSidNameLookupResult>();
-		ASSERT_NONZERO__OR_RETURN_EUNEXPECTED( spSidNameLookupResult );
+		ASSERT_ALLOCATED__OR_RETURN_STANDARD_ERROR( spSidNameLookupResult );
 		spSidNameLookupResult->m_sStringSid = sStringSid;
 		spSidNameLookupResult->m_oeWellKnownSid = eWellKnownSid;
 
@@ -253,7 +253,7 @@ HRESULT DoLookupAccountSid(
 	ON_HR_S_OK__RETURN_HRESULT( hr );
 
 	auto spSidNameLookupResult = std::make_shared<CSidNameLookupResult>();
-	ASSERT_NONZERO__OR_RETURN_EUNEXPECTED( spSidNameLookupResult );
+	ASSERT_ALLOCATED__OR_RETURN_STANDARD_ERROR( spSidNameLookupResult );
 	auto oOnDestroy_AssignResult = MakeActionOnDestruction( [&] { spSidNameLookupResult_Result = spSidNameLookupResult; } );
 	auto oOnDestroy_CacheResult = MakeActionOnDestruction( [&]
 		{
