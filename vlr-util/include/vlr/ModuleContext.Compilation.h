@@ -39,6 +39,15 @@ constexpr auto IsBuildType_Release()
 	return !IsBuildType_Debug();
 }
 
+constexpr auto IsPlatform_Windows()
+{
+#ifdef WIN32
+	return true;
+#else
+	return false;
+#endif
+}
+
 NAMESPACE_END //( Compilation )
 
 NAMESPACE_END //( ModuleContext )

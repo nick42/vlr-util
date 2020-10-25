@@ -211,6 +211,7 @@
     <ClInclude Include="include\vlr\ModuleContext.Runtime.h" />
     <ClInclude Include="include\vlr\SharedInstance.h" />
     <ClInclude Include="include\vlr\util.convert.Arithmetic.h" />
+    <ClInclude Include="include\vlr\util.convert.DateTime.h" />
     <ClInclude Include="include\vlr\util.convert.ToDisplay.h" />
     <ClInclude Include="include\vlr\util.data_adaptor.MultiSZ.h" />
     <ClInclude Include="include\vlr\util.api_adaptor.OutString.h" />
@@ -227,6 +228,7 @@
     <ClInclude Include="include\vlr\util.OnValidAssignTo.h" />
     <ClInclude Include="include\vlr\util.range_checked_cast.h" />
     <ClInclude Include="include\vlr\util.std_aliases.h" />
+    <ClInclude Include="include\vlr\util.types.h" />
     <ClInclude Include="include\vlr\util.Unicode.h" />
     <ClInclude Include="include\vlr\UtilMacros.Assertions.h" />
     <ClInclude Include="include\vlr\UtilMacros.General.h" />

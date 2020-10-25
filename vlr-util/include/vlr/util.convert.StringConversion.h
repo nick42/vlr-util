@@ -8,6 +8,7 @@
 
 #include "util.range_checked_cast.h"
 #include "util.Unicode.h"
+#include "util.types.h"
 
 NAMESPACE_BEGIN( vlr )
 
@@ -85,6 +86,17 @@ inline decltype(auto) ToStdStringW( const CStringW& swValue )
 {
 	auto svValue = std::wstring_view{ swValue.GetString(), util::range_checked_cast<size_t>(swValue.GetLength()) };
 	return std::wstring{ svValue };
+}
+
+template< typename TString >
+inline decltype(auto) ToStdStringA( const TString& tString )
+{
+	static_assert("Unhandled conversion type");
+}
+template< typename TString >
+inline decltype(auto) ToStdStringW( const TString& tString )
+{
+	static_assert("Unhandled conversion type");
 }
 
 // Generic version for "StdStringT", based on compilation type

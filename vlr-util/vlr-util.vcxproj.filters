@@ -209,6 +209,12 @@
     <ClInclude Include="include\vlr\util.convert.Arithmetic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\vlr\util.types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vlr\util.convert.DateTime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg.json" />
