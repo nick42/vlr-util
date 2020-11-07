@@ -103,7 +103,8 @@ HRESULT iterator_volumes::OnIterationBegin()
 	ASSERT_ALLOCATED__OR_RETURN_STANDARD_ERROR( m_spRefCountedDataBlock );
 
 	m_spRefCountedDataBlock->m_ohFindVolume = hFindVolume;
-	m_osCurrentResult = sValue;
+	// Note: string length will be longer than actual value; need to explicitly truncate at NULL terminator
+	m_osCurrentResult = vlr::tstring{ sValue.c_str() };
 
 	return S_OK;
 }
@@ -125,7 +126,8 @@ HRESULT iterator_volumes::OnAdaptorMethod_increment()
 		MAX_PATH );
 	if (bSuccess)
 	{
-		m_osCurrentResult = sValue;
+		// Note: string length will be longer than actual value; need to explicitly truncate at NULL terminator
+		m_osCurrentResult = vlr::tstring{ sValue.c_str() };
 		return S_OK;
 	}
 

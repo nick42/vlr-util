@@ -14,6 +14,22 @@ NAMESPACE_BEGIN( util )
 
 NAMESPACE_BEGIN( Convert )
 
+enum class DateTimeFormat
+{
+	Unknown,
+	ISO8601,
+};
+
+struct FormatOptions_DateTime
+{
+	DateTimeFormat m_eDateTimeFormat = DateTimeFormat::Unknown;
+
+	FormatOptions_DateTime() = default;
+	FormatOptions_DateTime( DateTimeFormat eDateTimeFormat )
+		: m_eDateTimeFormat{ eDateTimeFormat }
+	{}
+};
+
 NAMESPACE_BEGIN( detail )
 
 #ifdef WIN32
@@ -32,15 +48,30 @@ inline auto ToDateTime_FILETIME( const FILETIME& oValue )
 	return vlr::types::DateTime{ oSystemTime };
 }
 
-inline auto ToStdStringA( const vlr::types::DateTime& dtValue )
+inline auto ToString( const vlr::types::DateTime& dtValue, const FormatOptions_DateTime& oFormatOptions )
 {
-	auto sValue = dtValue.Format();
+	switch (oFormatOptions.m_eDateTimeFormat)
+	{
+	default:
+	case DateTimeFormat::Unknown:
+		return dtValue.Format();
+	case DateTimeFormat::ISO8601:
+	{
+		// Format: YYYY-MM-DD[T]HH:MM:SS[TZ]
+		return dtValue.Format( _T( "%Y-%m-%dT%H:%M:%SZ" ) );
+	}
+	}
+}
+
+inline auto ToStdStringA( const vlr::types::DateTime& dtValue, const FormatOptions_DateTime& oFormatOptions )
+{
+	auto sValue = ToString( dtValue, oFormatOptions );
 	return vlr::util::Convert::ToStdStringA( sValue );
 }
 
-inline auto ToStdStringW( const vlr::types::DateTime& dtValue )
+inline auto ToStdStringW( const vlr::types::DateTime& dtValue, const FormatOptions_DateTime& oFormatOptions )
 {
-	auto sValue = dtValue.Format();
+	auto sValue = ToString( dtValue, oFormatOptions );
 	return vlr::util::Convert::ToStdStringW( sValue );
 }
 
@@ -63,12 +94,23 @@ inline auto ToDateTime_FILETIME( const FILETIME& oValue )
 	}
 }
 
-template<>
-inline decltype(auto) ToStdStringA( const vlr::types::DateTime& dtValue )
+inline decltype(auto) ToStdStringA( const vlr::types::DateTime& dtValue, const FormatOptions_DateTime& oFormatOptions )
 {
 	if constexpr (ModuleContext::Compilation::IsPlatform_Windows())
 	{
-		return detail::Windows::ToStdStringA( dtValue );
+		return detail::Windows::ToStdStringA( dtValue, oFormatOptions );
+	}
+	else
+	{
+		static_assert("Unsupported platform type");
+	}
+}
+
+inline decltype(auto) ToStdStringW( const vlr::types::DateTime& dtValue, const FormatOptions_DateTime& oFormatOptions )
+{
+	if constexpr (ModuleContext::Compilation::IsPlatform_Windows())
+	{
+		return detail::Windows::ToStdStringW( dtValue, oFormatOptions );
 	}
 	else
 	{
@@ -77,16 +119,15 @@ inline decltype(auto) ToStdStringA( const vlr::types::DateTime& dtValue )
 }
 
 template<>
+inline decltype(auto) ToStdStringA( const vlr::types::DateTime& dtValue )
+{
+	return ToStdStringA( dtValue, FormatOptions_DateTime{} );
+}
+
+template<>
 inline decltype(auto) ToStdStringW( const vlr::types::DateTime& dtValue )
 {
-	if constexpr (ModuleContext::Compilation::IsPlatform_Windows())
-	{
-		return detail::Windows::ToStdStringW( dtValue );
-	}
-	else
-	{
-		static_assert("Unsupported platform type");
-	}
+	return ToStdStringW( dtValue, FormatOptions_DateTime{} );
 }
 
 NAMESPACE_END //( Convert )

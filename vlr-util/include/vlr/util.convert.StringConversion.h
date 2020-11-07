@@ -18,22 +18,22 @@ NAMESPACE_BEGIN( Convert )
 
 // std::string <- std::string_view
 
-inline decltype(auto) ToStdStringA( std::string_view svValue )
+inline auto ToStdStringA( std::string_view svValue )
 {
 	return std::string{ svValue };
 }
 
-inline decltype(auto) ToStdStringA( std::wstring_view svValue )
+inline auto ToStdStringA( std::wstring_view svValue )
 {
 	return CStringConversion{}.Inline_UTF16_to_MultiByte_StdString( svValue );
 }
 
-inline decltype(auto) ToStdStringW( std::string_view svValue )
+inline auto ToStdStringW( std::string_view svValue )
 {
 	return CStringConversion{}.Inline_MultiByte_to_UTF16_StdString( svValue );
 }
 
-inline decltype(auto) ToStdStringW( std::wstring_view svValue )
+inline auto ToStdStringW( std::wstring_view svValue )
 {
 	return std::wstring{ svValue };
 }
@@ -45,13 +45,13 @@ inline decltype(auto) ToStdStringA( const std::string& sValue )
 	return sValue;
 }
 
-inline decltype(auto) ToStdStringA( const std::wstring& sValue )
+inline auto ToStdStringA( const std::wstring& sValue )
 {
 	auto svValue = std::wstring_view{ sValue };
 	return ToStdStringA( svValue );
 }
 
-inline decltype(auto) ToStdStringW( const std::string& sValue )
+inline auto ToStdStringW( const std::string& sValue )
 {
 	auto svValue = std::string_view{ sValue };
 	return ToStdStringW( svValue );
@@ -64,53 +64,79 @@ inline decltype(auto) ToStdStringW( const std::wstring& sValue )
 
 // std::string <- CString
 
-inline decltype(auto) ToStdStringA( const CStringA& saValue )
+inline auto ToStdStringA( const CStringA& saValue )
 {
 	auto svValue = std::string_view{ saValue.GetString(), util::range_checked_cast<size_t>(saValue.GetLength()) };
 	return std::string{ svValue };
 }
 
-inline decltype(auto) ToStdStringA( const CStringW& swValue )
+inline auto ToStdStringA( const CStringW& swValue )
 {
 	auto svValue = std::wstring_view{ swValue.GetString(), util::range_checked_cast<size_t>(swValue.GetLength()) };
 	return ToStdStringA( svValue );
 }
 
-inline decltype(auto) ToStdStringW( const CStringA& saValue )
+inline auto ToStdStringW( const CStringA& saValue )
 {
 	auto svValue = std::string_view{ saValue.GetString(), util::range_checked_cast<size_t>(saValue.GetLength()) };
 	return ToStdStringW( svValue );
 }
 
-inline decltype(auto) ToStdStringW( const CStringW& swValue )
+inline auto ToStdStringW( const CStringW& swValue )
 {
 	auto svValue = std::wstring_view{ swValue.GetString(), util::range_checked_cast<size_t>(swValue.GetLength()) };
 	return std::wstring{ svValue };
 }
 
+NAMESPACE_BEGIN( detail )
+
+template< typename TString, typename std::enable_if_t<std::is_convertible_v<const TString&, std::string>>* = nullptr >
+inline decltype(auto) ToStdStringA_choice( const TString& tString, vlr::util::choice<0>&& )
+{
+	return static_cast<std::string>(tString);
+}
+template< typename TString, typename std::enable_if_t<std::is_convertible_v<const TString&, std::wstring>>* = nullptr  >
+inline decltype(auto) ToStdStringW_choice( const TString& tString, vlr::util::choice<0>&& )
+{
+	return static_cast<std::wstring>(tString);
+}
+
+template< typename TString >
+inline decltype(auto) ToStdStringA_choice( const TString& tString, vlr::util::choice<1>&& )
+{
+	static_assert(false, "Unhandled conversion type");
+}
+template< typename TString >
+inline decltype(auto) ToStdStringW_choice( const TString& tString, vlr::util::choice<1>&& )
+{
+	static_assert(false, "Unhandled conversion type");
+}
+
+NAMESPACE_END //( detail )
+
 template< typename TString >
 inline decltype(auto) ToStdStringA( const TString& tString )
 {
-	static_assert("Unhandled conversion type");
+	return detail::ToStdStringA_choice( tString, vlr::util::choice<0>{} );
 }
 template< typename TString >
 inline decltype(auto) ToStdStringW( const TString& tString )
 {
-	static_assert("Unhandled conversion type");
+	return detail::ToStdStringW_choice( tString, vlr::util::choice<0>{} );
 }
 
 // Generic version for "StdStringT", based on compilation type
 
-template< typename TString >
-inline decltype(auto) ToStdString( const TString& tString )
+template< typename TString, typename... Arg >
+inline decltype(auto) ToStdString( const TString& tString, Arg&&... args )
 {
 	if constexpr (vlr::ModuleContext::Compilation::DefaultCharTypeIs_char())
 	{
-		return ToStdStringA( tString );
+		return ToStdStringA( tString, std::forward<Arg>( args )... );
 	}
 	else if constexpr (vlr::ModuleContext::Compilation::DefaultCharTypeIs_wchar_t())
 	{
-		return ToStdStringW( tString );
+		return ToStdStringW( tString, std::forward<Arg>( args )... );
 	}
 	else
 	{
@@ -192,16 +218,16 @@ inline decltype(auto) ToCStringW( const std::wstring& sValue )
 
 // Generic version for "CStringT", based on compilation type
 
-template< typename TString >
-inline decltype(auto) ToCString( const TString& tString )
+template< typename TString, typename... Arg >
+inline decltype(auto) ToCString( const TString& tString, Arg&&... args )
 {
 	if constexpr (vlr::ModuleContext::Compilation::DefaultCharTypeIs_char())
 	{
-		return ToCStringA( tString );
+		return ToCStringA( tString, std::forward<Arg>( args )... );
 	}
 	else if constexpr (vlr::ModuleContext::Compilation::DefaultCharTypeIs_wchar_t())
 	{
-		return ToCStringW( tString );
+		return ToCStringW( tString, std::forward<Arg>( args )... );
 	}
 	else
 	{
