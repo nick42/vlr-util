@@ -82,18 +82,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
-  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <VcpkgEnableManifest>true</VcpkgEnableManifest>
-  </PropertyGroup>
-  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <VcpkgEnableManifest>true</VcpkgEnableManifest>
-  </PropertyGroup>
-  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <VcpkgEnableManifest>true</VcpkgEnableManifest>
-  </PropertyGroup>
-  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <VcpkgEnableManifest>true</VcpkgEnableManifest>
-  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
@@ -195,6 +187,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="include\vlr\ActionOnDestruction.h" />
     <ClInclude Include="include\vlr\AssertionHandling_Config.h" />
+    <ClInclude Include="include\vlr\as_span.h" />
     <ClInclude Include="include\vlr\AutoFreeResource.h" />
     <ClInclude Include="include\vlr\AutoRevertingAssignment.h" />
     <ClInclude Include="include\vlr\BaseWithVirtualDestructor.h" />
@@ -202,6 +195,7 @@
     <ClInclude Include="include\vlr\cpp_namespace.h" />
     <ClInclude Include="include\vlr\enums.FormatEnum.h" />
     <ClInclude Include="include\vlr\enums.RangeInfo.h" />
+    <ClInclude Include="include\vlr\win32.registry.enum_RegValues.h" />
     <ClInclude Include="include\vlr\formatpf.h" />
     <ClInclude Include="include\vlr\include.fmt.h" />
     <ClInclude Include="include\vlr\include.spdlog.h" />
@@ -238,6 +232,9 @@
     <ClInclude Include="include\vlr\win32.filesystem.enum_files.h" />
     <ClInclude Include="include\vlr\win32.filesystem.enum_volumes.h" />
     <ClInclude Include="include\vlr\win32.filesystem.Functions.h" />
+    <ClInclude Include="include\vlr\win32.registry.iterator_RegEnumValue.h" />
+    <ClInclude Include="include\vlr\win32.registry.RegKey.h" />
+    <ClInclude Include="include\vlr\win32.registry.RegValue.h" />
     <ClInclude Include="include\vlr\win32.security.SIDs.h" />
     <ClInclude Include="include\vlr\win32.security.tokens.h" />
     <ClInclude Include="include\vlr\win32.structure.ACE.h" />

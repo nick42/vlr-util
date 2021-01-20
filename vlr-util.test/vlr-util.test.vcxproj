@@ -156,6 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Assertions.cpp" />
+    <ClCompile Include="as_span.cpp" />
     <ClCompile Include="AutoFreeResource.cpp" />
     <ClCompile Include="AutoRevertingAssignment.cpp" />
     <ClCompile Include="enums.RangeInfo.cpp" />
@@ -180,6 +181,7 @@
     <ClCompile Include="vlr-util.test.cpp" />
     <ClCompile Include="win32.filesystem.enum_files.cpp" />
     <ClCompile Include="win32.filesystem.enum_volumes.cpp" />
+    <ClCompile Include="win32.registry.RegKey.cpp" />
     <ClCompile Include="win32.structure.WIN32_FIND_DATA.cpp" />
     <ClCompile Include="zstring_view.cpp" />
   </ItemGroup>

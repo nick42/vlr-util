@@ -2,6 +2,7 @@
   "name": "vlr-util",
   "version-string": "0.1",
   "dependencies": [
+    "gsl-lite",
     "boost",
     "fmt",
     "spdlog"

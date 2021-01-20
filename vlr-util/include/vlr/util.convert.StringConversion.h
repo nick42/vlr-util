@@ -90,24 +90,57 @@ inline auto ToStdStringW( const CStringW& swValue )
 
 NAMESPACE_BEGIN( detail )
 
+// Convertible to "matching" width string type; special case for type with operator conversion
+// Note: Necessary to resolve potential ambiguity in conversions
+
+template< typename TString >
+inline auto ToStdStringA_choice( const TString& tString, vlr::util::choice<0>&& )
+-> decltype(std::declval<TString>().operator std::string())
+{
+	return tString.operator std::string();
+}
+template< typename TString  >
+inline auto ToStdStringW_choice( const TString& tString, vlr::util::choice<0>&& )
+-> decltype(std::declval<TString>().operator std::wstring())
+{
+	return tString.operator std::wstring();
+}
+
+// Convertible to "matching" width string type (should include views of matching char width)
+
 template< typename TString, typename std::enable_if_t<std::is_convertible_v<const TString&, std::string>>* = nullptr >
-inline decltype(auto) ToStdStringA_choice( const TString& tString, vlr::util::choice<0>&& )
+inline decltype(auto) ToStdStringA_choice( const TString& tString, vlr::util::choice<1>&& )
 {
 	return static_cast<std::string>(tString);
 }
 template< typename TString, typename std::enable_if_t<std::is_convertible_v<const TString&, std::wstring>>* = nullptr  >
-inline decltype(auto) ToStdStringW_choice( const TString& tString, vlr::util::choice<0>&& )
+inline decltype(auto) ToStdStringW_choice( const TString& tString, vlr::util::choice<1>&& )
 {
 	return static_cast<std::wstring>(tString);
 }
 
+// Convertible to "opposite" width string view
+
+template< typename TString, typename std::enable_if_t<std::is_convertible_v<const TString&, std::wstring_view>>* = nullptr >
+inline decltype(auto) ToStdStringA_choice( const TString& tString, vlr::util::choice<2>&& )
+{
+	return ToStdStringA( static_cast<std::wstring_view>(tString) );
+}
+template< typename TString, typename std::enable_if_t<std::is_convertible_v<const TString&, std::string_view>>* = nullptr  >
+inline decltype(auto) ToStdStringW_choice( const TString& tString, vlr::util::choice<2>&& )
+{
+	return ToStdStringW( static_cast<std::string_view>(tString) );
+}
+
+// Do not know how to convert this type
+
 template< typename TString >
-inline decltype(auto) ToStdStringA_choice( const TString& tString, vlr::util::choice<1>&& )
+inline decltype(auto) ToStdStringA_choice( const TString& tString, vlr::util::choice<3>&& )
 {
 	static_assert(false, "Unhandled conversion type");
 }
 template< typename TString >
-inline decltype(auto) ToStdStringW_choice( const TString& tString, vlr::util::choice<1>&& )
+inline decltype(auto) ToStdStringW_choice( const TString& tString, vlr::util::choice<3>&& )
 {
 	static_assert(false, "Unhandled conversion type");
 }

@@ -128,6 +128,7 @@
 #define ASSERT_COMPARE__OR_RETURN_HRESULT_LAST_ERROR( lhs, op, rhs ) ASSERT_COMPARE__OR_RETURN_EXPRESSION( lhs, op, rhs, HRESULT_FROM_WIN32( ::GetLastError() ) );
 
 #define ASSERT_HR_SUCCEEDED__OR_RETURN_HRESULT( hr ) { auto&& _hr = (hr); ASSERT_NONZERO__OR_RETURN_EXPRESSION( SUCCEEDED(_hr), _hr ) }
+#define ASSERT_HR_SUCCEEDED__OR_RETURN_FAILURE_VALUE( hr ) { auto&& _hr = (hr); ASSERT_NONZERO__OR_RETURN_EXPRESSION( SUCCEEDED(_hr), _tFailureValue ) }
 #define ASSERT_HR_SUCCEEDED__OR_CONTINUE( hr ) { auto&& _hr = (hr); ASSERT_NONZERO__OR_CONTINUE( SUCCEEDED(_hr) ) }
 
 #define ON_HR_S_OK__RETURN_HRESULT( hr ) { auto&& _hr = (hr); if (_hr != S_OK) {} else { return _hr; } }
