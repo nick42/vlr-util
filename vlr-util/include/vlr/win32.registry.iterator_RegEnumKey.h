@@ -11,7 +11,7 @@
 #include "vlr/util.std_aliases.h"
 #include "vlr/UtilMacros.Assertions.h"
 
-#include "vlr/win32.registry.RegValue.h"
+#include "vlr/win32.registry.RegKey.h"
 
 NAMESPACE_BEGIN( vlr )
 
@@ -19,24 +19,27 @@ NAMESPACE_BEGIN( win32 )
 
 NAMESPACE_BEGIN( registry )
 
-struct RegEnumValueResult
-	: public CRegValue
+struct RegEnumKeyResult
+	: public CRegKey
 {
 	DWORD m_dwIndex = 0;
+	std::wstring m_wsName;
+	std::wstring m_wsClass;
+	FILETIME m_oLastWriteTime = {};
 };
 
-class enum_RegValues;
+class enum_RegKeys;
 
-class iterator_RegEnumValue
-	: public boost::iterator_facade<iterator_RegEnumValue, const RegEnumValueResult&, boost::forward_traversal_tag, const RegEnumValueResult&>
+class iterator_RegEnumKey
+	: public boost::iterator_facade<iterator_RegEnumKey, const RegEnumKeyResult&, boost::forward_traversal_tag, const RegEnumKeyResult&>
 {
 	friend boost::iterator_core_access;
-	friend enum_RegValues;
+	friend enum_RegKeys;
 
 protected:
 	HKEY m_hParentKey = {};
 	std::optional<DWORD> m_odwNextIndex;
-	cpp::shared_ptr<RegEnumValueResult> m_spCurrentResult;
+	cpp::shared_ptr<RegEnumKeyResult> m_spCurrentResult;
 	std::optional<DWORD> m_odwLastError;
 
 protected:
@@ -78,7 +81,7 @@ public:
 		}
 		OnAdaptorMethod_increment();
 	}
-	auto equal( const iterator_RegEnumValue& iterOther ) const
+	auto equal( const iterator_RegEnumKey& iterOther ) const
 	{
 		bool bInvalidIter_this = (!HaveValidIndexForIteration());
 		bool bInvalidIter_other = (!iterOther.HaveValidIndexForIteration());
@@ -98,11 +101,11 @@ public:
 	}
 
 public:
-	constexpr iterator_RegEnumValue(
+	constexpr iterator_RegEnumKey(
 		HKEY hParentKey )
 		: m_hParentKey{ hParentKey }
 	{}
-	iterator_RegEnumValue(
+	iterator_RegEnumKey(
 		HKEY hParentKey,
 		DWORD dwIndex )
 		: m_hParentKey{ hParentKey }
@@ -110,17 +113,17 @@ public:
 	{
 		increment();
 	}
-	~iterator_RegEnumValue() = default;
+	~iterator_RegEnumKey() = default;
 };
 
-HRESULT iterator_RegEnumValue::OnAdaptorMethod_increment()
+HRESULT iterator_RegEnumKey::OnAdaptorMethod_increment()
 {
 	ASSERT_NONZERO__OR_RETURN_EUNEXPECTED( m_hParentKey );
 	ASSERT_NONZERO__OR_RETURN_EUNEXPECTED( m_odwNextIndex.has_value() );
 
 	do
 	{
-		auto spCurrentResult = cpp::make_shared<RegEnumValueResult>();
+		auto spCurrentResult = cpp::make_shared<RegEnumKeyResult>();
 		ASSERT_NONZERO__OR_RETURN_EUNEXPECTED( spCurrentResult );
 
 		spCurrentResult->m_dwIndex = m_odwNextIndex.has_value();
@@ -128,22 +131,22 @@ HRESULT iterator_RegEnumValue::OnAdaptorMethod_increment()
 		DWORD dwValueNameLength = 256;
 		spCurrentResult->m_wsName.resize( dwValueNameLength );
 
-		DWORD dwValueLength = 2048;
-		spCurrentResult->m_oData.resize( dwValueLength );
+		DWORD dwClassNameLength = 256;
+		spCurrentResult->m_wsClass.resize( dwClassNameLength );
 
-		auto lStatus = ::RegEnumValueW(
+		auto lStatus = ::RegEnumKeyExW(
 			m_hParentKey,
 			m_odwNextIndex.value(),
 			spCurrentResult->m_wsName.data(),
 			&dwValueNameLength,
 			NULL,
-			&spCurrentResult->m_dwType,
-			spCurrentResult->m_oData.data(),
-			&dwValueLength );
+			spCurrentResult->m_wsClass.data(),
+			&dwClassNameLength,
+			&spCurrentResult->m_oLastWriteTime );
 		if (lStatus == ERROR_SUCCESS)
 		{
 			spCurrentResult->m_wsName.resize( dwValueNameLength );
-			spCurrentResult->m_oData.resize( dwValueLength );
+			spCurrentResult->m_wsClass.resize( dwClassNameLength );
 			m_spCurrentResult = spCurrentResult;
 			m_odwNextIndex = ++m_odwNextIndex.value();
 
@@ -152,7 +155,7 @@ HRESULT iterator_RegEnumValue::OnAdaptorMethod_increment()
 		else if (lStatus == ERROR_NO_MORE_ITEMS)
 		{
 			m_odwNextIndex = {};
-			m_spCurrentResult = {};
+			spCurrentResult = {};
 			m_odwLastError = HRESULT_FROM_WIN32( ERROR_NO_MORE_ITEMS );
 
 			return S_FALSE;
@@ -160,7 +163,7 @@ HRESULT iterator_RegEnumValue::OnAdaptorMethod_increment()
 		else if (lStatus == ERROR_MORE_DATA)
 		{
 			spCurrentResult->m_wsName.resize( dwValueNameLength );
-			spCurrentResult->m_oData.resize( dwValueLength );
+			spCurrentResult->m_wsClass.resize( dwClassNameLength );
 
 			continue;
 		}

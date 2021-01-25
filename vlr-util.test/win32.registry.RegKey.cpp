@@ -3,6 +3,7 @@
 #include "vlr/win32.registry.RegKey.h"
 #include "vlr/win32.registry.iterator_RegEnumValue.h"
 #include "vlr/win32.registry.enum_RegValues.h"
+#include "vlr/win32.registry.enum_RegKeys.h"
 
 TEST( win32_registry_RegKey, general )
 {
@@ -77,6 +78,27 @@ TEST( win32_registry_RegKey, general )
 		for (const auto& oRegValue : vlr::win32::registry::enum_RegValues{ oRegKey_Test.GetHKEY().value() })
 		{
 			TRACE( _T( "Value: %s\n" ), oRegValue.m_wsName.c_str() );
+		}
+	}
+
+	{
+		vlr::win32::registry::CRegKey oRegKey_Test;
+		hr = oRegKey_HKCU.OpenKey( svwzTestKey, oRegKey_Test, oOptions_OpenKey_Read );
+		ASSERT_EQ( hr, S_OK );
+		ASSERT_EQ( oRegKey_Test.IsValid(), true );
+
+		auto iterRegKey = vlr::win32::registry::iterator_RegEnumKey{ oRegKey_Test.GetHKEY().value(), 0 };
+		auto endRegKey = vlr::win32::registry::iterator_RegEnumKey{ oRegKey_Test.GetHKEY().value() };
+
+		for (; iterRegKey != endRegKey; ++iterRegKey)
+		{
+			auto& oRegValue = *iterRegKey;
+			TRACE( _T( "Key name: %s\n" ), oRegValue.m_wsName.c_str() );
+		}
+
+		for (const auto& oRegKey : vlr::win32::registry::enum_RegKeys{ oRegKey_Test.GetHKEY().value() })
+		{
+			TRACE( _T( "Key name: %s\n" ), oRegKey.m_wsName.c_str() );
 		}
 	}
 }

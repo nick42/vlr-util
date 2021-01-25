@@ -230,6 +230,12 @@
     <ClInclude Include="include\vlr\win32.registry.enum_RegValues.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\vlr\win32.registry.iterator_RegEnumKey.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vlr\win32.registry.enum_RegKeys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg.json" />

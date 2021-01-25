@@ -195,6 +195,7 @@
     <ClInclude Include="include\vlr\cpp_namespace.h" />
     <ClInclude Include="include\vlr\enums.FormatEnum.h" />
     <ClInclude Include="include\vlr\enums.RangeInfo.h" />
+    <ClInclude Include="include\vlr\win32.registry.enum_RegKeys.h" />
     <ClInclude Include="include\vlr\win32.registry.enum_RegValues.h" />
     <ClInclude Include="include\vlr\formatpf.h" />
     <ClInclude Include="include\vlr\include.fmt.h" />
@@ -232,6 +233,7 @@
     <ClInclude Include="include\vlr\win32.filesystem.enum_files.h" />
     <ClInclude Include="include\vlr\win32.filesystem.enum_volumes.h" />
     <ClInclude Include="include\vlr\win32.filesystem.Functions.h" />
+    <ClInclude Include="include\vlr\win32.registry.iterator_RegEnumKey.h" />
     <ClInclude Include="include\vlr\win32.registry.iterator_RegEnumValue.h" />
     <ClInclude Include="include\vlr\win32.registry.RegKey.h" />
     <ClInclude Include="include\vlr\win32.registry.RegValue.h" />
