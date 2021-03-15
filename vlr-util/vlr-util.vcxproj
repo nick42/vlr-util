@@ -175,6 +175,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="util.Unicode.cpp" />
     <ClCompile Include="vlr-util.cpp" />
     <ClCompile Include="win32.filesystem.Functions.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="include\vlr\cpp_namespace.h" />
     <ClInclude Include="include\vlr\enums.FormatEnum.h" />
     <ClInclude Include="include\vlr\enums.RangeInfo.h" />
+    <ClInclude Include="include\vlr\ThreadPool.h" />
     <ClInclude Include="include\vlr\win32.registry.enum_RegKeys.h" />
     <ClInclude Include="include\vlr\win32.registry.enum_RegValues.h" />
     <ClInclude Include="include\vlr\formatpf.h" />

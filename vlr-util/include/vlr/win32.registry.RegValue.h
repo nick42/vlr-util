@@ -121,6 +121,27 @@ public:
 
 		return std::move( oValueCollection );
 	}
+
+public:
+	HRESULT SetValue_DWORD( DWORD dwValue )
+	{
+		m_dwType = REG_DWORD;
+		m_oData = {};
+		m_oData.resize( sizeof( DWORD ) );
+		memcpy_s( m_oData.data(), m_oData.size(), &dwValue, sizeof( DWORD ) );
+
+		return S_OK;
+	}
+	HRESULT SetValue_SZ( vlr::wzstring_view svzValue )
+	{
+		m_dwType = REG_SZ;
+		auto nValueLengthBytes = (svzValue.size() + 1) * sizeof( wchar_t );
+		m_oData = {};
+		m_oData.resize( nValueLengthBytes );
+		memcpy_s( m_oData.data(), m_oData.size(), svzValue.data(), nValueLengthBytes );
+
+		return S_OK;
+	}
 };
 
 NAMESPACE_END //( registry )
