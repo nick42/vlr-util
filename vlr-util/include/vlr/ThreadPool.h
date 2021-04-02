@@ -51,6 +51,11 @@ public:
 public:
 	HRESULT WaitForCompletion();
 
+public:
+	~CThreadPool()
+	{
+		WaitForCompletion();
+	}
 };
 
 NAMESPACE_END //( vlr )

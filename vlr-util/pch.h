@@ -11,7 +11,11 @@
 
 // add headers that you want to pre-compile here
 #include "framework.h"
+#ifdef WIN32
+#include <afx.h>
+#endif
 
 #include "vlr/UtilMacros.Namespace.h"
+#include "vlr/UtilMacros.Assertions.h"
 
 #endif //PCH_H

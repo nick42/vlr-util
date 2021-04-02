@@ -30,7 +30,7 @@ template<class _Elem, class _Traits>
 class basic_zstring_view
 	: public std::basic_string_view<_Elem, _Traits>
 {
-public:
+private:
     using base_type = std::basic_string_view<_Elem, _Traits>;
     using traits_type = _Traits;
     using value_type = _Elem;

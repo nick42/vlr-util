@@ -14,8 +14,9 @@
 
 NAMESPACE_BEGIN( cpp )
 
+using vlr::string;
+using vlr::wstring;
 using vlr::tstring;
-using vlr::zstring_view;
 using vlr::zstring_view;
 using vlr::wzstring_view;
 using vlr::tzstring_view;
