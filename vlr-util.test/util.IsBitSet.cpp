@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "vlr/util.IsBitSet.h"
+#include "vlr-util/util.IsBitSet.h"
 
 TEST( util_IsBitSet, general )
 {

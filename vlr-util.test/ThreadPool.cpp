@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "vlr/ThreadPool.h"
+#include "vlr-util/ThreadPool.h"
 
 TEST( ThreadPool, general )
 {

@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "vlr/util.logical_zstring_view.h"
+#include "vlr-util/util.logical_zstring_view.h"
 
 TEST( util_logical_zstring_view, general )
 {

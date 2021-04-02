@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "vlr/logging.LogMessage.h"
+#include "vlr-util/logging.LogMessage.h"
 
 TEST( logging_LogMessage, general )
 {

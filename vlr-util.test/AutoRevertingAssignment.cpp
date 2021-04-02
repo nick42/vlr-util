@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "vlr/AutoRevertingAssignment.h"
+#include "vlr-util/AutoRevertingAssignment.h"
 
 TEST( CAutoRevertingAssignment, general )
 {

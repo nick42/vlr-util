@@ -3,7 +3,7 @@
 
 #include <gtest/gtest.h>
 
-#include "vlr/zstring_view.h"
+#include "vlr-util/zstring_view.h"
 
 static constexpr auto pcszTestStringA = "test";
 static constexpr auto pcszTestStringW = L"test";

@@ -95,7 +95,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -115,7 +115,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -135,7 +135,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -155,7 +155,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -167,99 +167,99 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ModuleContext.Runtime.CommandLine.cpp" />
-    <ClCompile Include="ModuleContext.Runtime.cpp" />
-    <ClCompile Include="ops.NetworkTargetInfo.cpp" />
+    <ClCompile Include="src\vlr-util\ModuleContext.Runtime.CommandLine.cpp" />
+    <ClCompile Include="src\vlr-util\ModuleContext.Runtime.cpp" />
+    <ClCompile Include="src\vlr-util\ops.NetworkTargetInfo.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="ThreadPool.cpp" />
-    <ClCompile Include="util.AutoCleanupBase.cpp" />
-    <ClCompile Include="util.AutoCleanup_SC_HANDLE.cpp" />
-    <ClCompile Include="util.Result.cpp" />
-    <ClCompile Include="util.Unicode.cpp" />
+    <ClCompile Include="src\vlr-util\ThreadPool.cpp" />
+    <ClCompile Include="src\vlr-util\util.AutoCleanupBase.cpp" />
+    <ClCompile Include="src\vlr-util\util.AutoCleanup_SC_HANDLE.cpp" />
+    <ClCompile Include="src\vlr-util\util.Result.cpp" />
+    <ClCompile Include="src\vlr-util\util.Unicode.cpp" />
     <ClCompile Include="vlr-util.cpp" />
-    <ClCompile Include="win32.filesystem.Functions.cpp" />
-    <ClCompile Include="win32.security.SIDs.cpp" />
-    <ClCompile Include="win32.security.tokens.cpp" />
-    <ClCompile Include="win32.ServiceControl.cpp" />
-    <ClCompile Include="win32.structure.ACE.cpp" />
-    <ClCompile Include="win32.structure.ACL.cpp" />
+    <ClCompile Include="src\vlr-util\win32.filesystem.Functions.cpp" />
+    <ClCompile Include="src\vlr-util\win32.security.SIDs.cpp" />
+    <ClCompile Include="src\vlr-util\win32.security.tokens.cpp" />
+    <ClCompile Include="src\vlr-util\win32.ServiceControl.cpp" />
+    <ClCompile Include="src\vlr-util\win32.structure.ACE.cpp" />
+    <ClCompile Include="src\vlr-util\win32.structure.ACL.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
-    <ClInclude Include="include\vlr\ActionOnDestruction.h" />
-    <ClInclude Include="include\vlr\AssertionHandling_Config.h" />
-    <ClInclude Include="include\vlr\as_span.h" />
-    <ClInclude Include="include\vlr\AutoFreeResource.h" />
-    <ClInclude Include="include\vlr\AutoRevertingAssignment.h" />
-    <ClInclude Include="include\vlr\BaseWithVirtualDestructor.h" />
-    <ClInclude Include="include\vlr\config.h" />
-    <ClInclude Include="include\vlr\cpp_namespace.h" />
-    <ClInclude Include="include\vlr\enums.FormatEnum.h" />
-    <ClInclude Include="include\vlr\enums.RangeInfo.h" />
-    <ClInclude Include="include\vlr\ops.NetworkTargetInfo.h" />
-    <ClInclude Include="include\vlr\ThreadPool.h" />
-    <ClInclude Include="include\vlr\util.AutoCleanupBase.h" />
-    <ClInclude Include="include\vlr\util.AutoCleanup_SC_HANDLE.h" />
-    <ClInclude Include="include\vlr\util.logical_zstring_view.h" />
-    <ClInclude Include="include\vlr\util.Result.h" />
-    <ClInclude Include="include\vlr\win32.registry.enum_RegKeys.h" />
-    <ClInclude Include="include\vlr\win32.registry.enum_RegValues.h" />
-    <ClInclude Include="include\vlr\formatpf.h" />
-    <ClInclude Include="include\vlr\include.fmt.h" />
-    <ClInclude Include="include\vlr\include.spdlog.h" />
-    <ClInclude Include="include\vlr\logging.LogMessage.h" />
-    <ClInclude Include="include\vlr\logging.MessageContext.h" />
-    <ClInclude Include="include\vlr\ModuleContext.Runtime.CommandLine.h" />
-    <ClInclude Include="include\vlr\ModuleContext.Runtime.h" />
-    <ClInclude Include="include\vlr\SharedInstance.h" />
-    <ClInclude Include="include\vlr\util.convert.Arithmetic.h" />
-    <ClInclude Include="include\vlr\util.convert.DateTime.h" />
-    <ClInclude Include="include\vlr\util.convert.ToDisplay.h" />
-    <ClInclude Include="include\vlr\util.data_adaptor.MultiSZ.h" />
-    <ClInclude Include="include\vlr\util.api_adaptor.OutString.h" />
-    <ClInclude Include="include\vlr\c_runtime.StringFunctions.h" />
-    <ClInclude Include="include\vlr\util.choice.h" />
-    <ClInclude Include="include\vlr\util.convert.StringConversion.h" />
-    <ClInclude Include="include\vlr\util.CStringBufferAccess.h" />
-    <ClInclude Include="include\vlr\util.IsBitSet.h" />
-    <ClInclude Include="include\vlr\util.IsBitValue.h" />
-    <ClInclude Include="include\vlr\util.IsNonZero.h" />
-    <ClInclude Include="include\vlr\util.IsNotBlank.h" />
-    <ClInclude Include="include\vlr\util.MathOps.h" />
-    <ClInclude Include="include\vlr\ModuleContext.Compilation.h" />
-    <ClInclude Include="include\vlr\util.OnValidAssignTo.h" />
-    <ClInclude Include="include\vlr\util.range_checked_cast.h" />
-    <ClInclude Include="include\vlr\util.std_aliases.h" />
-    <ClInclude Include="include\vlr\util.types.h" />
-    <ClInclude Include="include\vlr\util.Unicode.h" />
-    <ClInclude Include="include\vlr\UtilMacros.Assertions.h" />
-    <ClInclude Include="include\vlr\UtilMacros.General.h" />
-    <ClInclude Include="include\vlr\UtilMacros.Namespace.h" />
-    <ClInclude Include="include\vlr\win32.enum.SID_NAME_USE.h" />
-    <ClInclude Include="include\vlr\win32.enum.WELL_KNOWN_SID_TYPE.h" />
-    <ClInclude Include="include\vlr\win32.filesystem.enum_files.h" />
-    <ClInclude Include="include\vlr\win32.filesystem.enum_volumes.h" />
-    <ClInclude Include="include\vlr\win32.filesystem.Functions.h" />
-    <ClInclude Include="include\vlr\win32.registry.iterator_RegEnumKey.h" />
-    <ClInclude Include="include\vlr\win32.registry.iterator_RegEnumValue.h" />
-    <ClInclude Include="include\vlr\win32.registry.RegKey.h" />
-    <ClInclude Include="include\vlr\win32.registry.RegValue.h" />
-    <ClInclude Include="include\vlr\win32.security.SIDs.h" />
-    <ClInclude Include="include\vlr\win32.security.tokens.h" />
-    <ClInclude Include="include\vlr\win32.ServiceConfig.h" />
-    <ClInclude Include="include\vlr\win32.ServiceControl.h" />
-    <ClInclude Include="include\vlr\win32.structure.ACE.h" />
-    <ClInclude Include="include\vlr\win32.structure.ACL.h" />
-    <ClInclude Include="include\vlr\win32.structure.WIN32_FIND_DATA.h" />
-    <ClInclude Include="include\vlr\win32.targetver.WIN2K.h" />
-    <ClInclude Include="include\vlr\win32.targetver.WIN7.h" />
-    <ClInclude Include="include\vlr\win32.targetver.WINXP.h" />
-    <ClInclude Include="include\vlr\zstring_view.h" />
+    <ClInclude Include="src\vlr-util\ActionOnDestruction.h" />
+    <ClInclude Include="src\vlr-util\AssertionHandling_Config.h" />
+    <ClInclude Include="src\vlr-util\as_span.h" />
+    <ClInclude Include="src\vlr-util\AutoFreeResource.h" />
+    <ClInclude Include="src\vlr-util\AutoRevertingAssignment.h" />
+    <ClInclude Include="src\vlr-util\BaseWithVirtualDestructor.h" />
+    <ClInclude Include="src\vlr-util\config.h" />
+    <ClInclude Include="src\vlr-util\cpp_namespace.h" />
+    <ClInclude Include="src\vlr-util\enums.FormatEnum.h" />
+    <ClInclude Include="src\vlr-util\enums.RangeInfo.h" />
+    <ClInclude Include="src\vlr-util\ops.NetworkTargetInfo.h" />
+    <ClInclude Include="src\vlr-util\ThreadPool.h" />
+    <ClInclude Include="src\vlr-util\util.AutoCleanupBase.h" />
+    <ClInclude Include="src\vlr-util\util.AutoCleanup_SC_HANDLE.h" />
+    <ClInclude Include="src\vlr-util\util.logical_zstring_view.h" />
+    <ClInclude Include="src\vlr-util\util.Result.h" />
+    <ClInclude Include="src\vlr-util\win32.registry.enum_RegKeys.h" />
+    <ClInclude Include="src\vlr-util\win32.registry.enum_RegValues.h" />
+    <ClInclude Include="src\vlr-util\formatpf.h" />
+    <ClInclude Include="src\vlr-util\include.fmt.h" />
+    <ClInclude Include="src\vlr-util\include.spdlog.h" />
+    <ClInclude Include="src\vlr-util\logging.LogMessage.h" />
+    <ClInclude Include="src\vlr-util\logging.MessageContext.h" />
+    <ClInclude Include="src\vlr-util\ModuleContext.Runtime.CommandLine.h" />
+    <ClInclude Include="src\vlr-util\ModuleContext.Runtime.h" />
+    <ClInclude Include="src\vlr-util\SharedInstance.h" />
+    <ClInclude Include="src\vlr-util\util.convert.Arithmetic.h" />
+    <ClInclude Include="src\vlr-util\util.convert.DateTime.h" />
+    <ClInclude Include="src\vlr-util\util.convert.ToDisplay.h" />
+    <ClInclude Include="src\vlr-util\util.data_adaptor.MultiSZ.h" />
+    <ClInclude Include="src\vlr-util\util.api_adaptor.OutString.h" />
+    <ClInclude Include="src\vlr-util\c_runtime.StringFunctions.h" />
+    <ClInclude Include="src\vlr-util\util.choice.h" />
+    <ClInclude Include="src\vlr-util\util.convert.StringConversion.h" />
+    <ClInclude Include="src\vlr-util\util.CStringBufferAccess.h" />
+    <ClInclude Include="src\vlr-util\util.IsBitSet.h" />
+    <ClInclude Include="src\vlr-util\util.IsBitValue.h" />
+    <ClInclude Include="src\vlr-util\util.IsNonZero.h" />
+    <ClInclude Include="src\vlr-util\util.IsNotBlank.h" />
+    <ClInclude Include="src\vlr-util\util.MathOps.h" />
+    <ClInclude Include="src\vlr-util\ModuleContext.Compilation.h" />
+    <ClInclude Include="src\vlr-util\util.OnValidAssignTo.h" />
+    <ClInclude Include="src\vlr-util\util.range_checked_cast.h" />
+    <ClInclude Include="src\vlr-util\util.std_aliases.h" />
+    <ClInclude Include="src\vlr-util\util.types.h" />
+    <ClInclude Include="src\vlr-util\util.Unicode.h" />
+    <ClInclude Include="src\vlr-util\UtilMacros.Assertions.h" />
+    <ClInclude Include="src\vlr-util\UtilMacros.General.h" />
+    <ClInclude Include="src\vlr-util\UtilMacros.Namespace.h" />
+    <ClInclude Include="src\vlr-util\win32.enum.SID_NAME_USE.h" />
+    <ClInclude Include="src\vlr-util\win32.enum.WELL_KNOWN_SID_TYPE.h" />
+    <ClInclude Include="src\vlr-util\win32.filesystem.enum_files.h" />
+    <ClInclude Include="src\vlr-util\win32.filesystem.enum_volumes.h" />
+    <ClInclude Include="src\vlr-util\win32.filesystem.Functions.h" />
+    <ClInclude Include="src\vlr-util\win32.registry.iterator_RegEnumKey.h" />
+    <ClInclude Include="src\vlr-util\win32.registry.iterator_RegEnumValue.h" />
+    <ClInclude Include="src\vlr-util\win32.registry.RegKey.h" />
+    <ClInclude Include="src\vlr-util\win32.registry.RegValue.h" />
+    <ClInclude Include="src\vlr-util\win32.security.SIDs.h" />
+    <ClInclude Include="src\vlr-util\win32.security.tokens.h" />
+    <ClInclude Include="src\vlr-util\win32.ServiceConfig.h" />
+    <ClInclude Include="src\vlr-util\win32.ServiceControl.h" />
+    <ClInclude Include="src\vlr-util\win32.structure.ACE.h" />
+    <ClInclude Include="src\vlr-util\win32.structure.ACL.h" />
+    <ClInclude Include="src\vlr-util\win32.structure.WIN32_FIND_DATA.h" />
+    <ClInclude Include="src\vlr-util\win32.targetver.WIN2K.h" />
+    <ClInclude Include="src\vlr-util\win32.targetver.WIN7.h" />
+    <ClInclude Include="src\vlr-util\win32.targetver.WINXP.h" />
+    <ClInclude Include="src\vlr-util\zstring_view.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>

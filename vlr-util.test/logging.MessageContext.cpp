@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "vlr/logging.MessageContext.h"
+#include "vlr-util/logging.MessageContext.h"
 
 TEST( logging_MessageContext, general )
 {

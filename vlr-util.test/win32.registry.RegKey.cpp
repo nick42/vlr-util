@@ -1,9 +1,9 @@
 #include "pch.h"
 
-#include "vlr/win32.registry.RegKey.h"
-#include "vlr/win32.registry.iterator_RegEnumValue.h"
-#include "vlr/win32.registry.enum_RegValues.h"
-#include "vlr/win32.registry.enum_RegKeys.h"
+#include "vlr-util/win32.registry.RegKey.h"
+#include "vlr-util/win32.registry.iterator_RegEnumValue.h"
+#include "vlr-util/win32.registry.enum_RegValues.h"
+#include "vlr-util/win32.registry.enum_RegKeys.h"
 
 TEST( win32_registry_RegKey, general )
 {

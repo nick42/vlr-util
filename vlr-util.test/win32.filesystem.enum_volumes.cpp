@@ -1,7 +1,7 @@
 #include "pch.h"
 
-#include "vlr/win32.filesystem.enum_volumes.h"
-#include "vlr/util.data_adaptor.MultiSZ.h"
+#include "vlr-util/win32.filesystem.enum_volumes.h"
+#include "vlr-util/util.data_adaptor.MultiSZ.h"
 
 TEST( win32_filesystem_enum_volumes, general )
 {

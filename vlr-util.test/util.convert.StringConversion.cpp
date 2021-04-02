@@ -1,7 +1,7 @@
 #include "pch.h"
 
-#include "vlr/util.convert.StringConversion.h"
-#include "vlr/zstring_view.h"
+#include "vlr-util/util.convert.StringConversion.h"
+#include "vlr-util/zstring_view.h"
 
 TEST( util_convert_StringConversion, general )
 {

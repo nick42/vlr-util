@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "vlr/win32.structure.WIN32_FIND_DATA.h"
+#include "vlr-util/win32.structure.WIN32_FIND_DATA.h"
 
 TEST( win32_structure_WIN32_FIND_DATA, general )
 {

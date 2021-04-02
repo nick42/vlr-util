@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "vlr/util.api_adaptor.OutString.h"
+#include "vlr-util/util.api_adaptor.OutString.h"
 
 TEST( util_api_adaptor_OutString, general )
 {

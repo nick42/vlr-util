@@ -1,8 +1,8 @@
 #include "pch.h"
 
-#include "vlr/formatpf.h"
-#include "vlr/zstring_view.h"
-#include "vlr/util.std_aliases.h"
+#include "vlr-util/formatpf.h"
+#include "vlr-util/zstring_view.h"
+#include "vlr-util/util.std_aliases.h"
 
 TEST( formatpf, general )
 {

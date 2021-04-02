@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "vlr/util.IsBitValue.h"
+#include "vlr-util/util.IsBitValue.h"
 
 TEST( util_IsBitValue, general )
 {

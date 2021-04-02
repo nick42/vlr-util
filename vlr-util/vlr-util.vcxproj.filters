@@ -21,265 +21,267 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.Unicode.cpp">
+    <ClCompile Include="src\vlr-util\ModuleContext.Runtime.CommandLine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="win32.filesystem.Functions.cpp">
+    <ClCompile Include="src\vlr-util\ModuleContext.Runtime.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="win32.security.tokens.cpp">
+    <ClCompile Include="src\vlr-util\ops.NetworkTargetInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="win32.structure.ACL.cpp">
+    <ClCompile Include="src\vlr-util\ThreadPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="win32.structure.ACE.cpp">
+    <ClCompile Include="src\vlr-util\util.AutoCleanup_SC_HANDLE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleContext.Runtime.CommandLine.cpp">
+    <ClCompile Include="src\vlr-util\util.AutoCleanupBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleContext.Runtime.cpp">
+    <ClCompile Include="src\vlr-util\util.Result.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="win32.security.SIDs.cpp">
+    <ClCompile Include="src\vlr-util\util.Unicode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ThreadPool.cpp">
+    <ClCompile Include="src\vlr-util\win32.filesystem.Functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="win32.ServiceControl.cpp">
+    <ClCompile Include="src\vlr-util\win32.security.SIDs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.Result.cpp">
+    <ClCompile Include="src\vlr-util\win32.security.tokens.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ops.NetworkTargetInfo.cpp">
+    <ClCompile Include="src\vlr-util\win32.ServiceControl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.AutoCleanup_SC_HANDLE.cpp">
+    <ClCompile Include="src\vlr-util\win32.structure.ACE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.AutoCleanupBase.cpp">
+    <ClCompile Include="src\vlr-util\win32.structure.ACL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\vlr\enums.FormatEnum.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\enums.RangeInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\formatpf.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\include.fmt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\SharedInstance.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\util.choice.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\util.IsBitSet.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\util.IsBitValue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\util.IsNonZero.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\util.IsNotBlank.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\UtilMacros.Assertions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\UtilMacros.Namespace.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\zstring_view.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\ActionOnDestruction.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\AssertionHandling_Config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\AutoFreeResource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\AutoRevertingAssignment.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\BaseWithVirtualDestructor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\util.convert.StringConversion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\util.Unicode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\UtilMacros.General.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\util.range_checked_cast.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vlr\util.CStringBufferAccess.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.filesystem.enum_volumes.h">
+    <ClInclude Include="src\vlr-util\ActionOnDestruction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\util.api_adaptor.OutString.h">
+    <ClInclude Include="src\vlr-util\as_span.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\util.std_aliases.h">
+    <ClInclude Include="src\vlr-util\AssertionHandling_Config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\util.data_adaptor.MultiSZ.h">
+    <ClInclude Include="src\vlr-util\AutoFreeResource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\c_runtime.StringFunctions.h">
+    <ClInclude Include="src\vlr-util\AutoRevertingAssignment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.filesystem.Functions.h">
+    <ClInclude Include="src\vlr-util\BaseWithVirtualDestructor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.filesystem.enum_files.h">
+    <ClInclude Include="src\vlr-util\c_runtime.StringFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.structure.WIN32_FIND_DATA.h">
+    <ClInclude Include="src\vlr-util\config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\util.MathOps.h">
+    <ClInclude Include="src\vlr-util\cpp_namespace.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\util.convert.ToDisplay.h">
+    <ClInclude Include="src\vlr-util\enums.FormatEnum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.security.tokens.h">
+    <ClInclude Include="src\vlr-util\enums.RangeInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.structure.ACL.h">
+    <ClInclude Include="src\vlr-util\formatpf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.structure.ACE.h">
+    <ClInclude Include="src\vlr-util\include.fmt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\logging.MessageContext.h">
+    <ClInclude Include="src\vlr-util\include.spdlog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\logging.LogMessage.h">
+    <ClInclude Include="src\vlr-util\logging.LogMessage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\include.spdlog.h">
+    <ClInclude Include="src\vlr-util\logging.MessageContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\ModuleContext.Runtime.CommandLine.h">
+    <ClInclude Include="src\vlr-util\ModuleContext.Compilation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\ModuleContext.Compilation.h">
+    <ClInclude Include="src\vlr-util\ModuleContext.Runtime.CommandLine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.targetver.WIN2K.h">
+    <ClInclude Include="src\vlr-util\ModuleContext.Runtime.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.targetver.WINXP.h">
+    <ClInclude Include="src\vlr-util\ops.NetworkTargetInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.targetver.WIN7.h">
+    <ClInclude Include="src\vlr-util\SharedInstance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\ModuleContext.Runtime.h">
+    <ClInclude Include="src\vlr-util\ThreadPool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.security.SIDs.h">
+    <ClInclude Include="src\vlr-util\util.api_adaptor.OutString.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.enum.WELL_KNOWN_SID_TYPE.h">
+    <ClInclude Include="src\vlr-util\util.AutoCleanup_SC_HANDLE.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.enum.SID_NAME_USE.h">
+    <ClInclude Include="src\vlr-util\util.AutoCleanupBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\util.OnValidAssignTo.h">
+    <ClInclude Include="src\vlr-util\util.choice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\cpp_namespace.h">
+    <ClInclude Include="src\vlr-util\util.convert.Arithmetic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\util.convert.Arithmetic.h">
+    <ClInclude Include="src\vlr-util\util.convert.DateTime.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\util.types.h">
+    <ClInclude Include="src\vlr-util\util.convert.StringConversion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\util.convert.DateTime.h">
+    <ClInclude Include="src\vlr-util\util.convert.ToDisplay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\as_span.h">
+    <ClInclude Include="src\vlr-util\util.CStringBufferAccess.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.registry.RegKey.h">
+    <ClInclude Include="src\vlr-util\util.data_adaptor.MultiSZ.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.registry.RegValue.h">
+    <ClInclude Include="src\vlr-util\util.IsBitSet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.registry.iterator_RegEnumValue.h">
+    <ClInclude Include="src\vlr-util\util.IsBitValue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.registry.enum_RegValues.h">
+    <ClInclude Include="src\vlr-util\util.IsNonZero.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.registry.iterator_RegEnumKey.h">
+    <ClInclude Include="src\vlr-util\util.IsNotBlank.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.registry.enum_RegKeys.h">
+    <ClInclude Include="src\vlr-util\util.logical_zstring_view.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\ThreadPool.h">
+    <ClInclude Include="src\vlr-util\util.MathOps.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.ServiceControl.h">
+    <ClInclude Include="src\vlr-util\util.OnValidAssignTo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\ops.NetworkTargetInfo.h">
+    <ClInclude Include="src\vlr-util\util.range_checked_cast.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\util.AutoCleanupBase.h">
+    <ClInclude Include="src\vlr-util\util.Result.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\util.AutoCleanup_SC_HANDLE.h">
+    <ClInclude Include="src\vlr-util\util.std_aliases.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\util.Result.h">
+    <ClInclude Include="src\vlr-util\util.types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\util.logical_zstring_view.h">
+    <ClInclude Include="src\vlr-util\util.Unicode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vlr\win32.ServiceConfig.h">
+    <ClInclude Include="src\vlr-util\UtilMacros.Assertions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\UtilMacros.General.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\UtilMacros.Namespace.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.enum.SID_NAME_USE.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.enum.WELL_KNOWN_SID_TYPE.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.filesystem.enum_files.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.filesystem.enum_volumes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.filesystem.Functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.registry.enum_RegKeys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.registry.enum_RegValues.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.registry.iterator_RegEnumKey.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.registry.iterator_RegEnumValue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.registry.RegKey.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.registry.RegValue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.security.SIDs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.security.tokens.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.ServiceConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.ServiceControl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.structure.ACE.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.structure.ACL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.structure.WIN32_FIND_DATA.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.targetver.WIN2K.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.targetver.WIN7.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\win32.targetver.WINXP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\zstring_view.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="vcpkg.json" />
+    <None Include="vcpkg.json">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

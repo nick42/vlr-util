@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "vlr/AutoFreeResource.h"
+#include "vlr-util/AutoFreeResource.h"
 
 TEST( CAutoFreeResource, explicit_construct )
 {

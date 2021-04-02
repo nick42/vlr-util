@@ -1,7 +1,7 @@
 #include "pch.h"
 #include <tchar.h>
 
-#include "vlr/util.IsNotBlank.h"
+#include "vlr-util/util.IsNotBlank.h"
 
 TEST( util_IsNotBlank, general )
 {
