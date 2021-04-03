@@ -41,7 +41,7 @@ HRESULT CCommandLine::SetFromAPI_Win32()
 	{
 		//m_ppArgArray_ASCII = ::CommandLineToArgvA( pcszCommandLine, &m_nArgCount );
 		// This does not exist on later versions of Windows
-		return S_FALSE;
+		return E_NOTIMPL;
 	}
 	else
 	{
