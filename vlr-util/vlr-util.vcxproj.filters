@@ -63,6 +63,9 @@
     <ClCompile Include="src\vlr-util\win32.structure.ACL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\vlr-util\ModuleContext.Runtime.ConfigOptionsBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -276,6 +279,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\vlr-util\zstring_view.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vlr-util\ModuleContext.Runtime.ConfigOptionsBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

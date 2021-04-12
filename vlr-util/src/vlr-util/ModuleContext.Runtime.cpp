@@ -1,5 +1,5 @@
 #include "pch.h"
-#include <vlr-util/ModuleContext.Runtime.h>
+#include "ModuleContext.Runtime.h"
 
 #include <debugapi.h>
 

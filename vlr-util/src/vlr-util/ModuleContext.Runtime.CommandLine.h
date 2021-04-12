@@ -29,6 +29,7 @@ protected:
 public:
 	HRESULT SetFromMainArgs( int argc, const char** argv );
 	HRESULT SetFromMainArgs( int argc, const wchar_t** argv );
+	HRESULT SetFromOS_Implicit();
 	HRESULT SetFromAPI_Win32();
 
 	bool HavePopulatedInfo() const;

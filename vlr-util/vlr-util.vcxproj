@@ -168,6 +168,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\vlr-util\ModuleContext.Runtime.CommandLine.cpp" />
+    <ClCompile Include="src\vlr-util\ModuleContext.Runtime.ConfigOptionsBase.cpp" />
     <ClCompile Include="src\vlr-util\ModuleContext.Runtime.cpp" />
     <ClCompile Include="src\vlr-util\ops.NetworkTargetInfo.cpp" />
     <ClCompile Include="pch.cpp">
@@ -201,6 +202,7 @@
     <ClInclude Include="src\vlr-util\cpp_namespace.h" />
     <ClInclude Include="src\vlr-util\enums.FormatEnum.h" />
     <ClInclude Include="src\vlr-util\enums.RangeInfo.h" />
+    <ClInclude Include="src\vlr-util\ModuleContext.Runtime.ConfigOptionsBase.h" />
     <ClInclude Include="src\vlr-util\ops.NetworkTargetInfo.h" />
     <ClInclude Include="src\vlr-util\ThreadPool.h" />
     <ClInclude Include="src\vlr-util\util.AutoCleanupBase.h" />

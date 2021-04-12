@@ -1,0 +1,12 @@
+{
+    "name": "vlr-util",
+    "version-string": "0.1",
+    "description": "A library of utility code",
+    "homepage": "https://github.com/nick42/vlr-util",
+    "dependencies": [
+        "boost",
+        "fmt",
+        "spdlog"
+    ],
+    "supports": "windows"
+}
