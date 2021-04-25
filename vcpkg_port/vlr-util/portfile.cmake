@@ -23,7 +23,7 @@ vcpkg_install_msbuild(
 
 file(COPY
     "${SOURCE_PATH}/vlr-util/"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include/"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include/vlr-util/"
     FILES_MATCHING
     PATTERN "*.h"
     PATTERN "*.hpp"
