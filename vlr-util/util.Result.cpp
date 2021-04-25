@@ -7,7 +7,7 @@ NAMESPACE_BEGIN( vlr )
 
 NAMESPACE_BEGIN( util )
 
-cpp::tstring CResult::ToString() const
+vlr::tstring CResult::ToString() const
 {
 	return vlr::formatpf( _T( "0x%08X" ), m_hrResult );
 }

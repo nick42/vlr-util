@@ -5,12 +5,12 @@ NAMESPACE_BEGIN( vlr )
 
 NAMESPACE_BEGIN( ops )
 
-cpp::tzstring_view CNetworkTargetInfo::GetNameForIntent_win32_OpenSCManager() const
+vlr::tzstring_view CNetworkTargetInfo::GetNameForIntent_win32_OpenSCManager() const
 {
 	if (m_bIsLocalSystem)
 	{
 		// NULL is correct for local system
-		return cpp::tzstring_view{};
+		return vlr::tzstring_view{};
 	}
 
 	// TODO: Write method to switch on available info, check valid

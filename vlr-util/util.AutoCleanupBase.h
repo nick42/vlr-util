@@ -1,7 +1,6 @@
 #pragma once
 
-#include <vlr-util/UtilMacros.Namespace.h>
-#include <vlr-util/cpp_namespace.h>
+#include "UtilMacros.Namespace.h"
 
 NAMESPACE_BEGIN( vlr )
 

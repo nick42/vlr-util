@@ -7,7 +7,7 @@
 #ifndef PCH_H
 #define PCH_H
 
-#include "vlr-util/win32.targetver.WIN7.h"
+#include "win32.targetver.WIN7.h"
 
 // add headers that you want to pre-compile here
 #include "framework.h"
@@ -15,7 +15,7 @@
 #include <afx.h>
 #endif
 
-#include "vlr-util/UtilMacros.Namespace.h"
-#include "vlr-util/UtilMacros.Assertions.h"
+#include "UtilMacros.Namespace.h"
+#include "UtilMacros.Assertions.h"
 
 #endif //PCH_H

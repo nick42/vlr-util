@@ -5,7 +5,7 @@
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
-#include <vlr-util/zstring_view.h>
+#include "zstring_view.h"
 
 NAMESPACE_BEGIN( vlr )
 

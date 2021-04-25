@@ -8,9 +8,9 @@
 
 #include <gsl/gsl-lite.hpp>
 
-#include <vlr-util/UtilMacros.Namespace.h>
-#include <vlr-util/util.std_aliases.h>
-#include <vlr-util/zstring_view.h>
+#include "UtilMacros.Namespace.h"
+#include "util.std_aliases.h"
+#include "zstring_view.h"
 
 NAMESPACE_BEGIN( cpp )
 

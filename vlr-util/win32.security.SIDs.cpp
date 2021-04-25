@@ -1,5 +1,5 @@
 #include "pch.h"
-#include <vlr-util/win32.security.SIDs.h>
+#include "win32.security.SIDs.h"
 
 #include <sddl.h>
 

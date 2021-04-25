@@ -17,18 +17,18 @@ vcpkg_install_msbuild(
     PROJECT_SUBPATH "vlr-util/vlr-util.vcxproj"
     PLATFORM ${BUILD_ARCH}
     USE_VCPKG_INTEGRATION
-#    OPTIONS "/p:DebugInformationFormat=OldStyle"
-#    INCLUDES_SUBPATH "vlr-util/src/vlr-util/"
     LICENSE_SUBPATH "LICENSE.txt"
     SKIP_CLEAN
 )
 
 file(COPY
-    "${SOURCE_PATH}/vlr-util/src/vlr-util/"
+    "${SOURCE_PATH}/vlr-util/"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include/"
+    FILES_MATCHING
+    PATTERN "*.h"
+    PATTERN "*.hpp"
     PATTERN "pch.h" EXCLUDE
     PATTERN "targetver.h" EXCLUDE
-    PATTERN "config.h" EXCLUDE
 )
 
 #file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/vlr-util RENAME copyright)

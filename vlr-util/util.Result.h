@@ -1,7 +1,8 @@
 #pragma once
 
-#include <vlr-util/UtilMacros.Namespace.h>
-#include <vlr-util/cpp_namespace.h>
+#include "UtilMacros.Namespace.h"
+
+#include "util.std_aliases.h"
 
 NAMESPACE_BEGIN( vlr )
 
@@ -52,7 +53,7 @@ public:
 	}
 
 public:
-	cpp::tstring ToString() const;
+	vlr::tstring ToString() const;
 
 protected:
 	constexpr CResult() = default;
