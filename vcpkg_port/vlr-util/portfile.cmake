@@ -7,8 +7,8 @@ set(VERSION 0.1)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nick42/vlr-util
-    REF bd59ab8a0f490c64ffb1a61aade5cdfb51391c79
-    SHA512 6f23ae680f1c57aa08e0f2319de479fa0a8018b49a507911845a0126c6004a14931f5a3ab0eeb75519762097b96682c72894c0295167ff94b1eacafbb9ea7511
+#    REF bd59ab8a0f490c64ffb1a61aade5cdfb51391c79
+#    SHA512 0
     HEAD_REF master
 )
 
