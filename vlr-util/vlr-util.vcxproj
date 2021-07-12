@@ -22,6 +22,7 @@
     <ClInclude Include="ActionOnDestruction.h" />
     <ClInclude Include="AssertionHandling_Config.h" />
     <ClInclude Include="as_span.h" />
+    <ClInclude Include="as_string_view.h" />
     <ClInclude Include="AutoFreeResource.h" />
     <ClInclude Include="AutoRevertingAssignment.h" />
     <ClInclude Include="BaseWithVirtualDestructor.h" />
@@ -54,6 +55,7 @@
     <ClInclude Include="util.convert.ToDisplay.h" />
     <ClInclude Include="util.CStringBufferAccess.h" />
     <ClInclude Include="util.data_adaptor.MultiSZ.h" />
+    <ClInclude Include="util.includes.h" />
     <ClInclude Include="util.IsBitSet.h" />
     <ClInclude Include="util.IsBitValue.h" />
     <ClInclude Include="util.IsNonZero.h" />
@@ -63,30 +65,13 @@
     <ClInclude Include="util.OnValidAssignTo.h" />
     <ClInclude Include="util.range_checked_cast.h" />
     <ClInclude Include="util.Result.h" />
+    <ClInclude Include="util.static_no_match.h" />
     <ClInclude Include="util.std_aliases.h" />
     <ClInclude Include="util.types.h" />
     <ClInclude Include="util.Unicode.h" />
     <ClInclude Include="UtilMacros.Assertions.h" />
     <ClInclude Include="UtilMacros.General.h" />
     <ClInclude Include="UtilMacros.Namespace.h" />
-    <ClInclude Include="win32.enum.SID_NAME_USE.h" />
-    <ClInclude Include="win32.enum.WELL_KNOWN_SID_TYPE.h" />
-    <ClInclude Include="win32.filesystem.enum_files.h" />
-    <ClInclude Include="win32.filesystem.enum_volumes.h" />
-    <ClInclude Include="win32.filesystem.Functions.h" />
-    <ClInclude Include="win32.registry.enum_RegKeys.h" />
-    <ClInclude Include="win32.registry.enum_RegValues.h" />
-    <ClInclude Include="win32.registry.iterator_RegEnumKey.h" />
-    <ClInclude Include="win32.registry.iterator_RegEnumValue.h" />
-    <ClInclude Include="win32.registry.RegKey.h" />
-    <ClInclude Include="win32.registry.RegValue.h" />
-    <ClInclude Include="win32.security.SIDs.h" />
-    <ClInclude Include="win32.security.tokens.h" />
-    <ClInclude Include="win32.ServiceConfig.h" />
-    <ClInclude Include="win32.ServiceControl.h" />
-    <ClInclude Include="win32.structure.ACE.h" />
-    <ClInclude Include="win32.structure.ACL.h" />
-    <ClInclude Include="win32.structure.WIN32_FIND_DATA.h" />
     <ClInclude Include="win32.targetver.WIN2K.h" />
     <ClInclude Include="win32.targetver.WIN7.h" />
     <ClInclude Include="win32.targetver.WINXP.h" />
@@ -109,12 +94,6 @@
     <ClCompile Include="util.Result.cpp" />
     <ClCompile Include="util.Unicode.cpp" />
     <ClCompile Include="vlr-util.cpp" />
-    <ClCompile Include="win32.filesystem.Functions.cpp" />
-    <ClCompile Include="win32.security.SIDs.cpp" />
-    <ClCompile Include="win32.security.tokens.cpp" />
-    <ClCompile Include="win32.ServiceControl.cpp" />
-    <ClCompile Include="win32.structure.ACE.cpp" />
-    <ClCompile Include="win32.structure.ACL.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg.json" />
@@ -160,15 +139,19 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Project.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Project.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Project.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Project.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -192,10 +175,8 @@
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -212,10 +193,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -232,10 +211,8 @@
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -252,10 +229,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>

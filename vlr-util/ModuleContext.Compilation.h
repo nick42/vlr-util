@@ -9,11 +9,11 @@
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
-NAMESPACE_BEGIN( ModuleContext )
+VLR_NAMESPACE_BEGIN( ModuleContext )
 
-NAMESPACE_BEGIN( Compilation )
+VLR_NAMESPACE_BEGIN( Compilation )
 
 constexpr auto DefaultCharTypeIs_char()
 {
@@ -48,8 +48,8 @@ constexpr auto IsPlatform_Windows()
 #endif
 }
 
-NAMESPACE_END //( Compilation )
+VLR_NAMESPACE_END //( Compilation )
 
-NAMESPACE_END //( ModuleContext )
+VLR_NAMESPACE_END //( ModuleContext )
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

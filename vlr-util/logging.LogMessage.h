@@ -8,9 +8,9 @@
 #include "logging.MessageContext.h"
 #include "formatpf.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
-NAMESPACE_BEGIN( logging )
+VLR_NAMESPACE_BEGIN( logging )
 
 inline auto GetLevel_spdlog( const CMessageContext& oMessageContext )
 {
@@ -57,6 +57,6 @@ inline auto LogMessagePF( const CMessageContext& oMessageContext, TFormatString 
 	return sMessage;
 }
 
-NAMESPACE_END //( logging )
+VLR_NAMESPACE_END //( logging )
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

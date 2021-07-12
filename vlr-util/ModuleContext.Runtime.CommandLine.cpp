@@ -8,11 +8,11 @@
 #include <shellapi.h>
 #endif
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
-NAMESPACE_BEGIN( ModuleContext )
+VLR_NAMESPACE_BEGIN( ModuleContext )
 
-NAMESPACE_BEGIN( Runtime )
+VLR_NAMESPACE_BEGIN( Runtime )
 
 HRESULT CCommandLine::SetFromMainArgs( int argc, const char** argv )
 {
@@ -75,8 +75,8 @@ bool CCommandLine::HavePopulatedInfo() const
 		;
 }
 
-NAMESPACE_END //( Runtime )
+VLR_NAMESPACE_END //( Runtime )
 
-NAMESPACE_END //( ModuleContext )
+VLR_NAMESPACE_END //( ModuleContext )
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

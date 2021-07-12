@@ -3,7 +3,7 @@
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
 class ISharedInstanceBase
 {
@@ -60,4 +60,4 @@ public:
 	}
 };
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

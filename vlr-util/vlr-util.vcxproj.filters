@@ -165,60 +165,6 @@
     <ClInclude Include="UtilMacros.Namespace.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="win32.enum.SID_NAME_USE.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="win32.enum.WELL_KNOWN_SID_TYPE.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="win32.filesystem.enum_files.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="win32.filesystem.enum_volumes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="win32.filesystem.Functions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="win32.registry.enum_RegKeys.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="win32.registry.enum_RegValues.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="win32.registry.iterator_RegEnumKey.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="win32.registry.iterator_RegEnumValue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="win32.registry.RegKey.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="win32.registry.RegValue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="win32.security.SIDs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="win32.security.tokens.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="win32.ServiceConfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="win32.ServiceControl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="win32.structure.ACE.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="win32.structure.ACL.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="win32.structure.WIN32_FIND_DATA.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="win32.targetver.WIN2K.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -229,6 +175,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="zstring_view.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util.includes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util.static_no_match.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="as_string_view.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -264,24 +219,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vlr-util.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="win32.filesystem.Functions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="win32.security.SIDs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="win32.security.tokens.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="win32.ServiceControl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="win32.structure.ACE.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="win32.structure.ACL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

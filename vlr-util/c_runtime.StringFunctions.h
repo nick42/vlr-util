@@ -3,11 +3,11 @@
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
-NAMESPACE_BEGIN( c_runtime )
+VLR_NAMESPACE_BEGIN( c_runtime )
 
-NAMESPACE_BEGIN( StringFunctions )
+VLR_NAMESPACE_BEGIN( StringFunctions )
 
 template< typename TChar = TCHAR >
 inline auto GetFunction_strlen()
@@ -26,8 +26,8 @@ inline auto GetFunction_strlen()
 	}
 }
 
-NAMESPACE_END //( StringFunctions )
+VLR_NAMESPACE_END //( StringFunctions )
 
-NAMESPACE_END //( c_runtime )
+VLR_NAMESPACE_END //( c_runtime )
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

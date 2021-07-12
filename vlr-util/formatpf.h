@@ -8,9 +8,9 @@
 #include "util.convert.StringConversion.h"
 #include "util.std_aliases.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
-NAMESPACE_BEGIN( detail )
+VLR_NAMESPACE_BEGIN( detail )
 
 // The pass-through case
 
@@ -64,7 +64,7 @@ inline decltype(auto) ConvertTo_choice( const TSource& tSource, vlr::util::choic
 	return TResult{ tSource };
 }
 
-NAMESPACE_END //( detail )
+VLR_NAMESPACE_END //( detail )
 
 template< typename TResult, typename TSource >
 inline auto ConvertTo( const TSource& tSource )
@@ -72,7 +72,7 @@ inline auto ConvertTo( const TSource& tSource )
 	return detail::ConvertTo_choice<TResult>( tSource, vlr::util::choice<0>{} );
 }
 
-NAMESPACE_BEGIN( detail )
+VLR_NAMESPACE_BEGIN( detail )
 
 #if VLR_CONFIG_INCLUDE_AFX
 
@@ -112,7 +112,7 @@ inline auto formatpf_to_TResult( TFormatString svFormatString, Arg&&... args )
 
 #endif // VLR_CONFIG_INCLUDE_AFX
 
-NAMESPACE_END //( detail )
+VLR_NAMESPACE_END //( detail )
 
 template< typename TResult, typename... Arg >
 inline auto formatpf_to( lib_fmt::FormatStringA svFormatString, Arg&&... args )
@@ -140,4 +140,4 @@ inline auto formatpf( lib_fmt::FormatStringW svFormatString, Arg&&... args )
 	return detail::formatpf_to_TResult<vlr::tstring, lib_fmt::FormatStringW>( svFormatString, std::forward<Arg>( args )... );
 }
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

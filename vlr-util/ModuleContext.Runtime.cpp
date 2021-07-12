@@ -3,11 +3,11 @@
 
 #include <debugapi.h>
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
-NAMESPACE_BEGIN( ModuleContext )
+VLR_NAMESPACE_BEGIN( ModuleContext )
 
-NAMESPACE_BEGIN( Runtime )
+VLR_NAMESPACE_BEGIN( Runtime )
 
 bool IsDebuggerAttached()
 {
@@ -16,8 +16,8 @@ bool IsDebuggerAttached()
 	return (!!bAttached);
 }
 
-NAMESPACE_END //( Runtime )
+VLR_NAMESPACE_END //( Runtime )
 
-NAMESPACE_END //( ModuleContext )
+VLR_NAMESPACE_END //( ModuleContext )
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

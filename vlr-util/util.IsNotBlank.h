@@ -6,11 +6,11 @@
 #include "util.choice.h"
 #include "zstring_view.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
-NAMESPACE_BEGIN( util )
+VLR_NAMESPACE_BEGIN( util )
 
-NAMESPACE_BEGIN( detail )
+VLR_NAMESPACE_BEGIN( detail )
 
 // Note: Using our type, to allow more implicit construction from string classes
 
@@ -32,7 +32,7 @@ constexpr bool IsNotBlank_choice( const TValue& tValue, choice<1>&& )
 //	return (tValue != "");
 //}
 
-NAMESPACE_END //( detail )
+VLR_NAMESPACE_END //( detail )
 
 constexpr bool IsNotBlank( vlr::zstring_view svzValue )
 {
@@ -60,6 +60,6 @@ constexpr bool IsNotBlank( const TValue& tValue )
 	return detail::IsNotBlank_choice( tValue, choice<0>{} );
 }
 
-NAMESPACE_END //( util )
+VLR_NAMESPACE_END //( util )
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

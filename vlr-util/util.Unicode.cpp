@@ -6,9 +6,9 @@
 #include "util.range_checked_cast.h"
 #include "util.CStringBufferAccess.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
-NAMESPACE_BEGIN( util )
+VLR_NAMESPACE_BEGIN( util )
 
 HRESULT CStringConversion::MultiByte_to_UTF16(
 	std::string_view svValue,
@@ -180,7 +180,7 @@ HRESULT CStringConversion::MultiByte_to_UTF16(
 			nOutputBufferSizeBytes,
 			oStringConversionOptions_Local,
 			&oStringConversionResults );
-		ON_HR_NON_S_OK__RETURN_HRESULT( hr );
+		VLR_ON_HR_NON_S_OK__RETURN_HRESULT( hr );
 
 		auto nOutputSizeChars = oStringConversionResults.m_nOuputSizeBytes / sizeof( wchar_t );
 		if (oStringConversionResults.m_nOuputSizeBytes > nOutputBufferSizeBytes)
@@ -224,7 +224,7 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 			nOutputBufferSizeBytes,
 			oStringConversionOptions_Local,
 			&oStringConversionResults );
-		ON_HR_NON_S_OK__RETURN_HRESULT( hr );
+		VLR_ON_HR_NON_S_OK__RETURN_HRESULT( hr );
 
 		auto nOutputSizeChars = oStringConversionResults.m_nOuputSizeBytes / sizeof( char );
 		if (oStringConversionResults.m_nOuputSizeBytes > nOutputBufferSizeBytes)
@@ -294,7 +294,7 @@ HRESULT CStringConversion::MultiByte_to_UTF16(
 			nOutputBufferSizeBytes,
 			oStringConversionOptions_Local,
 			&oStringConversionResults );
-		ON_HR_NON_S_OK__RETURN_HRESULT( hr );
+		VLR_ON_HR_NON_S_OK__RETURN_HRESULT( hr );
 
 		auto nOutputSizeChars = oStringConversionResults.m_nOuputSizeBytes / sizeof( wchar_t );
 		if (oStringConversionResults.m_nOuputSizeBytes > nOutputBufferSizeBytes)
@@ -337,7 +337,7 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 			nOutputBufferSizeBytes,
 			oStringConversionOptions_Local,
 			&oStringConversionResults );
-		ON_HR_NON_S_OK__RETURN_HRESULT( hr );
+		VLR_ON_HR_NON_S_OK__RETURN_HRESULT( hr );
 
 		auto nOutputSizeChars = oStringConversionResults.m_nOuputSizeBytes / sizeof( char );
 		if (oStringConversionResults.m_nOuputSizeBytes > nOutputBufferSizeBytes)
@@ -356,6 +356,6 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 	return S_OK;
 }
 
-NAMESPACE_END //( util )
+VLR_NAMESPACE_END //( util )
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

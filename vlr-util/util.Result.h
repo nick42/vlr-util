@@ -4,9 +4,9 @@
 
 #include "util.std_aliases.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
-NAMESPACE_BEGIN( util )
+VLR_NAMESPACE_BEGIN( util )
 
 class CResult
 {
@@ -63,6 +63,6 @@ public:
 	{}
 };
 
-NAMESPACE_END //( util )
+VLR_NAMESPACE_END //( util )
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

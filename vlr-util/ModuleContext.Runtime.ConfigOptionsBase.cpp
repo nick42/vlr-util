@@ -4,11 +4,11 @@
 #include "util.convert.StringConversion.h"
 #include "UtilMacros.Assertions.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
-NAMESPACE_BEGIN( ModuleContext )
+VLR_NAMESPACE_BEGIN( ModuleContext )
 
-NAMESPACE_BEGIN( Runtime )
+VLR_NAMESPACE_BEGIN( Runtime )
 
 HRESULT CConfigOptionsBase::RecordUnrecognizedOptions( const std::vector<std::string>& oOptionsArray )
 {
@@ -66,7 +66,7 @@ HRESULT CConfigOptionsBase::ParseOptions_CommandLine_withBoost(
 	}
 	else
 	{
-		HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION( E_UNEXPECTED );
+		VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION( E_UNEXPECTED );
 	}
 
 	boost::program_options::notify( oParsedVariablesMap );
@@ -78,7 +78,7 @@ HRESULT CConfigOptionsBase::ParseOptions_CommandLine_withBoost(
 	//}
 
 	hr = RecordParsedOptions( oParsedVariablesMap );
-	ASSERT_HR_SUCCEEDED__OR_RETURN_HRESULT( hr );
+	VLR_ASSERT_HR_SUCCEEDED__OR_RETURN_HRESULT( hr );
 
 	return S_OK;
 }
@@ -115,8 +115,8 @@ HRESULT CConfigOptionsBase::RecordParsedOptions(
 {
 	for (const auto& oOptionHandler : m_oRecordParsedOptionActionArray)
 	{
-		ASSERT_NONZERO__OR_RETURN_EUNEXPECTED( oOptionHandler.m_svzOptionName );
-		ASSERT_NONZERO__OR_RETURN_EUNEXPECTED( oOptionHandler.m_fOnOptionValue );
+		VLR_ASSERT_NONZERO__OR_RETURN_EUNEXPECTED( oOptionHandler.m_svzOptionName );
+		VLR_ASSERT_NONZERO__OR_RETURN_EUNEXPECTED( oOptionHandler.m_fOnOptionValue );
 
 		if (oParsedVariablesMap.count( oOptionHandler.m_svzOptionName ) == 0)
 		{
@@ -130,8 +130,8 @@ HRESULT CConfigOptionsBase::RecordParsedOptions(
 	return S_OK;
 }
 
-NAMESPACE_END //( Runtime )
+VLR_NAMESPACE_END //( Runtime )
 
-NAMESPACE_END //( ModuleContext )
+VLR_NAMESPACE_END //( ModuleContext )
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

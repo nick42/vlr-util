@@ -9,9 +9,9 @@
 #include "util.std_aliases.h"
 #include "util.convert.StringConversion.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
-NAMESPACE_BEGIN( ops )
+VLR_NAMESPACE_BEGIN( ops )
 
 class CNetworkTargetInfo
 {
@@ -71,6 +71,6 @@ public:
 
 };
 
-NAMESPACE_END //( ops )
+VLR_NAMESPACE_END //( ops )
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

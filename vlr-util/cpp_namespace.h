@@ -12,7 +12,7 @@
 #include "util.std_aliases.h"
 #include "zstring_view.h"
 
-NAMESPACE_BEGIN( cpp )
+VLR_NAMESPACE_BEGIN( cpp )
 
 using vlr::string;
 using vlr::wstring;
@@ -29,4 +29,4 @@ using std::function;
 
 using gsl::span;
 
-NAMESPACE_END //( cpp )
+VLR_NAMESPACE_END //( cpp )

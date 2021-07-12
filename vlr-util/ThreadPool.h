@@ -11,7 +11,7 @@
 
 // Note: Some conceptual ideas derived from blog: https://dens.website/articles/cpp-threadpool
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
 class CThreadPool
 {
@@ -58,13 +58,13 @@ public:
 	}
 };
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )
 
 #include <future>
 
 #include "UtilMacros.Assertions.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
 template< typename F >
 HRESULT CThreadPool::AddTaskToPool_ResultIgnored( F&& fTask )
@@ -72,7 +72,7 @@ HRESULT CThreadPool::AddTaskToPool_ResultIgnored( F&& fTask )
 	HRESULT hr;
 
 	hr = EnsurePoolInitialized();
-	ASSERT_HR_SUCCEEDED__OR_RETURN_HRESULT( hr );
+	VLR_ASSERT_HR_SUCCEEDED__OR_RETURN_HRESULT( hr );
 
 	boost::asio::post( *m_spThreadPool, std::forward<F>( fTask ) );
 
@@ -85,7 +85,7 @@ HRESULT CThreadPool::AddTaskToPool_ResultAsFuture( F&& fTask, std::future<declty
 	HRESULT hr;
 
 	hr = EnsurePoolInitialized();
-	ASSERT_HR_SUCCEEDED__OR_RETURN_HRESULT( hr );
+	VLR_ASSERT_HR_SUCCEEDED__OR_RETURN_HRESULT( hr );
 
 	std::promise<decltype(fTask())> oTaskExecResult;
 	oFuture = oTaskExecResult.get_future();
@@ -98,4 +98,4 @@ HRESULT CThreadPool::AddTaskToPool_ResultAsFuture( F&& fTask, std::future<declty
 	return S_OK;
 }
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

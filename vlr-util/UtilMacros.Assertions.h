@@ -26,13 +26,13 @@
 
 #define VLR_ASSERTIONS_RETURN_EXPRESSION( expression ) return (expression);
 
-#define HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION( expression ) \
+#define VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION( expression ) \
 { \
 	vlr::assert::HandleCheckFailure( _T("Assertion failed (general)") ); \
 	VLR_ASSERTIONS_RETURN_EXPRESSION( expression ) \
 }
 
-#define ASSERT_NONZERO__OR_RETURN( value ) \
+#define VLR_ASSERT_NONZERO__OR_RETURN( value ) \
 { \
 	auto&& _value = (value); \
 	if (vlr::util::IsNonZero( _value )) \
@@ -44,7 +44,7 @@
 	} \
 }
 
-#define ASSERT_NOTBLANK__OR_RETURN( value ) \
+#define VLR_ASSERT_NOTBLANK__OR_RETURN( value ) \
 { \
 	auto&& _value = (value); \
 	if (vlr::util::IsNotBlank( _value )) \
@@ -56,7 +56,7 @@
 	} \
 }
 
-#define ASSERT_COMPARE__OR_RETURN( lhs, op, rhs ) \
+#define VLR_ASSERT_COMPARE__OR_RETURN( lhs, op, rhs ) \
 { \
 	auto&& _compareResult = VLR_ASSERTIONS_EVALUATE_COMPARISON( lhs, op, rhs ); \
 	if (vlr::util::IsNonZero( _compareResult )) \
@@ -68,7 +68,7 @@
 	} \
 }
 
-#define ASSERT_NONZERO__OR_RETURN_EXPRESSION( value, expression ) \
+#define VLR_ASSERT_NONZERO__OR_RETURN_EXPRESSION( value, expression ) \
 { \
 	auto&& _value = (value); \
 	if (vlr::util::IsNonZero( _value )) \
@@ -80,7 +80,7 @@
 	} \
 }
 
-#define ASSERT_NOTBLANK__OR_RETURN_EXPRESSION( value, expression ) \
+#define VLR_ASSERT_NOTBLANK__OR_RETURN_EXPRESSION( value, expression ) \
 { \
 	auto&& _value = (value); \
 	if (vlr::util::IsNotBlank( _value )) \
@@ -92,7 +92,7 @@
 	} \
 }
 
-#define ASSERT_COMPARE__OR_RETURN_EXPRESSION( lhs, op, rhs, expression ) \
+#define VLR_ASSERT_COMPARE__OR_RETURN_EXPRESSION( lhs, op, rhs, expression ) \
 { \
 	auto&& _compareResult = VLR_ASSERTIONS_EVALUATE_COMPARISON( lhs, op, rhs ); \
 	if (vlr::util::IsNonZero( _compareResult )) \
@@ -104,7 +104,7 @@
 	} \
 }
 
-#define ASSERT_NONZERO__OR_CONTINUE( value ) \
+#define VLR_ASSERT_NONZERO__OR_CONTINUE( value ) \
 { \
 	auto&& _value = (value); \
 	if (vlr::util::IsNonZero( _value )) \
@@ -115,26 +115,26 @@
 	} \
 }
 
-#define HANDLE_ASSERTION_FAILURE__AND_RETURN_FAILURE_VALUE HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION( _tFailureValue )
+#define VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_FAILURE_VALUE VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION( _tFailureValue )
 
-#define ASSERT_NONZERO__OR_RETURN_FAILURE_VALUE( value ) ASSERT_NONZERO__OR_RETURN_EXPRESSION( value, _tFailureValue )
-#define ASSERT_NOTBLANK__OR_RETURN_FAILURE_VALUE( value ) ASSERT_NOTBLANK__OR_RETURN_EXPRESSION( value, _tFailureValue )
-#define ASSERT_COMPARE__OR_RETURN_FAILURE_VALUE( lhs, op, rhs ) ASSERT_COMPARE__OR_RETURN_EXPRESSION( lhs, op, rhs, _tFailureValue )
+#define VLR_ASSERT_NONZERO__OR_RETURN_FAILURE_VALUE( value ) VLR_ASSERT_NONZERO__OR_RETURN_EXPRESSION( value, _tFailureValue )
+#define VLR_ASSERT_NOTBLANK__OR_RETURN_FAILURE_VALUE( value ) VLR_ASSERT_NOTBLANK__OR_RETURN_EXPRESSION( value, _tFailureValue )
+#define VLR_ASSERT_COMPARE__OR_RETURN_FAILURE_VALUE( lhs, op, rhs ) VLR_ASSERT_COMPARE__OR_RETURN_EXPRESSION( lhs, op, rhs, _tFailureValue )
 
-#define ASSERT_NONZERO__OR_RETURN_EUNEXPECTED( value ) ASSERT_NONZERO__OR_RETURN_EXPRESSION( value, E_UNEXPECTED )
-#define ASSERT_NOTBLANK__OR_RETURN_EUNEXPECTED( value ) ASSERT_NOTBLANK__OR_RETURN_EXPRESSION( value, E_UNEXPECTED )
-#define ASSERT_COMPARE__OR_RETURN_EUNEXPECTED( lhs, op, rhs ) ASSERT_COMPARE__OR_RETURN_EXPRESSION( lhs, op, rhs, E_UNEXPECTED )
+#define VLR_ASSERT_NONZERO__OR_RETURN_EUNEXPECTED( value ) VLR_ASSERT_NONZERO__OR_RETURN_EXPRESSION( value, E_UNEXPECTED )
+#define VLR_ASSERT_NOTBLANK__OR_RETURN_EUNEXPECTED( value ) VLR_ASSERT_NOTBLANK__OR_RETURN_EXPRESSION( value, E_UNEXPECTED )
+#define VLR_ASSERT_COMPARE__OR_RETURN_EUNEXPECTED( lhs, op, rhs ) VLR_ASSERT_COMPARE__OR_RETURN_EXPRESSION( lhs, op, rhs, E_UNEXPECTED )
 
-#define ASSERT_NONZERO__OR_RETURN_HRESULT_LAST_ERROR( value ) ASSERT_NONZERO__OR_RETURN_EXPRESSION( value, HRESULT_FROM_WIN32( ::GetLastError() ) )
-#define ASSERT_NOTBLANK__OR_RETURN_HRESULT_LAST_ERROR( value ) ASSERT_NOTBLANK__OR_RETURN_EXPRESSION( value, HRESULT_FROM_WIN32( ::GetLastError() ) )
-#define ASSERT_COMPARE__OR_RETURN_HRESULT_LAST_ERROR( lhs, op, rhs ) ASSERT_COMPARE__OR_RETURN_EXPRESSION( lhs, op, rhs, HRESULT_FROM_WIN32( ::GetLastError() ) )
+#define VLR_ASSERT_NONZERO__OR_RETURN_HRESULT_LAST_ERROR( value ) VLR_ASSERT_NONZERO__OR_RETURN_EXPRESSION( value, HRESULT_FROM_WIN32( ::GetLastError() ) )
+#define VLR_ASSERT_NOTBLANK__OR_RETURN_HRESULT_LAST_ERROR( value ) VLR_ASSERT_NOTBLANK__OR_RETURN_EXPRESSION( value, HRESULT_FROM_WIN32( ::GetLastError() ) )
+#define VLR_ASSERT_COMPARE__OR_RETURN_HRESULT_LAST_ERROR( lhs, op, rhs ) VLR_ASSERT_COMPARE__OR_RETURN_EXPRESSION( lhs, op, rhs, HRESULT_FROM_WIN32( ::GetLastError() ) )
 
-#define ASSERT_HR_SUCCEEDED__OR_RETURN_HRESULT( hr ) { auto&& _hr = (hr); ASSERT_NONZERO__OR_RETURN_EXPRESSION( SUCCEEDED(_hr), _hr ) }
-#define ASSERT_HR_SUCCEEDED__OR_RETURN_FAILURE_VALUE( hr ) { auto&& _hr = (hr); ASSERT_NONZERO__OR_RETURN_EXPRESSION( SUCCEEDED(_hr), _tFailureValue ) }
-#define ASSERT_HR_SUCCEEDED__OR_CONTINUE( hr ) { auto&& _hr = (hr); ASSERT_NONZERO__OR_CONTINUE( SUCCEEDED(_hr) ) }
+#define VLR_ASSERT_HR_SUCCEEDED__OR_RETURN_HRESULT( hr ) { auto&& _hr = (hr); VLR_ASSERT_NONZERO__OR_RETURN_EXPRESSION( SUCCEEDED(_hr), _hr ) }
+#define VLR_ASSERT_HR_SUCCEEDED__OR_RETURN_FAILURE_VALUE( hr ) { auto&& _hr = (hr); VLR_ASSERT_NONZERO__OR_RETURN_EXPRESSION( SUCCEEDED(_hr), _tFailureValue ) }
+#define VLR_ASSERT_HR_SUCCEEDED__OR_CONTINUE( hr ) { auto&& _hr = (hr); VLR_ASSERT_NONZERO__OR_CONTINUE( SUCCEEDED(_hr) ) }
 
-#define ON_HR_S_OK__RETURN_HRESULT( hr ) { auto&& _hr = (hr); if (_hr != S_OK) {} else { return _hr; } }
-#define ON_HR_NON_S_OK__RETURN_HRESULT( hr ) { auto&& _hr = (hr); if (_hr == S_OK) {} else { return _hr; } }
+#define VLR_ON_HR_S_OK__RETURN_HRESULT( hr ) { auto&& _hr = (hr); if (_hr != S_OK) {} else { return _hr; } }
+#define VLR_ON_HR_NON_S_OK__RETURN_HRESULT( hr ) { auto&& _hr = (hr); if (_hr == S_OK) {} else { return _hr; } }
 
-#define ASSERT_ALLOCATED__OR_RETURN_STANDARD_ERROR( value ) ASSERT_NONZERO__OR_RETURN_EXPRESSION( value, E_OUTOFMEMORY )
-#define ASSERT_ALLOCATED__OR_RETURN_FAILURE_VALUE( value ) ASSERT_NONZERO__OR_RETURN_EXPRESSION( value, _tFailureValue )
+#define VLR_ASSERT_ALLOCATED__OR_RETURN_STANDARD_ERROR( value ) VLR_ASSERT_NONZERO__OR_RETURN_EXPRESSION( value, E_OUTOFMEMORY )
+#define VLR_ASSERT_ALLOCATED__OR_RETURN_FAILURE_VALUE( value ) VLR_ASSERT_NONZERO__OR_RETURN_EXPRESSION( value, _tFailureValue )

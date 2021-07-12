@@ -8,7 +8,7 @@
 
 #include "BaseWithVirtualDestructor.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
 template< typename TActionResult >
 class CActionOnDestruction
@@ -111,4 +111,4 @@ inline auto CActionOnDestruction<void>::DoActionAndClear()
 	m_fAction = {};
 }
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

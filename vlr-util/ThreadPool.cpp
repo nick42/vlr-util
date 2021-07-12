@@ -3,7 +3,7 @@
 
 #include "UtilMacros.Assertions.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
 HRESULT CThreadPool::EnsurePoolInitialized()
 {
@@ -22,7 +22,7 @@ HRESULT CThreadPool::EnsurePoolInitialized()
 	{
 		m_spThreadPool = cpp::make_shared<boost::asio::thread_pool>();
 	}
-	ASSERT_ALLOCATED__OR_RETURN_STANDARD_ERROR( m_spThreadPool );
+	VLR_ASSERT_ALLOCATED__OR_RETURN_STANDARD_ERROR( m_spThreadPool );
 
 	return S_OK;
 }
@@ -39,4 +39,4 @@ HRESULT CThreadPool::WaitForCompletion()
 	return S_OK;
 }
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

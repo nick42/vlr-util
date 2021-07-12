@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "util.AutoCleanup_SC_HANDLE.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
-NAMESPACE_BEGIN( util )
+VLR_NAMESPACE_BEGIN( util )
 
 HRESULT CAutoCleanup_SC_HANDLE::DoCleanup()
 {
@@ -24,6 +24,6 @@ HRESULT CAutoCleanup_SC_HANDLE::DoCleanup()
 	return S_OK;
 }
 
-NAMESPACE_END //( util )
+VLR_NAMESPACE_END //( util )
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

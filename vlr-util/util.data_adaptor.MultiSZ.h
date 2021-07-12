@@ -11,11 +11,11 @@
 
 #include "zstring_view.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
-NAMESPACE_BEGIN( util )
+VLR_NAMESPACE_BEGIN( util )
 
-NAMESPACE_BEGIN( data_adaptor )
+VLR_NAMESPACE_BEGIN( data_adaptor )
 
 template< typename TChar = TCHAR >
 struct HelperFor_MultiSZ
@@ -78,8 +78,8 @@ HRESULT HelperFor_MultiSZ<TChar>::ToStructuredData(
 	return S_OK;
 }
 
-NAMESPACE_END //( data_adaptor )
+VLR_NAMESPACE_END //( data_adaptor )
 
-NAMESPACE_END //( util )
+VLR_NAMESPACE_END //( util )
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

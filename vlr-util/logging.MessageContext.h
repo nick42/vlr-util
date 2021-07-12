@@ -5,9 +5,9 @@
 
 #include "zstring_view.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
-NAMESPACE_BEGIN( logging )
+VLR_NAMESPACE_BEGIN( logging )
 
 class CCodeContext
 {
@@ -30,7 +30,7 @@ public:
 
 #define VLR_CODE_CONTEXT vlr::logging::CCodeContext{ _T(__FILE__), __LINE__, _T(__FUNCTION__) }
 
-NAMESPACE_BEGIN( LogicalLevel )
+VLR_NAMESPACE_BEGIN( LogicalLevel )
 
 enum ELogicalLevel
 {
@@ -44,7 +44,7 @@ enum ELogicalLevel
 	Critical,
 };
 
-NAMESPACE_END //( LogicalLevel )
+VLR_NAMESPACE_END //( LogicalLevel )
 
 class CMessageContext
 {
@@ -70,6 +70,6 @@ public:
 #define VLR_LOG_CONTEXT_DEFAULT vlr::logging::CMessageContext{ VLR_CODE_CONTEXT, vlr::logging::LogicalLevel::Info }
 #define VLR_LOG_CONTEXT_WARNING vlr::logging::CMessageContext{ VLR_CODE_CONTEXT, vlr::logging::LogicalLevel::Warning }
 
-NAMESPACE_END //( logging )
+VLR_NAMESPACE_END //( logging )
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

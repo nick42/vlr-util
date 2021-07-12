@@ -8,15 +8,15 @@
 #include <ATLComTime.h>
 #endif
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
-NAMESPACE_BEGIN( types )
+VLR_NAMESPACE_BEGIN( types )
 
 #ifdef WIN32
 using DateTime = ATL::COleDateTime;
 using DateTimeSpan = ATL::COleDateTimeSpan;
 #endif
 
-NAMESPACE_END //( types )
+VLR_NAMESPACE_END //( types )
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

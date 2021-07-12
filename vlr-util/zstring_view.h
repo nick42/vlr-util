@@ -9,7 +9,7 @@
 #include <atlstr.h>
 #endif
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
 #if VLR_CONFIG_INCLUDE_AFX
 template<class _Elem>
@@ -69,8 +69,11 @@ public:
         : base_type{ _Cts, _Count }
     {}
 
-    constexpr basic_zstring_view( const std::basic_string<_Elem>& strValue ) noexcept
-        : base_type{ static_cast<const_pointer>(strValue.c_str()), strValue.length() }
+    // Note: Basically, we'll allow any string with the same element size to be converted to a zstring_view.
+    // This allows wstring and u16string to both convert to wzstring_view, for example, IFF wchar_t is 16 bits.
+    template< typename TBasicStringElem, typename std::enable_if_t<(sizeof( TBasicStringElem ) == sizeof( _Elem ))>* = nullptr >
+    constexpr basic_zstring_view( const std::basic_string<TBasicStringElem>& strValue ) noexcept
+        : base_type{ reinterpret_cast<const_pointer>(strValue.c_str()), strValue.length() }
     {}
 
 #if VLR_CONFIG_INCLUDE_AFX
@@ -144,4 +147,4 @@ using tzstring_view = basic_zstring_view<TCHAR>;
 
 using tstring_view = std::basic_string_view<TCHAR>;
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

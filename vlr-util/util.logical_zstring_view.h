@@ -5,9 +5,9 @@
 
 #include "zstring_view.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
-NAMESPACE_BEGIN( util )
+VLR_NAMESPACE_BEGIN( util )
 
 template<class _Elem,
 	class _Traits = std::char_traits<_Elem>>
@@ -71,6 +71,6 @@ using logical_azstring_view = logical_zstring_view<char>;
 using logical_wzstring_view = logical_zstring_view<wchar_t>;
 using logical_tzstring_view = logical_zstring_view<TCHAR>;
 
-NAMESPACE_END //( util )
+VLR_NAMESPACE_END //( util )
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

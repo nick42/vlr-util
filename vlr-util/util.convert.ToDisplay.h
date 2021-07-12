@@ -9,11 +9,11 @@
 
 #include "formatpf.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
-NAMESPACE_BEGIN( util )
+VLR_NAMESPACE_BEGIN( util )
 
-NAMESPACE_BEGIN( Convert )
+VLR_NAMESPACE_BEGIN( Convert )
 
 auto ToDisplay_ApproxDataSize( LONGLONG nSize )
 {
@@ -67,8 +67,8 @@ auto ToDisplay_ApproxDataSize( LONGLONG nSize )
 	return vlr::formatpf( _T( "%.02f %s" ), dValue, _T( "GB( big )" ) );
 }
 
-NAMESPACE_END //( Convert )
+VLR_NAMESPACE_END //( Convert )
 
-NAMESPACE_END //( util )
+VLR_NAMESPACE_END //( util )
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

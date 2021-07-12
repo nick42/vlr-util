@@ -7,7 +7,7 @@
 
 #include "BaseWithVirtualDestructor.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
 template< typename TAssignedVariable >
 class CAutoRevertingAssignment
@@ -59,4 +59,4 @@ inline auto MakeAutoRevertingAssignment( TAssignedVariable& tAssignedVariable, c
 	return CAutoRevertingAssignment<TAssignedVariable>{ tAssignedVariable, tAssignment };
 }
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

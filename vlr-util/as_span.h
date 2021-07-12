@@ -4,7 +4,7 @@
 #include "config.h"
 #include "cpp_namespace.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
 // Note: span should always be const by default, so make that the default
 
@@ -24,4 +24,4 @@ public:
 	{}
 };
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

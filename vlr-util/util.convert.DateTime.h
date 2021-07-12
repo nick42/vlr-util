@@ -8,11 +8,11 @@
 #include "util.types.h"
 #include "util.convert.StringConversion.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
-NAMESPACE_BEGIN( util )
+VLR_NAMESPACE_BEGIN( util )
 
-NAMESPACE_BEGIN( Convert )
+VLR_NAMESPACE_BEGIN( Convert )
 
 enum class DateTimeFormat
 {
@@ -30,11 +30,11 @@ struct FormatOptions_DateTime
 	{}
 };
 
-NAMESPACE_BEGIN( detail )
+VLR_NAMESPACE_BEGIN( detail )
 
 #ifdef WIN32
 
-NAMESPACE_BEGIN( Windows )
+VLR_NAMESPACE_BEGIN( Windows )
 
 inline auto ToDateTime_FILETIME( const FILETIME& oValue )
 -> vlr::types::DateTime
@@ -43,7 +43,7 @@ inline auto ToDateTime_FILETIME( const FILETIME& oValue )
 
 	auto oSystemTime = SYSTEMTIME{};
 	auto bSuccess = ::FileTimeToSystemTime( &oValue, &oSystemTime );
-	ASSERT_NONZERO__OR_RETURN_FAILURE_VALUE( bSuccess );
+	VLR_ASSERT_NONZERO__OR_RETURN_FAILURE_VALUE( bSuccess );
 
 	return vlr::types::DateTime{ oSystemTime };
 }
@@ -75,11 +75,11 @@ inline auto ToStdStringW( const vlr::types::DateTime& dtValue, const FormatOptio
 	return vlr::util::Convert::ToStdStringW( sValue );
 }
 
-NAMESPACE_END //( Windows )
+VLR_NAMESPACE_END //( Windows )
 
 #endif
 
-NAMESPACE_END //( detail )
+VLR_NAMESPACE_END //( detail )
 
 inline auto ToDateTime_FILETIME( const FILETIME& oValue )
 -> vlr::types::DateTime
@@ -130,8 +130,8 @@ inline decltype(auto) ToStdStringW( const vlr::types::DateTime& dtValue )
 	return ToStdStringW( dtValue, FormatOptions_DateTime{} );
 }
 
-NAMESPACE_END //( Convert )
+VLR_NAMESPACE_END //( Convert )
 
-NAMESPACE_END //( util )
+VLR_NAMESPACE_END //( util )
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

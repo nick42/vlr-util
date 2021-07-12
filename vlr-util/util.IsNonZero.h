@@ -5,11 +5,11 @@
 
 #include "util.choice.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
-NAMESPACE_BEGIN( util )
+VLR_NAMESPACE_BEGIN( util )
 
-NAMESPACE_BEGIN( detail )
+VLR_NAMESPACE_BEGIN( detail )
 
 template< typename TValue >
 constexpr auto IsNonZero_choice( const TValue& tValue, choice<0>&& )
@@ -32,7 +32,7 @@ constexpr auto IsNonZero_choice( const TValue& tValue, choice<2>&& )
 	return (tValue != nullptr);
 }
 
-NAMESPACE_END //( detail )
+VLR_NAMESPACE_END //( detail )
 
 template< typename TValue >
 constexpr bool IsNonZero( const TValue& tValue )
@@ -40,6 +40,6 @@ constexpr bool IsNonZero( const TValue& tValue )
 	return detail::IsNonZero_choice( tValue, choice<0>{} );
 }
 
-NAMESPACE_END //( util )
+VLR_NAMESPACE_END //( util )
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )

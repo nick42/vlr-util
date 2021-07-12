@@ -8,7 +8,7 @@
 
 #include "ActionOnDestruction.h"
 
-NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN( vlr )
 
 template< typename TResource, typename TFreeResult >
 class CAutoFreeResource
@@ -53,4 +53,4 @@ inline auto MakeAutoCleanup_viaCloseHandle( HANDLE hHandle )
 	return MakeActionOnDestruction( fAction );
 }
 
-NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //( vlr )
