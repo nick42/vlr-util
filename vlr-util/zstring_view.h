@@ -9,6 +9,10 @@
 #include <atlstr.h>
 #endif
 
+#ifndef __ATTR_SAL
+#include <sal.h>
+#endif
+
 VLR_NAMESPACE_BEGIN( vlr )
 
 #if VLR_CONFIG_INCLUDE_AFX
@@ -32,18 +36,18 @@ class basic_zstring_view
 {
 private:
     using base_type = std::basic_string_view<_Elem, _Traits>;
-    using traits_type = _Traits;
-    using value_type = _Elem;
-    using pointer = _Elem*;
-    using const_pointer = const _Elem*;
-    using reference = _Elem&;
-    using const_reference = const _Elem&;
-    using const_iterator = _STD _String_view_iterator<_Traits>;
-    using iterator = const_iterator;
-    using const_reverse_iterator = _STD reverse_iterator<const_iterator>;
-    using reverse_iterator = const_reverse_iterator;
-    using size_type = size_t;
-    using difference_type = ptrdiff_t;
+    using base_type::traits_type;
+    using base_type::value_type;
+    using base_type::pointer;
+    using base_type::const_pointer;
+    using base_type::reference;
+    using base_type::const_reference;
+    using base_type::const_iterator;
+    using base_type::iterator;
+    using base_type::const_reverse_iterator;
+    using base_type::reverse_iterator;
+    using base_type::size_type;
+    using base_type::difference_type;
 
 #if VLR_CONFIG_INCLUDE_AFX
     using TCStringT = ATL::CStringT<_Elem, TStrTraitMFC<_Elem>>;

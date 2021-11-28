@@ -7,4 +7,6 @@ If it gets big enough, I'll think about organization more.
 
 ## Licensing
 
-This software may be used in any manner compatible with the [licence](LICENSE.txt). In addition, any direct employer of the owner of this software may use it under the [MIT License](https://opensource.org/licenses/MIT), at their discretion.
+This software may be used in any manner compatible with the [licence](LICENSE.txt). In addition, any direct employer of the owner of this software may use it under the [MIT License](https://opensource.org/licenses/MIT), at their discretion. Currently, the list of organizations which are permitted to use this software under the MIT license are:
+- BeyondTrust
+- Amazon.com

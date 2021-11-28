@@ -11,3 +11,15 @@
 #if VLR_CONFIG_INCLUDE_AFX
 #include <afx.h>
 #endif
+
+#ifndef _WIN32
+#ifdef UNICODE
+#define TCHAR wchar_t
+#else
+#define TCHAR char
+#endif
+#endif
+
+#ifndef _STD
+#define _STD std::
+#endif
