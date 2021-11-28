@@ -10,7 +10,7 @@
 #endif
 
 #ifndef __ATTR_SAL
-#include <sal.h>
+#include "sal.h"
 #endif
 
 VLR_NAMESPACE_BEGIN( vlr )
@@ -36,18 +36,19 @@ class basic_zstring_view
 {
 private:
     using base_type = std::basic_string_view<_Elem, _Traits>;
-    using base_type::traits_type;
-    using base_type::value_type;
-    using base_type::pointer;
-    using base_type::const_pointer;
-    using base_type::reference;
-    using base_type::const_reference;
-    using base_type::const_iterator;
-    using base_type::iterator;
-    using base_type::const_reverse_iterator;
-    using base_type::reverse_iterator;
-    using base_type::size_type;
-    using base_type::difference_type;
+public:
+    using typename base_type::traits_type;
+    using typename base_type::value_type;
+    using typename base_type::pointer;
+    using typename base_type::const_pointer;
+    using typename base_type::reference;
+    using typename base_type::const_reference;
+    using typename base_type::const_iterator;
+    using typename base_type::iterator;
+    using typename base_type::const_reverse_iterator;
+    using typename base_type::reverse_iterator;
+    using typename base_type::size_type;
+    using typename base_type::difference_type;
 
 #if VLR_CONFIG_INCLUDE_AFX
     using TCStringT = ATL::CStringT<_Elem, TStrTraitMFC<_Elem>>;
@@ -88,7 +89,7 @@ public:
 
 public:
     // Note: It is safe to return the trailing end of a null-terminated string as null-terminated
-    _NODISCARD constexpr base_type trailing_end( const size_type _Off = 0 )
+    [[nodiscard]] constexpr base_type trailing_end( const size_type _Off = 0 )
     {
         _Check_offset( _Off );
         auto _Count = _Clamp_suffix_size( _Off, base_type::npos );
@@ -97,14 +98,14 @@ public:
 
     // It is "safe" to return the direct pointer implicitly as a null-terminated string
     // (ie: this is the anticipated main usage for this class)
-    _NODISCARD constexpr operator const_pointer() const
+    [[nodiscard]] constexpr operator const_pointer() const
     {
         return base_type::data();
     }
 
 #if VLR_CONFIG_INCLUDE_AFX
     // Allow explicit casting to CString only
-    _NODISCARD explicit inline operator TCStringT() const
+    [[nodiscard]] explicit inline operator TCStringT() const
     {
         if (base_type::data() == nullptr)
         {
@@ -141,7 +142,11 @@ protected:
     }
 
     [[noreturn]] static void _Xran() {
+#ifdef _WIN32
         _STD _Xout_of_range( "invalid string_view position" );
+#else
+        _STD __throw_out_of_range( "invalid string_view position" );
+#endif
     }
 };
 
