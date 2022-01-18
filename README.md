@@ -7,6 +7,7 @@ If it gets big enough, I'll think about organization more.
 
 ## Licensing
 
-This software may be used in any manner compatible with the [licence](LICENSE.txt). In addition, any direct employer of the owner of this software may use it under the [MIT License](https://opensource.org/licenses/MIT), at their discretion. Currently, the list of organizations which are permitted to use this software under the MIT license are:
+This software may be used by anyone in any manner compatible with the Artistic License 2.0: [general licence](https://opensource.org/licenses/Artistic-2.0). In addition, any direct employer of the owner of this repository/software may use it under the [MIT License](https://opensource.org/licenses/MIT) or the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0), at their discretion. Currently, the list of organizations which are permitted to use this software under the MIT/Apache license are:
 - BeyondTrust
 - Amazon.com
+Note: The license file is the Apache 2.0 license, to assist with otherwise limited automated file scanners, which cannot parse this file.

@@ -15,17 +15,43 @@ VLR_NAMESPACE_BEGIN( ModuleContext )
 
 VLR_NAMESPACE_BEGIN( Compilation )
 
-constexpr auto DefaultCharTypeIs_char()
+constexpr auto IsBuildPlatform_Win32()
 {
-	return (sizeof( TCHAR ) == sizeof( char ));
+#ifdef WIN32
+	return true;
+#else
+	return false;
+#endif
 }
 
-constexpr auto DefaultCharTypeIs_wchar_t()
+constexpr auto IsBuildPlatform_Linux()
 {
-	return (sizeof( TCHAR ) == sizeof( wchar_t ));
+#ifdef __linux__
+	return true;
+#else
+	return false;
+#endif
 }
 
-constexpr auto IsBuildType_Debug()
+constexpr auto IsBuildPlatform_Apple()
+{
+#ifdef __APPLE__
+	return true;
+#else
+	return false;
+#endif
+}
+
+constexpr auto IsSymbolDefined_DEBUG()
+{
+#ifdef DEBUG
+	return true;
+#else
+	return false;
+#endif
+}
+
+constexpr auto IsSymbolDefined__DEBUG()
 {
 #ifdef _DEBUG
 	return true;
@@ -34,18 +60,32 @@ constexpr auto IsBuildType_Debug()
 #endif
 }
 
+constexpr auto DefaultCharTypeIs_char()
+{
+	return (sizeof(TCHAR) == sizeof(char));
+}
+
+constexpr auto DefaultCharTypeIs_wchar_t()
+{
+	return (sizeof(TCHAR) == sizeof(wchar_t));
+}
+
+constexpr auto IsBuildType_Debug()
+{
+	if constexpr (IsBuildPlatform_Win32())
+	{
+		return IsSymbolDefined__DEBUG();
+	}
+	else
+	{
+		// No standard for other platforms? Picking a reasonable guess...
+		return IsSymbolDefined_DEBUG();
+	}
+}
+
 constexpr auto IsBuildType_Release()
 {
 	return !IsBuildType_Debug();
-}
-
-constexpr auto IsPlatform_Windows()
-{
-#ifdef WIN32
-	return true;
-#else
-	return false;
-#endif
 }
 
 VLR_NAMESPACE_END //( Compilation )
