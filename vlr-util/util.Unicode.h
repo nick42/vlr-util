@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <string_view>
 
 #include "UtilMacros.Namespace.h"
@@ -151,6 +152,7 @@ public:
 		return strOutput;
 	}
 
+#if VLR_CONFIG_INCLUDE_AFX
 	HRESULT MultiByte_to_UTF16(
 		std::string_view svValue,
 		CStringW& sOutput,
@@ -161,6 +163,7 @@ public:
 		CStringA& sOutput,
 		const StringConversionOptions& oStringConversionOptions = {},
 		StringConversionResults* pStringConversionResults = nullptr );
+#endif // VLR_CONFIG_INCLUDE_AFX
 
 	auto Inline_MultiByte_to_UTF16_CString(
 		std::string_view svValue,

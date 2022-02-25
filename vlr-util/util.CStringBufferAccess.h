@@ -1,6 +1,8 @@
 #pragma once
 
+#if VLR_CONFIG_INCLUDE_AFX
 #include <afxstr.h>
+#endif
 
 #include "UtilMacros.Namespace.h"
 #include "config.h"

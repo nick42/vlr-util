@@ -24,23 +24,33 @@ vlr_cc_library(
     ${ABSL_DEFAULT_COPTS}
 )
 
-file(GLOB_RECURSE
-  FILES_INCLUDE
-  "*.h;*.hpp"
-)
-
-file(GLOB_RECURSE
-  FILES_SOURCE
-  "*.cpp"
-)
-
 vlr_cc_library(
   NAME
-    vlr-util
+    ActionOnDestruction
   HDRS
-    ${FILES_INCLUDE}
-  SRCS
-    ${FILES_SOURCE}
+    "ActionOnDestruction.h"
+  DEPS
   COPTS
     ${ABSL_DEFAULT_COPTS}
 )
+
+# file(GLOB_RECURSE
+#   FILES_INCLUDE
+#   "*.h;*.hpp"
+# )
+
+# file(GLOB_RECURSE
+#   FILES_SOURCE
+#   "*.cpp"
+# )
+
+# vlr_cc_library(
+#   NAME
+#     vlr-util
+#   HDRS
+#     ${FILES_INCLUDE}
+#   SRCS
+#     ${FILES_SOURCE}
+#   COPTS
+#     ${ABSL_DEFAULT_COPTS}
+# )

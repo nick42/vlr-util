@@ -60,6 +60,15 @@ constexpr auto IsSymbolDefined__DEBUG()
 #endif
 }
 
+constexpr auto IsSymbolDefined_NDEBUG()
+{
+#ifdef NDEBUG
+	return true;
+#else
+	return false;
+#endif
+}
+
 constexpr auto DefaultCharTypeIs_char()
 {
 	return (sizeof(TCHAR) == sizeof(char));
@@ -74,12 +83,12 @@ constexpr auto IsBuildType_Debug()
 {
 	if constexpr (IsBuildPlatform_Win32())
 	{
-		return IsSymbolDefined__DEBUG();
+		return (IsSymbolDefined__DEBUG() || !IsSymbolDefined_NDEBUG());
 	}
 	else
 	{
-		// No standard for other platforms? Picking a reasonable guess...
-		return IsSymbolDefined_DEBUG();
+		// No standard for other platforms? C-runtime uses NDEBUG to gate assert()...
+		return !IsSymbolDefined_NDEBUG();
 	}
 }
 

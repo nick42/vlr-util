@@ -23,13 +23,33 @@ public:
 	FAction m_fAction;
 
 protected:
-	void DoAction_VoidResult() const;
-	template< typename TMethodResult = std::enable_if_t<ActionHasValidResult, std::optional<TActionResult>> >
-	TMethodResult DoAction_WithResult() const;
+	decltype(auto) DoActionWithPossibleResult(const FAction& fAction)
+	{
+		if (!fAction)
+		{
+			if constexpr (ActionHasValidResult)
+			{
+				return {};
+			}
+			else
+			{
+				return;
+			}
+		}
+		return fAction();
+	}
 
 public:
-	auto DoAction();
-	auto DoActionAndClear();
+	decltype(auto) DoAction()
+	{
+		return DoActionWithPossibleResult(m_fAction);
+	}
+	decltype(auto) DoActionAndClear()
+	{
+		auto fAction = m_fAction;
+		m_fAction = {};
+		return DoActionWithPossibleResult( fAction );
+	}
 
 public:
 	CActionOnDestruction() = default;
@@ -49,66 +69,6 @@ template< typename TFunctor >
 inline auto MakeActionOnDestruction( const TFunctor& fAction )
 {
 	return CActionOnDestruction<decltype(std::declval<TFunctor>()())>{ fAction };
-}
-
-template< typename TActionResult >
-inline void CActionOnDestruction<TActionResult>::DoAction_VoidResult() const
-{
-	if (!m_fAction)
-	{
-		return;
-	}
-
-	m_fAction();
-}
-
-template< typename TActionResult >
-template< typename TMethodResult >
-inline TMethodResult CActionOnDestruction<TActionResult>::DoAction_WithResult() const
-{
-	if (!m_fAction)
-	{
-		return {};
-	}
-
-	return m_fAction();
-}
-
-template< typename TActionResult >
-inline auto CActionOnDestruction<TActionResult>::DoAction()
-{
-	if (!m_fAction)
-	{
-		return std::optional<TActionResult>{};
-	}
-
-	return DoAction_WithResult();
-}
-
-template<>
-inline auto CActionOnDestruction<void>::DoAction()
-{
-	if (!m_fAction)
-	{
-		return;
-	}
-
-	return DoAction_VoidResult();
-}
-
-template< typename TActionResult >
-inline auto CActionOnDestruction<TActionResult>::DoActionAndClear()
-{
-	auto&& tActionResult = DoAction();
-	m_fAction = {};
-	return tActionResult;
-}
-
-template<>
-inline auto CActionOnDestruction<void>::DoActionAndClear()
-{
-	DoAction();
-	m_fAction = {};
 }
 
 VLR_NAMESPACE_END //( vlr )
