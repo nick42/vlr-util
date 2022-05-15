@@ -186,6 +186,21 @@
     <ClInclude Include="as_string_view.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RegexCache.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="typeshim.win32.ASSERT.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="typeshim.win32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util.types.win32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="util.types.linux.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleContext.Runtime.CommandLine.cpp">
@@ -219,6 +234,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vlr-util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RegexCache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

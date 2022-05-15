@@ -22,7 +22,7 @@ inline auto GetFunction_strlen()
 	}
 	else
 	{
-		static_assert(false, "Unhandled TChar type");
+		static_assert(dependent_false, "Unhandled TChar type");
 	}
 }
 

@@ -7,12 +7,13 @@
 
 #include "logging.MessageContext.h"
 #include "formatpf.h"
+#include "util.convert.StringConversion.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN(vlr)
 
-VLR_NAMESPACE_BEGIN( logging )
+VLR_NAMESPACE_BEGIN(logging)
 
-inline auto GetLevel_spdlog( const CMessageContext& oMessageContext )
+inline auto GetLevel_spdlog(const CMessageContext& oMessageContext)
 {
 	switch (oMessageContext.m_eLogicalLevel)
 	{
@@ -34,29 +35,29 @@ inline auto GetLevel_spdlog( const CMessageContext& oMessageContext )
 }
 
 template< typename TString >
-inline auto LogMessage( const CMessageContext& oMessageContext, const TString& tMessage )
+inline auto LogMessage(const CMessageContext& oMessageContext, const TString& tMessage)
 {
 	// TODO? Pre-checking based on message context, if message will be logged, early abort (before formatting)
 
-	auto eLevel_spdlog = GetLevel_spdlog( oMessageContext );
-	spdlog::log( eLevel_spdlog, tMessage );
+	auto eLevel_spdlog = GetLevel_spdlog(oMessageContext);
+	spdlog::log(eLevel_spdlog, tMessage);
 
 	return tMessage;
 }
 
 template< typename TFormatString, typename... Arg >
-inline auto LogMessagePF( const CMessageContext& oMessageContext, TFormatString svFormatString, Arg&&... args )
+inline auto LogMessagePF(const CMessageContext& oMessageContext, TFormatString svFormatString, Arg&&... args)
 {
 	// TODO? Pre-checking based on message context, if message will be logged, early abort (before formatting)
 
-	auto sMessage = formatpf( svFormatString, std::forward<Arg>( args )... );
+	auto sMessage = formatpf(svFormatString, std::forward<Arg>(args)...);
 
-	auto eLevel_spdlog = GetLevel_spdlog( oMessageContext );
-	spdlog::log( eLevel_spdlog, sMessage );
+	auto eLevel_spdlog = GetLevel_spdlog(oMessageContext);
+	spdlog::log(eLevel_spdlog, sMessage);
 
 	return sMessage;
 }
 
-VLR_NAMESPACE_END //( logging )
+VLR_NAMESPACE_END //(logging)
 
-VLR_NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //(vlr)

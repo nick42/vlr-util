@@ -43,8 +43,11 @@
     <ClInclude Include="ModuleContext.Runtime.h" />
     <ClInclude Include="ops.NetworkTargetInfo.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="RegexCache.h" />
     <ClInclude Include="SharedInstance.h" />
     <ClInclude Include="ThreadPool.h" />
+    <ClInclude Include="typeshim.win32.ASSERT.h" />
+    <ClInclude Include="typeshim.win32.h" />
     <ClInclude Include="util.api_adaptor.OutString.h" />
     <ClInclude Include="util.AutoCleanupBase.h" />
     <ClInclude Include="util.AutoCleanup_SC_HANDLE.h" />
@@ -68,6 +71,8 @@
     <ClInclude Include="util.static_no_match.h" />
     <ClInclude Include="util.std_aliases.h" />
     <ClInclude Include="util.types.h" />
+    <ClInclude Include="util.types.linux.h" />
+    <ClInclude Include="util.types.win32.h" />
     <ClInclude Include="util.Unicode.h" />
     <ClInclude Include="UtilMacros.Assertions.h" />
     <ClInclude Include="UtilMacros.General.h" />
@@ -88,6 +93,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="RegexCache.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="util.AutoCleanupBase.cpp" />
     <ClCompile Include="util.AutoCleanup_SC_HANDLE.cpp" />
@@ -110,26 +116,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>

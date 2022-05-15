@@ -8,7 +8,7 @@
 
 #include "BaseWithVirtualDestructor.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN(vlr)
 
 template< typename TActionResult >
 class CActionOnDestruction
@@ -48,17 +48,17 @@ public:
 	{
 		auto fAction = m_fAction;
 		m_fAction = {};
-		return DoActionWithPossibleResult( fAction );
+		return DoActionWithPossibleResult(fAction);
 	}
 
 public:
 	CActionOnDestruction() = default;
-	CActionOnDestruction( const FAction& fAction )
+	CActionOnDestruction(const FAction& fAction)
 		: m_fAction{ fAction }
 	{}
 	// Note: We allow move, but not copy, since we do not currently do reference counting
-	CActionOnDestruction( CActionOnDestruction&& ) = default;
-	CActionOnDestruction( const CActionOnDestruction& ) = delete;
+	CActionOnDestruction(CActionOnDestruction&&) = default;
+	CActionOnDestruction(const CActionOnDestruction&) = delete;
 	virtual ~CActionOnDestruction()
 	{
 		DoActionAndClear();
@@ -66,9 +66,9 @@ public:
 };
 
 template< typename TFunctor >
-inline auto MakeActionOnDestruction( const TFunctor& fAction )
+inline auto MakeActionOnDestruction(const TFunctor& fAction)
 {
 	return CActionOnDestruction<decltype(std::declval<TFunctor>()())>{ fAction };
 }
 
-VLR_NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //(vlr)

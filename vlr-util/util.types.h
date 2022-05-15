@@ -5,18 +5,20 @@
 #include "ModuleContext.Compilation.h"
 
 #ifdef WIN32
-#include <ATLComTime.h>
+#include "util.types.win32.h"
+#endif
+#ifdef POSIX
+#include "util.types.linux.h"
 #endif
 
 VLR_NAMESPACE_BEGIN( vlr )
 
-VLR_NAMESPACE_BEGIN( types )
+// Note: This good workaround suggested by MS, for conformance updates related to static_assert
+// See: https://docs.microsoft.com/en-us/cpp/overview/cpp-conformance-improvements?view=msvc-170
 
-#ifdef WIN32
-using DateTime = ATL::COleDateTime;
-using DateTimeSpan = ATL::COleDateTimeSpan;
-#endif
+template< typename Type = void >
+constexpr bool dependent_false = false;
 
-VLR_NAMESPACE_END //( types )
+using ResultCode = HRESULT;
 
 VLR_NAMESPACE_END //( vlr )

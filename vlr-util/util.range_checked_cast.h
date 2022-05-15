@@ -72,7 +72,7 @@ inline auto range_checked_cast_choice( TSource nValue, choice<1>&& )
 			else
 			{
 				// This should always fit; should not call here
-				static_assert(false);
+				static_assert(dependent_false);
 			}
 		}
 		else // std::is_signed_v<TSource>
@@ -118,7 +118,7 @@ inline auto range_checked_cast_choice( TSource nValue, choice<1>&& )
 			else
 			{
 				// This should always fit; should not call here
-				static_assert(false);
+				static_assert(dependent_false);
 			}
 		}
 		else // std::is_signed_v<TSource>
@@ -126,7 +126,7 @@ inline auto range_checked_cast_choice( TSource nValue, choice<1>&& )
 			if constexpr (sizeof( TDest ) >= sizeof( TSource ))
 			{
 				// This should always fit; should not call here
-				static_assert(false);
+				static_assert(dependent_false);
 			}
 			else
 			{
@@ -151,7 +151,7 @@ inline auto range_checked_cast_choice( TSource nValue, choice<1>&& )
 VLR_NAMESPACE_END //( detail )
 
 template< typename TDest, typename TSource >
-inline auto range_checked_cast( TSource nValue )
+constexpr auto range_checked_cast( TSource nValue )
 {
 	return detail::range_checked_cast_choice<TDest>( nValue, choice<0>{} );
 }

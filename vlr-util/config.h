@@ -19,3 +19,4 @@
 #endif
 
 #include "typeshim.win32.h"
+#include "util.types.h"

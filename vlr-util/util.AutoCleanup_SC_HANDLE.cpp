@@ -18,7 +18,7 @@ HRESULT CAutoCleanup_SC_HANDLE::DoCleanup()
 		logging::LogMessagePF( VLR_LOG_CONTEXT_WARNING,
 			_T( "OS call '%s' failed; error: %s" ),
 			_T( "CloseServiceHandle" ),
-			util::CResult::For_win32_LastError().ToString() );
+			SResult::For_win32_LastError().ToString() );
 	}
 
 	return S_OK;

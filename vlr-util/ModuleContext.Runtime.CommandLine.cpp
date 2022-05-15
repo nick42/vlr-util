@@ -32,7 +32,7 @@ HRESULT CCommandLine::SetFromMainArgs( int argc, const wchar_t** argv )
 
 HRESULT CCommandLine::SetFromOS_Implicit()
 {
-	if constexpr (vlr::ModuleContext::Compilation::IsPlatform_Windows())
+	if constexpr (vlr::ModuleContext::Compilation::IsBuildPlatform_Win32())
 	{
 		return SetFromAPI_Win32();
 	}

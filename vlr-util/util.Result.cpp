@@ -7,9 +7,9 @@ VLR_NAMESPACE_BEGIN( vlr )
 
 VLR_NAMESPACE_BEGIN( util )
 
-vlr::tstring CResult::ToString() const
+vlr::tstring SResult::ToString() const
 {
-	return vlr::formatpf( _T( "0x%08X" ), m_hrResult );
+	return vlr::formatpf(_T("0x%08X"), m_nResultCode);
 }
 
 VLR_NAMESPACE_END //( util )
