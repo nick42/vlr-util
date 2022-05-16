@@ -46,9 +46,12 @@ public:
 	}
 	decltype(auto) DoActionAndClear()
 	{
-		auto fAction = m_fAction;
-		m_fAction = {};
-		return DoActionWithPossibleResult(fAction);
+		// Note: Using a "manual" version of this class, to avoid copying m_fAction
+		// (we cannot "capture" the result to return, because it might be void)
+		auto fClearAction = [this](void*) { m_fAction = {}; };
+		// Note: Pointer must not be nullptr, so destructor is called
+		auto oOnDelete_ClearAction = std::unique_ptr<void, decltype(fClearAction)>{ (void*)0x42, fClearAction };
+		return DoActionWithPossibleResult(m_fAction);
 	}
 
 public:

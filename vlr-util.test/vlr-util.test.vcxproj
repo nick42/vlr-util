@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ActionOnDestruction.cpp" />
     <ClCompile Include="Assertions.cpp" />
     <ClCompile Include="as_span.cpp" />
     <ClCompile Include="AutoFreeResource.cpp" />
