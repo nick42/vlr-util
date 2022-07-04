@@ -24,15 +24,49 @@ static const auto svwzEmpty = vlr::wzstring_view{};
 static const auto svwzBlank = vlr::wzstring_view{ L"" };
 static const auto svwzNotBlank = vlr::wzstring_view{ L"value" };
 
+#define AVALUE_LOWER "value"
+#define AVALUE_UPPER "VALUE"
+#define AVALUE_MIXED "VaLuE"
+#define WVALUE_LOWER L"value"
+#define WVALUE_UPPER L"VALUE"
+#define WVALUE_MIXED L"VaLuE"
+
+static const auto pcaszLower = AVALUE_LOWER;
+static const auto saLower = std::string{ AVALUE_LOWER };
+static const auto svazLower = vlr::zstring_view{ AVALUE_LOWER };
+static const auto pcaszUpper = AVALUE_UPPER;
+static const auto saUpper = std::string{ AVALUE_UPPER };
+static const auto svazUpper = vlr::zstring_view{ AVALUE_UPPER };
+static const auto pcaszMixed = AVALUE_MIXED;
+static const auto saMixed = std::string{ AVALUE_MIXED };
+static const auto svazMixed = vlr::zstring_view{ AVALUE_MIXED };
+
+static const auto pcwszLower = WVALUE_LOWER;
+static const auto swLower = std::wstring{ WVALUE_LOWER };
+static const auto svwzLower = vlr::wzstring_view{ WVALUE_LOWER };
+static const auto pcwszUpper = WVALUE_UPPER;
+static const auto swUpper = std::wstring{ WVALUE_UPPER };
+static const auto svwzUpper = vlr::wzstring_view{ WVALUE_UPPER };
+static const auto pcwszMixed = WVALUE_MIXED;
+static const auto swMixed = std::wstring{ WVALUE_MIXED };
+static const auto svwzMixed = vlr::wzstring_view{ WVALUE_MIXED };
+
+#undef AVALUE_LOWER
+#undef AVALUE_UPPER
+#undef AVALUE_MIXED
+#undef WVALUE_LOWER
+#undef WVALUE_UPPER
+#undef WVALUE_MIXED
+
 const auto oStringCompareCS = vlr::StringCompare::CS();
 const auto oStringCompareCI = vlr::StringCompare::CI();
 
-TEST(StringCompare, asStringViewCompatType)
+TEST(StringCompare, asAStringViewCompatType)
 {
-	static_assert(vlr::StringCompare::detail::isCompatTypeForString<const char*>());
-	static_assert(vlr::StringCompare::detail::isCompatTypeForString<std::string_view>());
-	static_assert(vlr::StringCompare::detail::isCompatTypeForString<std::string>());
-	static_assert(vlr::StringCompare::detail::isCompatTypeForString<vlr::zstring_view>());
+	static_assert(vlr::StringCompare::detail::isCompatTypeForAString<const char*>());
+	static_assert(vlr::StringCompare::detail::isCompatTypeForAString<std::string_view>());
+	static_assert(vlr::StringCompare::detail::isCompatTypeForAString<std::string>());
+	static_assert(vlr::StringCompare::detail::isCompatTypeForAString<vlr::zstring_view>());
 
 	static_assert(vlr::StringCompare::detail::isCompatTypeForWString<const wchar_t*>());
 	static_assert(vlr::StringCompare::detail::isCompatTypeForWString<std::wstring_view>());
@@ -41,7 +75,7 @@ TEST(StringCompare, asStringViewCompatType)
 
 	auto fTestForStringViewCompat = [](const auto& tValue, bool bIsBlank)
 	{
-		const auto& tValueCompat = vlr::StringCompare::asStringViewCompatType(tValue);
+		const auto& tValueCompat = vlr::StringCompare::asAStringViewCompatType(tValue);
 		auto svValue = std::string_view{ tValueCompat };
 		EXPECT_EQ(svValue.empty(), bIsBlank);
 	};
@@ -187,40 +221,6 @@ TEST(StringCompare, AreEqual)
 	fTestAreEqual_BasicValueCombinations(oStringCompareCS);
 	fTestAreEqual_BasicValueCombinations(oStringCompareCI);
 
-#define AVALUE_LOWER "value"
-#define AVALUE_UPPER "VALUE"
-#define AVALUE_MIXED "VaLuE"
-#define WVALUE_LOWER L"value"
-#define WVALUE_UPPER L"VALUE"
-#define WVALUE_MIXED L"VaLuE"
-
-	static const auto pcaszLower = AVALUE_LOWER;
-	static const auto saLower = std::string{ AVALUE_LOWER };
-	static const auto svazLower = vlr::zstring_view{ AVALUE_LOWER };
-	static const auto pcaszUpper = AVALUE_UPPER;
-	static const auto saUpper = std::string{ AVALUE_UPPER };
-	static const auto svazUpper = vlr::zstring_view{ AVALUE_UPPER };
-	static const auto pcaszMixed = AVALUE_MIXED;
-	static const auto saMixed = std::string{ AVALUE_MIXED };
-	static const auto svazMixed = vlr::zstring_view{ AVALUE_MIXED };
-
-	static const auto pcwszLower = WVALUE_LOWER;
-	static const auto swLower = std::wstring{ WVALUE_LOWER };
-	static const auto svwzLower = vlr::wzstring_view{ WVALUE_LOWER };
-	static const auto pcwszUpper= WVALUE_UPPER;
-	static const auto swUpper= std::wstring{ WVALUE_UPPER };
-	static const auto svwzUpper= vlr::wzstring_view{ WVALUE_UPPER };
-	static const auto pcwszMixed = WVALUE_MIXED;
-	static const auto swMixed = std::wstring{ WVALUE_MIXED };
-	static const auto svwzMixed = vlr::wzstring_view{ WVALUE_MIXED };
-
-#undef AVALUE_LOWER
-#undef AVALUE_UPPER
-#undef AVALUE_MIXED
-#undef WVALUE_LOWER
-#undef WVALUE_UPPER
-#undef WVALUE_MIXED
-
 	// Everything should be equal for case insensitive compare
 
 	auto fTestAreEqual_a_CaseInsensitive = [&](const auto& tValue)
@@ -336,4 +336,168 @@ TEST(StringCompare, AreEqual)
 	fExpectCompareResult_CaseSensitive(svazLower, swMixed, false);
 	fExpectCompareResult_CaseSensitive(svazLower, svwzMixed, false);
 
+}
+
+TEST(StringCompare, StringHasPrefix)
+{
+	auto fTestStringHasPrefix_AnythingHasBlankPrefix = [&](const vlr::StringCompare::CComparator& oStringCompare, const auto& tString)
+	{
+		EXPECT_EQ(oStringCompare.StringHasPrefix(tString, svazEmpty), true);
+		EXPECT_EQ(oStringCompare.StringHasPrefix(tString, svwzEmpty), true);
+	};
+	auto fTestStringHasPrefix_LongerPrefixFalse = [&](const vlr::StringCompare::CComparator& oStringCompare, const auto& tString)
+	{
+		EXPECT_EQ(oStringCompare.StringHasPrefix(tString, "values"), false);
+		EXPECT_EQ(oStringCompare.StringHasPrefix(tString, "values"), false);
+	};
+	auto fTestStringHasPrefix_BasicValueCombinations = [&](const vlr::StringCompare::CComparator& oStringCompare)
+	{
+		fTestStringHasPrefix_AnythingHasBlankPrefix(oStringCompare, svazEmpty);
+		fTestStringHasPrefix_AnythingHasBlankPrefix(oStringCompare, svazBlank);
+		fTestStringHasPrefix_AnythingHasBlankPrefix(oStringCompare, svazNotBlank);
+		fTestStringHasPrefix_AnythingHasBlankPrefix(oStringCompare, svwzEmpty);
+		fTestStringHasPrefix_AnythingHasBlankPrefix(oStringCompare, svwzBlank);
+		fTestStringHasPrefix_AnythingHasBlankPrefix(oStringCompare, svwzNotBlank);
+
+		fTestStringHasPrefix_LongerPrefixFalse(oStringCompare, svazNotBlank);
+		fTestStringHasPrefix_LongerPrefixFalse(oStringCompare, svwzNotBlank);
+	};
+
+	// CI
+
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svazLower, "va"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svazLower, "VA"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svazLower, "Va"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svazLower, "vs"), false);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svazUpper, "va"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svazUpper, "VA"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svazUpper, "Va"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svazUpper, "vs"), false);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svazMixed, "va"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svazMixed, "VA"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svazMixed, "Va"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svazMixed, "vs"), false);
+
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svwzLower, "va"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svazLower, "VA"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svazLower, "Va"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svwzLower, "vs"), false);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svwzUpper, "va"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svwzUpper, "VA"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svwzUpper, "Va"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svwzUpper, "vs"), false);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svwzMixed, "va"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svwzMixed, "VA"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svwzMixed, "Va"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPrefix(svwzMixed, "vs"), false);
+
+	// CS
+
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svazLower, "va"), true);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svazLower, "VA"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svazLower, "Va"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svazLower, "vs"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svazUpper, "va"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svazUpper, "VA"), true);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svazUpper, "Va"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svazUpper, "vs"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svazMixed, "va"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svazMixed, "VA"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svazMixed, "Va"), true);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svazMixed, "vs"), false);
+
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svwzLower, "va"), true);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svwzLower, "VA"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svwzLower, "Va"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svwzLower, "vs"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svwzUpper, "va"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svwzUpper, "VA"), true);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svwzUpper, "Va"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svwzUpper, "vs"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svwzMixed, "va"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svwzMixed, "VA"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svwzMixed, "Va"), true);
+	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svwzMixed, "vs"), false);
+}
+
+TEST(StringCompare, StringHasPpostfix)
+{
+	auto fTestStringHasPostfix_AnythingHasBlankPostfix = [&](const vlr::StringCompare::CComparator& oStringCompare, const auto& tString)
+	{
+		EXPECT_EQ(oStringCompare.StringHasPostfix(tString, svazEmpty), true);
+		EXPECT_EQ(oStringCompare.StringHasPostfix(tString, svwzEmpty), true);
+	};
+	auto fTestStringHasPostfix_LongerPostfixFalse = [&](const vlr::StringCompare::CComparator& oStringCompare, const auto& tString)
+	{
+		EXPECT_EQ(oStringCompare.StringHasPostfix(tString, "values"), false);
+		EXPECT_EQ(oStringCompare.StringHasPostfix(tString, "values"), false);
+	};
+	auto fTestStringHasPostfix_BasicValueCombinations = [&](const vlr::StringCompare::CComparator& oStringCompare)
+	{
+		fTestStringHasPostfix_AnythingHasBlankPostfix(oStringCompare, svazEmpty);
+		fTestStringHasPostfix_AnythingHasBlankPostfix(oStringCompare, svazBlank);
+		fTestStringHasPostfix_AnythingHasBlankPostfix(oStringCompare, svazNotBlank);
+		fTestStringHasPostfix_AnythingHasBlankPostfix(oStringCompare, svwzEmpty);
+		fTestStringHasPostfix_AnythingHasBlankPostfix(oStringCompare, svwzBlank);
+		fTestStringHasPostfix_AnythingHasBlankPostfix(oStringCompare, svwzNotBlank);
+
+		fTestStringHasPostfix_LongerPostfixFalse(oStringCompare, svazNotBlank);
+		fTestStringHasPostfix_LongerPostfixFalse(oStringCompare, svwzNotBlank);
+	};
+
+	// CI
+
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svazLower, "ue"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svazLower, "UE"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svazLower, "uE"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svazLower, "us"), false);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svazUpper, "ue"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svazUpper, "UE"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svazUpper, "uE"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svazUpper, "us"), false);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svazMixed, "ue"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svazMixed, "UE"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svazMixed, "uE"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svazMixed, "us"), false);
+
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svwzLower, "ue"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svazLower, "UE"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svazLower, "uE"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svwzLower, "vs"), false);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svwzUpper, "ue"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svwzUpper, "UE"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svwzUpper, "uE"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svwzUpper, "vs"), false);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svwzMixed, "ue"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svwzMixed, "UE"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svwzMixed, "uE"), true);
+	EXPECT_EQ(oStringCompareCI.StringHasPostfix(svwzMixed, "vs"), false);
+
+	// CS
+
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svazLower, "ue"), true);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svazLower, "UE"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svazLower, "uE"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svazLower, "vs"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svazUpper, "ue"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svazUpper, "UE"), true);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svazUpper, "uE"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svazUpper, "vs"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svazMixed, "ue"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svazMixed, "UE"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svazMixed, "uE"), true);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svazMixed, "vs"), false);
+
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svwzLower, "ue"), true);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svwzLower, "UE"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svwzLower, "uE"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svwzLower, "vs"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svwzUpper, "ue"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svwzUpper, "UE"), true);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svwzUpper, "uE"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svwzUpper, "vs"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svwzMixed, "ue"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svwzMixed, "UE"), false);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svwzMixed, "uE"), true);
+	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svwzMixed, "vs"), false);
 }
