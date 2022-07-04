@@ -53,6 +53,10 @@ public:
 		auto oOnDelete_ClearAction = std::unique_ptr<void, decltype(fClearAction)>{ (void*)0x42, fClearAction };
 		return DoActionWithPossibleResult(m_fAction);
 	}
+	void ClearAction()
+	{
+		m_fAction = {};
+	}
 
 public:
 	CActionOnDestruction() = default;

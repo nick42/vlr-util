@@ -45,6 +45,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="RegexCache.h" />
     <ClInclude Include="SharedInstance.h" />
+    <ClInclude Include="StringCompare.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="typeshim.win32.ASSERT.h" />
     <ClInclude Include="typeshim.win32.h" />
@@ -177,6 +178,7 @@
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+  <PropertyGroup Label="Vcpkg" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>

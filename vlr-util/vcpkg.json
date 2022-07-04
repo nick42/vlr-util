@@ -5,6 +5,7 @@
     "gsl-lite",
     "boost",
     "fmt",
-    "spdlog"
+    "spdlog",
+    "utfcpp"
   ]
 }
