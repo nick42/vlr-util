@@ -18,5 +18,8 @@
 #define _STD std::
 #endif
 
+#undef min
+#undef max
+
 #include "typeshim.win32.h"
 #include "util.types.h"

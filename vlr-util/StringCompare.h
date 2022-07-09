@@ -1,7 +1,8 @@
 #pragma once
 
+#include <cctype>
 #include <cwchar>
-#include <string.h>
+#include <string>
 #include <string_view>
 
 #include "UtilMacros.Namespace.h"
@@ -125,8 +126,8 @@ constexpr decltype(auto) asWStringViewCompatType(const TValue& tValue)
 // Note: The "fallback" case is the value itself...
 template<typename TValue>
 using string_view_compat_t = 
-	std::conditional_t<detail::isCompatTypeForWString<TValue>(), std::wstring_view,
 	std::conditional_t<detail::isCompatTypeForAString<TValue>(), std::string_view,
+	std::conditional_t<detail::isCompatTypeForWString<TValue>(), std::wstring_view,
 	TValue>>;
 
 template<typename TValue>
@@ -187,13 +188,82 @@ VLR_NAMESPACE_BEGIN(detail)
 // inequality of string length. Compare semantics is return inequality in shared prefix.
 // See: https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/strnicmp-wcsnicmp-mbsnicmp-strnicmp-l-wcsnicmp-l-mbsnicmp-l?view=msvc-170
 
+template<typename TStringView>
+decltype(auto) StringViewCompareCI_ToShorterLength_Compat(TStringView svlhs, TStringView svrhs)
+{
+	auto nSmallerLength = std::min(svlhs.size(), svrhs.size());
+	for (decltype(nSmallerLength) i = 0; i < nSmallerLength; ++i)
+	{
+		auto clhsUC = std::toupper(svlhs[i]);
+		auto crhsUC = std::toupper(svrhs[i]);
+		if (clhsUC < crhsUC)
+		{
+			return -1;
+		}
+		if (clhsUC > crhsUC)
+		{
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+template<typename TStringView>
+decltype(auto) StringViewCompareCI_ToShorterLength(TStringView svlhs, TStringView svrhs)
+{
+	if constexpr (ModuleContext::Compilation::IsBuildPlatform_Win32())
+	{
+		auto nSmallerLength = std::min(svlhs.size(), svrhs.size());
+		if constexpr (std::is_same_v<TStringView, std::string_view>)
+		{
+			return _strnicmp(svlhs.data(), svrhs.data(), nSmallerLength);
+		}
+		else if constexpr (std::is_same_v<TStringView, std::wstring_view>)
+		{
+			return _wcsnicmp(svlhs.data(), svrhs.data(), nSmallerLength);
+		}
+		else
+		{
+			static_assert(VLR_DEPENDENT_FALSE, "Unhandled string_view type");
+		}
+	}
+	else
+	{
+		return StringViewCompareCI_ToShorterLength_Compat(svlhs, svrhs);
+	}
+}
+
+template<typename TStringView>
+decltype(auto) StringViewCompareCI(TStringView svlhs, TStringView svrhs)
+{
+	auto nSmallerLength = std::min(svlhs.size(), svrhs.size());
+	auto nResultToSmallerLength = StringViewCompareCI_ToShorterLength(svlhs, svrhs);
+	if (nResultToSmallerLength != 0)
+	{
+		return nResultToSmallerLength;
+	}
+	// Shorter string is lessor in normal algorithms...
+	if (svrhs.size() > nSmallerLength)
+	{
+		// lhs was shorter
+		return -1;
+	}
+	if (svlhs.size() > nSmallerLength)
+	{
+		// rhs was shorter
+		return 1;
+	}
+	return 0;
+}
+
 template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(isCompatTypeForAString<Tlhs>() && isCompatTypeForAString<Trhs>())>>
 constexpr decltype(auto) AreEqualAsStringCompat(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
 {
 	const auto& slhs = asAStringViewCompatType(tlhs);
-	const auto svlhs = static_cast<string_view_compat_t<Tlhs>>(slhs);
+	const auto svlhs = static_cast<const string_view_compat_t<Tlhs>>(slhs);
 	const auto& srhs = asAStringViewCompatType(trhs);
-	const auto svrhs = static_cast<string_view_compat_t<Trhs>>(srhs);
+	const auto svrhs = static_cast<const string_view_compat_t<Trhs>>(srhs);
 
 	// Short-circuit for same buffer
 	if (svlhs.data() == svrhs.data())
@@ -222,7 +292,7 @@ constexpr decltype(auto) AreEqualAsStringCompat(const CompareSettings& oCompareS
 			&& (svlhs.data() != nullptr)
 			&& (svrhs.data() != nullptr)
 			// TODO: Make sure this works on multiple platforms...
-			&& (_strnicmp(svlhs.data(), svrhs.data(), svlhs.size()) == 0)
+			&& (StringViewCompareCI(svlhs, svrhs) == 0)
 			;
 	}
 }
@@ -231,9 +301,9 @@ template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(isCompatType
 constexpr decltype(auto) AreEqualAsWStringCompat(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
 {
 	const auto& slhs = asWStringViewCompatType(tlhs);
-	const auto svlhs = static_cast<string_view_compat_t<Tlhs>>(slhs);
+	const auto svlhs = static_cast<const string_view_compat_t<Tlhs>>(slhs);
 	const auto& srhs = asWStringViewCompatType(trhs);
-	const auto svrhs = static_cast<string_view_compat_t<Trhs>>(srhs);
+	const auto svrhs = static_cast<const string_view_compat_t<Trhs>>(srhs);
 
 	// Short-circuit for same buffer
 	if (svlhs.data() == svrhs.data())
@@ -262,7 +332,7 @@ constexpr decltype(auto) AreEqualAsWStringCompat(const CompareSettings& oCompare
 			&& (svlhs.data() != nullptr)
 			&& (svrhs.data() != nullptr)
 			// TODO: Make sure this works on multiple platforms...
-			&& (_wcsnicmp(svlhs.data(), svrhs.data(), svlhs.size()) == 0)
+			&& (StringViewCompareCI(svlhs, svrhs) == 0)
 			;
 	}
 }
@@ -317,7 +387,7 @@ std::wstring GetAsWString(const TString& tValue)
 	}
 	else
 	{
-		static_assert(dependent_false, "Unhandled conversion case");
+		static_assert(VLR_DEPENDENT_FALSE, "Unhandled conversion case");
 	}
 
 	return {};
@@ -401,7 +471,7 @@ protected:
 		return static_cast<std::wstring_view>(asWStringViewCompatType(tValue)).empty();
 	}
 
-	template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(detail::isCompatTypeForAString<Tlhs>() && detail::isCompatTypeForString<Trhs>())>>
+	template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(detail::isCompatTypeForAString<Tlhs>() && detail::isCompatTypeForAString<Trhs>())>>
 	constexpr decltype(auto) choice_AreEqual(const Tlhs& tlhs, const Trhs& trhs, vlr::util::choice<0>&&) const
 	{
 		return detail::AreEqualAsStringCompat(m_oCompareSettings, tlhs, trhs);
@@ -464,30 +534,32 @@ public:
 	}
 
 public:
-	CComparator() = default;
-	CComparator(const CompareSettings&& oCompareSettings)
+	constexpr CComparator() = default;
+	constexpr CComparator(const CompareSettings&& oCompareSettings)
 		: m_oCompareSettings{ oCompareSettings }
 	{}
 };
 
-decltype(auto) CS()
+constexpr decltype(auto) CS()
 {
-	static const auto oComparator = []
-	{
-		auto oCmparator = CComparator{ CompareSettings::ForCaseSensitive() };
-		return oCmparator;
-	}();
-	return oComparator;
+	//static const auto oComparator = []
+	//{
+	//	auto oCmparator = CComparator{ CompareSettings::ForCaseSensitive() };
+	//	return oCmparator;
+	//}();
+	//return oComparator;
+	return CComparator{ CompareSettings::ForCaseSensitive() };
 }
 
-decltype(auto) CI()
+constexpr decltype(auto) CI()
 {
-	static const auto oComparator = []
-	{
-		auto oCmparator = CComparator{ CompareSettings::ForCaseInsensitive() };
-		return oCmparator;
-	}();
-	return oComparator;
+	//static const auto oComparator = []
+	//{
+	//	auto oCmparator = CComparator{ CompareSettings::ForCaseInsensitive() };
+	//	return oCmparator;
+	//}();
+	//return oComparator;
+	return CComparator{ CompareSettings::ForCaseInsensitive() };
 }
 
 VLR_NAMESPACE_END //(StringCompare)

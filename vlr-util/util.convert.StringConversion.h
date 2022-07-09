@@ -137,12 +137,12 @@ inline decltype(auto) ToStdStringW_choice(const TString& tString, vlr::util::cho
 template< typename TString >
 inline decltype(auto) ToStdStringA_choice(const TString& tString, vlr::util::choice<3>&&)
 {
-	static_assert(dependent_false, "Unhandled conversion type");
+	static_assert(VLR_DEPENDENT_FALSE, "Unhandled conversion type");
 }
 template< typename TString >
 inline decltype(auto) ToStdStringW_choice(const TString& tString, vlr::util::choice<3>&&)
 {
-	static_assert(dependent_false, "Unhandled conversion type");
+	static_assert(VLR_DEPENDENT_FALSE, "Unhandled conversion type");
 }
 
 VLR_NAMESPACE_END //( detail )
@@ -173,7 +173,7 @@ inline decltype(auto) ToStdString(const TString& tString, Arg&&... args)
 	}
 	else
 	{
-		static_assert(dependent_false, "Unhandled character size");
+		static_assert(VLR_DEPENDENT_FALSE, "Unhandled character size");
 	}
 }
 
@@ -264,7 +264,7 @@ inline decltype(auto) ToCString( const TString& tString, Arg&&... args )
 	}
 	else
 	{
-		static_assert(dependent_false, "Unhandled character size");
+		static_assert(VLR_DEPENDENT_FALSE, "Unhandled character size");
 	}
 }
 

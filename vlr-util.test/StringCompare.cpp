@@ -3,12 +3,12 @@
 #include "vlr-util/StringCompare.h"
 #include "vlr-util/zstring_view.h"
 
-static const auto pcaszNULL = nullptr;
-static const auto pcaszBlank = "";
-static const auto pcaszNotBlank = "value";
-static const auto pcwszNULL = L"";
-static const auto pcwszBlank = L"";
-static const auto pcwszNotBlank = L"value";
+static constexpr auto pcaszNULL = nullptr;
+static constexpr auto pcaszBlank = "";
+static constexpr auto pcaszNotBlank = "value";
+static constexpr auto pcwszNULL = L"";
+static constexpr auto pcwszBlank = L"";
+static constexpr auto pcwszNotBlank = L"value";
 
 static const auto saEmpty = std::string{};
 static const auto saBlank = std::string{ "" };
@@ -17,12 +17,19 @@ static const auto swEmpty = std::wstring{};
 static const auto swBlank = std::wstring{ L"" };
 static const auto swNotBlank = std::wstring{ L"value" };
 
-static const auto svazEmpty = vlr::zstring_view{};
-static const auto svazBlank = vlr::zstring_view{ "" };
-static const auto svazNotBlank = vlr::zstring_view{ "value" };
-static const auto svwzEmpty = vlr::wzstring_view{};
-static const auto svwzBlank = vlr::wzstring_view{ L"" };
-static const auto svwzNotBlank = vlr::wzstring_view{ L"value" };
+static constexpr auto svazEmpty = vlr::zstring_view{};
+static constexpr auto svazBlank = vlr::zstring_view{ "" };
+static constexpr auto svazNotBlank = vlr::zstring_view{ "value" };
+static constexpr auto svwzEmpty = vlr::wzstring_view{};
+static constexpr auto svwzBlank = vlr::wzstring_view{ L"" };
+static constexpr auto svwzNotBlank = vlr::wzstring_view{ L"value" };
+
+static constexpr auto svazShorter = vlr::zstring_view{ "valu" };
+static constexpr auto svwzShorter = vlr::wzstring_view{ L"valu" };
+static constexpr auto svazLonger = vlr::zstring_view{ "values" };
+static constexpr auto svwzLonger = vlr::wzstring_view{ L"values" };
+static constexpr auto svazDifferent = vlr::zstring_view{ "other" };
+static constexpr auto svwzDifferent = vlr::wzstring_view{ L"other" };
 
 #define AVALUE_LOWER "value"
 #define AVALUE_UPPER "VALUE"
@@ -31,25 +38,25 @@ static const auto svwzNotBlank = vlr::wzstring_view{ L"value" };
 #define WVALUE_UPPER L"VALUE"
 #define WVALUE_MIXED L"VaLuE"
 
-static const auto pcaszLower = AVALUE_LOWER;
+static constexpr auto pcaszLower = AVALUE_LOWER;
 static const auto saLower = std::string{ AVALUE_LOWER };
-static const auto svazLower = vlr::zstring_view{ AVALUE_LOWER };
-static const auto pcaszUpper = AVALUE_UPPER;
+static constexpr auto svazLower = vlr::zstring_view{ AVALUE_LOWER };
+static constexpr auto pcaszUpper = AVALUE_UPPER;
 static const auto saUpper = std::string{ AVALUE_UPPER };
-static const auto svazUpper = vlr::zstring_view{ AVALUE_UPPER };
-static const auto pcaszMixed = AVALUE_MIXED;
+static constexpr auto svazUpper = vlr::zstring_view{ AVALUE_UPPER };
+static constexpr auto pcaszMixed = AVALUE_MIXED;
 static const auto saMixed = std::string{ AVALUE_MIXED };
-static const auto svazMixed = vlr::zstring_view{ AVALUE_MIXED };
+static constexpr auto svazMixed = vlr::zstring_view{ AVALUE_MIXED };
 
-static const auto pcwszLower = WVALUE_LOWER;
+static constexpr auto pcwszLower = WVALUE_LOWER;
 static const auto swLower = std::wstring{ WVALUE_LOWER };
-static const auto svwzLower = vlr::wzstring_view{ WVALUE_LOWER };
-static const auto pcwszUpper = WVALUE_UPPER;
+static constexpr auto svwzLower = vlr::wzstring_view{ WVALUE_LOWER };
+static constexpr auto pcwszUpper = WVALUE_UPPER;
 static const auto swUpper = std::wstring{ WVALUE_UPPER };
-static const auto svwzUpper = vlr::wzstring_view{ WVALUE_UPPER };
-static const auto pcwszMixed = WVALUE_MIXED;
+static constexpr auto svwzUpper = vlr::wzstring_view{ WVALUE_UPPER };
+static constexpr auto pcwszMixed = WVALUE_MIXED;
 static const auto swMixed = std::wstring{ WVALUE_MIXED };
-static const auto svwzMixed = vlr::wzstring_view{ WVALUE_MIXED };
+static constexpr auto svwzMixed = vlr::wzstring_view{ WVALUE_MIXED };
 
 #undef AVALUE_LOWER
 #undef AVALUE_UPPER
@@ -58,8 +65,8 @@ static const auto svwzMixed = vlr::wzstring_view{ WVALUE_MIXED };
 #undef WVALUE_UPPER
 #undef WVALUE_MIXED
 
-const auto oStringCompareCS = vlr::StringCompare::CS();
-const auto oStringCompareCI = vlr::StringCompare::CI();
+static constexpr auto oStringCompareCS = vlr::StringCompare::CS();
+static constexpr auto oStringCompareCI = vlr::StringCompare::CI();
 
 TEST(StringCompare, asAStringViewCompatType)
 {
@@ -335,6 +342,29 @@ TEST(StringCompare, AreEqual)
 	fExpectCompareResult_CaseSensitive(svazLower, pcwszMixed, false);
 	fExpectCompareResult_CaseSensitive(svazLower, swMixed, false);
 	fExpectCompareResult_CaseSensitive(svazLower, svwzMixed, false);
+
+	// Any of the test strings should compare as not-equal with any explicitly different values
+
+	auto fTestNotEqual_DifferentValues = [&](const vlr::StringCompare::CComparator& oStringCompare, const auto& tValue)
+	{
+		fTestAreEqual(oStringCompare, tValue, svazShorter, false);
+		fTestAreEqual(oStringCompare, tValue, svazLonger, false);
+		fTestAreEqual(oStringCompare, tValue, svwzShorter, false);
+		fTestAreEqual(oStringCompare, tValue, svwzLonger, false);
+		fTestAreEqual(oStringCompare, tValue, svwzDifferent, false);
+		fTestAreEqual(oStringCompare, tValue, svwzDifferent, false);
+	};
+	auto fTestNotEqual_DifferentValues_AnyCompare = [&](const auto& tValue)
+	{
+		fTestNotEqual_DifferentValues(oStringCompareCS, tValue);
+		fTestNotEqual_DifferentValues(oStringCompareCI, tValue);
+	};
+	fTestNotEqual_DifferentValues_AnyCompare(svazEmpty);
+	fTestNotEqual_DifferentValues_AnyCompare(svwzEmpty);
+	fTestNotEqual_DifferentValues_AnyCompare(svazBlank);
+	fTestNotEqual_DifferentValues_AnyCompare(svwzBlank);
+	fTestNotEqual_DifferentValues_AnyCompare(svazNotBlank);
+	fTestNotEqual_DifferentValues_AnyCompare(svwzNotBlank);
 
 }
 

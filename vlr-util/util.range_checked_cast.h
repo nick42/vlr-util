@@ -72,7 +72,7 @@ inline auto range_checked_cast_choice( TSource nValue, choice<1>&& )
 			else
 			{
 				// This should always fit; should not call here
-				static_assert(dependent_false);
+				static_assert(VLR_DEPENDENT_FALSE);
 			}
 		}
 		else // std::is_signed_v<TSource>
@@ -118,7 +118,7 @@ inline auto range_checked_cast_choice( TSource nValue, choice<1>&& )
 			else
 			{
 				// This should always fit; should not call here
-				static_assert(dependent_false);
+				static_assert(VLR_DEPENDENT_FALSE);
 			}
 		}
 		else // std::is_signed_v<TSource>
@@ -126,7 +126,7 @@ inline auto range_checked_cast_choice( TSource nValue, choice<1>&& )
 			if constexpr (sizeof( TDest ) >= sizeof( TSource ))
 			{
 				// This should always fit; should not call here
-				static_assert(dependent_false);
+				static_assert(VLR_DEPENDENT_FALSE);
 			}
 			else
 			{
