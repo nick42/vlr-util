@@ -160,6 +160,7 @@
     <ClCompile Include="as_span.cpp" />
     <ClCompile Include="AutoFreeResource.cpp" />
     <ClCompile Include="AutoRevertingAssignment.cpp" />
+    <ClCompile Include="CloseEnough.cpp" />
     <ClCompile Include="enums.RangeInfo.cpp" />
     <ClCompile Include="formatpf.cpp" />
     <ClCompile Include="logging.LogMessage.cpp" />
@@ -182,6 +183,7 @@
     <ClCompile Include="util.IsNonZero.cpp" />
     <ClCompile Include="util.IsNotBlank.cpp" />
     <ClCompile Include="util.logical_zstring_view.cpp" />
+    <ClCompile Include="util.NonOwningSharedPtr.cpp" />
     <ClCompile Include="util.range_checked_cast.cpp" />
     <ClCompile Include="vlr-util.test.cpp" />
     <ClCompile Include="win32.filesystem.enum_files.cpp">

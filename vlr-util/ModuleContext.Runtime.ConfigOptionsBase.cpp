@@ -78,7 +78,7 @@ HRESULT CConfigOptionsBase::ParseOptions_CommandLine_withBoost(
 	//}
 
 	hr = RecordParsedOptions( oParsedVariablesMap );
-	VLR_ASSERT_HR_SUCCEEDED__OR_RETURN_HRESULT( hr );
+	VLR_ASSERT_HR_SUCCEEDED_OR_RETURN_HRESULT( hr );
 
 	return S_OK;
 }
@@ -115,8 +115,8 @@ HRESULT CConfigOptionsBase::RecordParsedOptions(
 {
 	for (const auto& oOptionHandler : m_oRecordParsedOptionActionArray)
 	{
-		VLR_ASSERT_NONZERO__OR_RETURN_EUNEXPECTED( oOptionHandler.m_svzOptionName );
-		VLR_ASSERT_NONZERO__OR_RETURN_EUNEXPECTED( oOptionHandler.m_fOnOptionValue );
+		VLR_ASSERT_NONZERO_OR_RETURN_EUNEXPECTED( oOptionHandler.m_svzOptionName );
+		VLR_ASSERT_NONZERO_OR_RETURN_EUNEXPECTED( oOptionHandler.m_fOnOptionValue );
 
 		if (oParsedVariablesMap.count( oOptionHandler.m_svzOptionName ) == 0)
 		{

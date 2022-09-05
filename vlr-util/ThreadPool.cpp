@@ -22,7 +22,7 @@ HRESULT CThreadPool::EnsurePoolInitialized()
 	{
 		m_spThreadPool = cpp::make_shared<boost::asio::thread_pool>();
 	}
-	VLR_ASSERT_ALLOCATED__OR_RETURN_STANDARD_ERROR( m_spThreadPool );
+	VLR_ASSERT_ALLOCATED_OR_RETURN_STANDARD_ERROR( m_spThreadPool );
 
 	return S_OK;
 }

@@ -58,9 +58,10 @@ class SResult
 {
 public:
 	static constexpr auto Uninitialized = HRESULT{0x0000FFFF};
-	static constexpr auto GeneralSuccess = S_OK;
-	static constexpr auto SuccessWithNuance = S_FALSE;
-	static constexpr auto GeneralFailure = E_FAIL;
+	static constexpr auto Success = S_OK;
+	static constexpr auto Success_WithNuance = S_FALSE;
+	static constexpr auto Success_NoWorkDone = S_FALSE;
+	static constexpr auto Failure = E_FAIL;
 
 protected:
 	ResultCode m_nResultCode = Uninitialized;
@@ -141,5 +142,6 @@ public:
 VLR_NAMESPACE_END //(util)
 
 using util::SResult;
+using StandardResult = SResult;
 
 VLR_NAMESPACE_END //(vlr)

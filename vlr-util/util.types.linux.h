@@ -1,6 +1,6 @@
 #pragma once
 
-#ifndef POSIX
+#ifndef __linux__
 #else
 
 #include "typeshim.win32.h"

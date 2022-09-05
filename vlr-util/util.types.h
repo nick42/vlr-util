@@ -7,7 +7,7 @@
 #ifdef WIN32
 #include "util.types.win32.h"
 #endif
-#ifdef POSIX
+#ifdef __linux__
 #include "util.types.linux.h"
 #endif
 

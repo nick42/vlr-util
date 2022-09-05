@@ -26,6 +26,7 @@
     <ClInclude Include="AutoFreeResource.h" />
     <ClInclude Include="AutoRevertingAssignment.h" />
     <ClInclude Include="BaseWithVirtualDestructor.h" />
+    <ClInclude Include="CloseEnough.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="cpp_namespace.h" />
     <ClInclude Include="c_runtime.StringFunctions.h" />
@@ -64,8 +65,10 @@
     <ClInclude Include="util.IsBitValue.h" />
     <ClInclude Include="util.IsNonZero.h" />
     <ClInclude Include="util.IsNotBlank.h" />
+    <ClInclude Include="util.LevenshteinDistance.h" />
     <ClInclude Include="util.logical_zstring_view.h" />
     <ClInclude Include="util.MathOps.h" />
+    <ClInclude Include="util.NonOwningSharedPtr.h" />
     <ClInclude Include="util.OnValidAssignTo.h" />
     <ClInclude Include="util.range_checked_cast.h" />
     <ClInclude Include="util.Result.h" />
@@ -84,6 +87,7 @@
     <ClInclude Include="zstring_view.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CloseEnough.cpp" />
     <ClCompile Include="ModuleContext.Runtime.CommandLine.cpp" />
     <ClCompile Include="ModuleContext.Runtime.ConfigOptionsBase.cpp" />
     <ClCompile Include="ModuleContext.Runtime.cpp" />

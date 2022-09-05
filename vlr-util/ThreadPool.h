@@ -72,7 +72,7 @@ HRESULT CThreadPool::AddTaskToPool_ResultIgnored( F&& fTask )
 	HRESULT hr;
 
 	hr = EnsurePoolInitialized();
-	VLR_ASSERT_HR_SUCCEEDED__OR_RETURN_HRESULT( hr );
+	VLR_ASSERT_HR_SUCCEEDED_OR_RETURN_HRESULT( hr );
 
 	boost::asio::post( *m_spThreadPool, std::forward<F>( fTask ) );
 
@@ -85,7 +85,7 @@ HRESULT CThreadPool::AddTaskToPool_ResultAsFuture( F&& fTask, std::future<declty
 	HRESULT hr;
 
 	hr = EnsurePoolInitialized();
-	VLR_ASSERT_HR_SUCCEEDED__OR_RETURN_HRESULT( hr );
+	VLR_ASSERT_HR_SUCCEEDED_OR_RETURN_HRESULT( hr );
 
 	std::promise<decltype(fTask())> oTaskExecResult;
 	oFuture = oTaskExecResult.get_future();

@@ -15,12 +15,12 @@ TEST(RegexCache, BasicSuccess)
 
 	RegexCache::SPRegex spCompiledRegex;
 	sr = RegexCache::getSharedInstance().GetCompiledRegex(svzRegex_Good, spCompiledRegex);
-	ASSERT_EQ(sr, SResult::GeneralSuccess);
+	ASSERT_EQ(sr, SResult::Success);
 	ASSERT_NE(spCompiledRegex, nullptr);
 
 	RegexCache::SPRegex spCompiledRegex_Copy;
 	sr = RegexCache::getSharedInstance().GetCompiledRegex(svzRegex_Good, spCompiledRegex_Copy);
-	ASSERT_EQ(sr, SResult::GeneralSuccess);
+	ASSERT_EQ(sr, SResult::Success);
 	ASSERT_NE(spCompiledRegex_Copy, nullptr);
 
 	ASSERT_EQ(spCompiledRegex.get(), spCompiledRegex_Copy.get());
@@ -34,7 +34,7 @@ TEST(RegexCache, BasicFailure)
 
 	RegexCache::SPRegex spCompiledRegex;
 	sr = RegexCache::getSharedInstance().GetCompiledRegex(svzRegex_Good, spCompiledRegex);
-	ASSERT_EQ(sr, SResult::SuccessWithNuance);
+	ASSERT_EQ(sr, SResult::Success_WithNuance);
 	ASSERT_EQ(spCompiledRegex, nullptr);
 }
 
@@ -48,7 +48,7 @@ TEST(RegexCache, BasicSuccessMultiThreaded)
 	{
 		RegexCache::SPRegex spCompiledRegex;
 		sr = RegexCache::getSharedInstance().GetCompiledRegex(svzRegex_Good, spCompiledRegex);
-		ASSERT_EQ(sr, SResult::GeneralSuccess);
+		ASSERT_EQ(sr, SResult::Success);
 		ASSERT_NE(spCompiledRegex, nullptr);
 	};
 

@@ -43,7 +43,7 @@ inline auto ToDateTime_FILETIME( const FILETIME& oValue )
 
 	auto oSystemTime = SYSTEMTIME{};
 	auto bSuccess = ::FileTimeToSystemTime( &oValue, &oSystemTime );
-	VLR_ASSERT_NONZERO__OR_RETURN_FAILURE_VALUE( bSuccess );
+	VLR_ASSERT_NONZERO_OR_RETURN_FAILURE_VALUE( bSuccess );
 
 	return vlr::types::DateTime{ oSystemTime };
 }

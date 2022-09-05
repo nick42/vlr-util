@@ -102,6 +102,12 @@
     <ClCompile Include="StringCompare.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="util.NonOwningSharedPtr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CloseEnough.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="zstring_view.h">

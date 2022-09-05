@@ -13,7 +13,7 @@ SResult RegexCache::GetCompiledRegex(const vlr::tstring& sRegex, SPRegex& spComp
 		if (iterExisting != m_mapRegexToCompiledRegex.end())
 		{
 			spCompiledRegex_Result = iterExisting->second;
-			return SResult::GeneralSuccess;
+			return SResult::Success;
 		}
 	}
 
@@ -38,10 +38,10 @@ SResult RegexCache::GetCompiledRegex(const vlr::tstring& sRegex, SPRegex& spComp
 		spCompiledRegex_Result = spCompiledRegex;
 		if (!spCompiledRegex_Result)
 		{
-			return SResult::SuccessWithNuance;
+			return SResult::Success_WithNuance;
 		}
 
-		return SResult::GeneralSuccess;
+		return SResult::Success;
 	}
 }
 
