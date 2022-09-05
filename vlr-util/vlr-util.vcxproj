@@ -47,6 +47,7 @@
     <ClInclude Include="RegexCache.h" />
     <ClInclude Include="SharedInstance.h" />
     <ClInclude Include="StringCompare.h" />
+    <ClInclude Include="strings.split.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="typeshim.win32.ASSERT.h" />
     <ClInclude Include="typeshim.win32.h" />

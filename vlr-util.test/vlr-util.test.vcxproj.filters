@@ -108,6 +108,9 @@
     <ClCompile Include="CloseEnough.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="strings.split.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="zstring_view.h">

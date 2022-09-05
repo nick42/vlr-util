@@ -213,6 +213,9 @@
     <ClInclude Include="util.LevenshteinDistance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="strings.split.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleContext.Runtime.CommandLine.cpp">

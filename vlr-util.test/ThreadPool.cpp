@@ -2,7 +2,7 @@
 
 #include "vlr-util/ThreadPool.h"
 
-TEST( ThreadPool, general )
+TEST(ThreadPool, general)
 {
 	auto oThreadPool = vlr::CThreadPool{};
 
@@ -17,7 +17,7 @@ TEST( ThreadPool, general )
 	ASSERT_EQ( nValue, 100 );
 }
 
-TEST( ThreadPool, ResultAsFuture )
+TEST(ThreadPool, ResultAsFuture)
 {
 	auto oThreadPool = vlr::CThreadPool{};
 

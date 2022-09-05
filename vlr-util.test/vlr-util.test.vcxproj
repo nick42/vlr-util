@@ -172,6 +172,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="RegexCache.cpp" />
+    <ClCompile Include="strings.split.cpp" />
     <ClCompile Include="StringCompare.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="util.api_adaptor.OutString.cpp" />
