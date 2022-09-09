@@ -10,6 +10,7 @@
 #include "util.Unicode.h"
 #include "util.types.h"
 #include "util.Result.h"
+#include "StringCompare.h"
 
 VLR_NAMESPACE_BEGIN(vlr)
 
@@ -142,6 +143,30 @@ SResult SplitStringAtDelimiter(const vlr::tstring_view svString, const Delimiter
 SResult SplitStringAtDelimiter_Path(const vlr::tstring_view svString, std::vector<vlr::tstring_view>& arrStringElements_Result, const Options_SplitStringAtDelimiter& options = {})
 {
 	return SplitStringAtDelimiter(svString, DelimitersSpec::ForPaths(), arrStringElements_Result, options);
+}
+
+vlr::tzstring_view StringWithoutPossiblePrefix(
+	vlr::tzstring_view svzValue,
+	vlr::tstring_view svPrefix,
+	const StringCompare::CComparator& oStringCompare = StringCompare::CS())
+{
+	if (!oStringCompare.StringHasPrefix(svzValue, svPrefix))
+	{
+		return svzValue;
+	}
+	return svzValue.trailing_end(svPrefix.length());
+}
+
+vlr::tstring_view StringWithoutPossiblePostfix(
+	vlr::tzstring_view svzValue,
+	vlr::tstring_view svPostfix,
+	const StringCompare::CComparator& oStringCompare = StringCompare::CS())
+{
+	if (!oStringCompare.StringHasPostfix(svzValue, svPostfix))
+	{
+		return svzValue;
+	}
+	return svzValue.substr(0, svzValue.length() - svPostfix.length());
 }
 
 VLR_NAMESPACE_END //(strings)

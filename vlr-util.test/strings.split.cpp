@@ -7,9 +7,9 @@ using namespace vlr;
 
 TEST(strings_split, general)
 {
-	static const vlr::tzstring_view svzTestDirectory = _T("/etc/something");
-	static const vlr::tzstring_view svzTestDirectory_Element1 = _T("etc");
-	static const vlr::tzstring_view svzTestDirectory_Element2 = _T("something");
+	static constexpr vlr::tzstring_view svzTestDirectory = _T("/etc/something");
+	static constexpr vlr::tzstring_view svzTestDirectory_Element1 = _T("etc");
+	static constexpr vlr::tzstring_view svzTestDirectory_Element2 = _T("something");
 
 	static const auto oStringCompareCS = StringCompare::CS();
 
@@ -69,5 +69,49 @@ TEST(strings_split, general)
 		ASSERT_TRUE(oStringCompareCS.AreEqual(arrStringElements[nResultIndex++], svzTestDirectory_Element1));
 		ASSERT_TRUE(oStringCompareCS.AreEqual(arrStringElements[nResultIndex++], svzTestDirectory_Element2));
 		ASSERT_TRUE(oStringCompareCS.AreEqual(arrStringElements[nResultIndex++], _T("")));
+	}
+}
+
+TEST(strings_split, StringWithoutPossiblePrefix)
+{
+	static constexpr vlr::tzstring_view svzTestValue = _T("/etc/something");
+	static constexpr vlr::tzstring_view svzTestPrefix_Valid = _T("/etc");
+	static constexpr vlr::tzstring_view svzTestPrefix_Invalid = _T("/usr");
+
+	static const auto oStringCompareCS = StringCompare::CS();
+
+	{
+		auto svValueWithoutPrefix = strings::StringWithoutPossiblePrefix(svzTestValue, svzTestPrefix_Valid);
+		ASSERT_TRUE(oStringCompareCS.AreEqual(svValueWithoutPrefix, _T("/something")));
+	}
+	{
+		auto svValueWithoutPrefix = strings::StringWithoutPossiblePrefix(svzTestValue, svzTestPrefix_Invalid);
+		ASSERT_TRUE(oStringCompareCS.AreEqual(svValueWithoutPrefix, _T("/etc/something")));
+	}
+	{
+		auto svValueWithoutPrefix = strings::StringWithoutPossiblePrefix(svzTestValue, svzTestPrefix_Invalid);
+		ASSERT_TRUE(oStringCompareCS.AreEqual(svValueWithoutPrefix, _T("/etc/something")));
+	}
+}
+
+TEST(strings_split, StringWithoutPossiblePostfix)
+{
+	static constexpr vlr::tzstring_view svzTestValue = _T("/etc/something");
+	static constexpr vlr::tzstring_view svzTestPostfix_Valid = _T("/something");
+	static constexpr vlr::tzstring_view svzTestPostfix_Invalid = _T("/else");
+
+	static const auto oStringCompareCS = StringCompare::CS();
+
+	{
+		auto svValueWithoutPrefix = strings::StringWithoutPossiblePostfix(svzTestValue, svzTestPostfix_Valid);
+		ASSERT_TRUE(oStringCompareCS.AreEqual(svValueWithoutPrefix, _T("/etc")));
+	}
+	{
+		auto svValueWithoutPrefix = strings::StringWithoutPossiblePostfix(svzTestValue, svzTestPostfix_Invalid);
+		ASSERT_TRUE(oStringCompareCS.AreEqual(svValueWithoutPrefix, _T("/etc/something")));
+	}
+	{
+		auto svValueWithoutPrefix = strings::StringWithoutPossiblePostfix(svzTestValue, svzTestPostfix_Invalid);
+		ASSERT_TRUE(oStringCompareCS.AreEqual(svValueWithoutPrefix, _T("/etc/something")));
 	}
 }
