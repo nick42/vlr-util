@@ -184,6 +184,144 @@ struct CompareSettings
 
 VLR_NAMESPACE_BEGIN(detail)
 
+// Note: This is an alternative method, per cpp docs; not currently used, as may not be optimal.
+// (ie: C-runtime methods for direct comparison without conversion might be faster)
+// To be tested in the future.
+
+template<typename TChar>
+struct char_traits_ci : public std::char_traits<TChar> {
+	static char to_upper(TChar ch) {
+		return std::toupper(ch);
+	}
+	static bool eq(TChar c1, TChar c2) {
+		return to_upper(c1) == to_upper(c2);
+	}
+	static bool lt(TChar c1, TChar c2) {
+		return to_upper(c1) < to_upper(c2);
+	}
+	static int compare(const TChar* s1, const TChar* s2, std::size_t n) {
+		while (n-- != 0) {
+			if (to_upper(*s1) < to_upper(*s2)) return -1;
+			if (to_upper(*s1) > to_upper(*s2)) return 1;
+			++s1; ++s2;
+		}
+		return 0;
+	}
+	static const TChar* find(const TChar* s, std::size_t n, TChar a) {
+		auto const ua(to_upper(a));
+		while (n-- != 0)
+		{
+			if (to_upper(*s) == ua)
+				return s;
+			s++;
+		}
+		return nullptr;
+	}
+};
+
+template<class DstTraits, class CharT, class SrcTraits>
+constexpr auto cast_string_view_with_traits(const std::basic_string_view<CharT, SrcTraits> src) noexcept
+{
+	return std::basic_string_view<CharT, DstTraits>{ src.data(), src.size() };
+}
+
+template<typename TString>
+std::wstring GetAsWString(const TString& tValue)
+{
+	if constexpr (isCompatTypeForAString<TString>())
+	{
+		const auto& saValue = asAStringViewCompatType(tValue);
+		const auto svaValue = static_cast<std::string_view>(saValue);
+		if (svaValue.size() == 0)
+		{
+			return {};
+		}
+
+		std::wstring swResult;
+		swResult.resize(saValue.length());
+		size_t nResultLength = 0;
+
+		size_t nSourceIndex = 0;
+		std::mbstate_t state = std::mbstate_t();
+		for (size_t nResultIndex = 0; nResultIndex < swResult.size(); ++nResultIndex)
+		{
+			auto nRemainingSourceSize = svaValue.size() - nSourceIndex;
+			if (nRemainingSourceSize <= 0)
+			{
+				break;
+			}
+
+			auto nConversionResult = std::mbrtowc(swResult.data() + nResultIndex, svaValue.data() + nSourceIndex, nRemainingSourceSize, &state);
+			if (nConversionResult == 0)
+			{
+				break;
+			}
+			if (nConversionResult == static_cast<size_t>(-1))
+			{
+				// Encoding error
+				break;
+			}
+			if (nConversionResult == static_cast<size_t>(-2))
+			{
+				// Partial read, then ran out of characters
+				break;
+			}
+			nSourceIndex += nConversionResult;
+			nResultLength++;
+		}
+		swResult.resize(nResultLength);
+
+		return swResult;
+	}
+	else
+	{
+		static_assert(VLR_DEPENDENT_FALSE, "Unhandled conversion case");
+	}
+
+	return {};
+}
+
+template<typename TStringView>
+decltype(auto) StringViewCompareCS_ToShorterLength(TStringView svlhs, TStringView svrhs)
+{
+	auto nSmallerLength = std::min(svlhs.size(), svrhs.size());
+	if constexpr (std::is_same_v<TStringView, std::string_view>)
+	{
+		return strncmp(svlhs.data(), svrhs.data(), nSmallerLength);
+	}
+	else if constexpr (std::is_same_v<TStringView, std::wstring_view>)
+	{
+		return wcsncmp(svlhs.data(), svrhs.data(), nSmallerLength);
+	}
+	else
+	{
+		static_assert(VLR_DEPENDENT_FALSE, "Unhandled string_view type");
+	}
+}
+
+template<typename TStringView>
+decltype(auto) StringViewCompareCS(TStringView svlhs, TStringView svrhs)
+{
+	auto nSmallerLength = std::min(svlhs.size(), svrhs.size());
+	auto nResultToSmallerLength = StringViewCompareCS_ToShorterLength(svlhs, svrhs);
+	if (nResultToSmallerLength != 0)
+	{
+		return nResultToSmallerLength;
+	}
+	// Shorter string is lessor in normal algorithms...
+	if (svrhs.size() > nSmallerLength)
+	{
+		// lhs was shorter
+		return -1;
+	}
+	if (svlhs.size() > nSmallerLength)
+	{
+		// rhs was shorter
+		return 1;
+	}
+	return 0;
+}
+
 // Note: AreEqual[...] is a more efficient version of Compare[...], because we can short circuit on
 // inequality of string length. Compare semantics is return inequality in shared prefix.
 // See: https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/strnicmp-wcsnicmp-mbsnicmp-strnicmp-l-wcsnicmp-l-mbsnicmp-l?view=msvc-170
@@ -257,14 +395,9 @@ decltype(auto) StringViewCompareCI(TStringView svlhs, TStringView svrhs)
 	return 0;
 }
 
-template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(isCompatTypeForAString<Tlhs>() && isCompatTypeForAString<Trhs>())>>
-constexpr decltype(auto) AreEqualAsStringCompat(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
+template<typename TStringView>
+constexpr decltype(auto) AreEqualStringViews(const CompareSettings& oCompareSettings, const TStringView& svlhs, const TStringView& svrhs)
 {
-	const auto& slhs = asAStringViewCompatType(tlhs);
-	const auto svlhs = static_cast<const string_view_compat_t<Tlhs>>(slhs);
-	const auto& srhs = asAStringViewCompatType(trhs);
-	const auto svrhs = static_cast<const string_view_compat_t<Trhs>>(srhs);
-
 	// Short-circuit for same buffer
 	if (svlhs.data() == svrhs.data())
 	{
@@ -295,6 +428,17 @@ constexpr decltype(auto) AreEqualAsStringCompat(const CompareSettings& oCompareS
 			&& (StringViewCompareCI(svlhs, svrhs) == 0)
 			;
 	}
+}
+
+template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(isCompatTypeForAString<Tlhs>() && isCompatTypeForAString<Trhs>())>>
+constexpr decltype(auto) AreEqualAsAStringCompat(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
+{
+	const auto& slhs = asAStringViewCompatType(tlhs);
+	const auto svlhs = static_cast<const string_view_compat_t<Tlhs>>(slhs);
+	const auto& srhs = asAStringViewCompatType(trhs);
+	const auto svrhs = static_cast<const string_view_compat_t<Trhs>>(srhs);
+
+	return AreEqualStringViews(oCompareSettings, svlhs, svrhs);
 }
 
 template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(isCompatTypeForWString<Tlhs>() && isCompatTypeForWString<Trhs>())>>
@@ -305,92 +449,7 @@ constexpr decltype(auto) AreEqualAsWStringCompat(const CompareSettings& oCompare
 	const auto& srhs = asWStringViewCompatType(trhs);
 	const auto svrhs = static_cast<const string_view_compat_t<Trhs>>(srhs);
 
-	// Short-circuit for same buffer
-	if (svlhs.data() == svrhs.data())
-	{
-		return true;
-	}
-	// Note: We allow strings which are "equivalent blank" to compare to true; this allows a blank string 
-	// compare will a NULL string to return true
-	if ((svlhs.size() == 0) && (svrhs.size() == 0))
-	{
-		return true;
-	}
-
-	switch (oCompareSettings.m_eCaseSensitivity)
-	{
-	default:
-	case CaseSensitivity::CaseSensitive:
-		// Assuming std compare is efficient
-		return (svlhs == svrhs);
-
-	case CaseSensitivity::CaseInsensitive:
-		return true
-			&& (svlhs.size() == svrhs.size())
-			// Note: C runtime function only works with non-NULL pointers, so short-circuit those cases
-			// Will return false for either of (but not both) pointers NULL
-			&& (svlhs.data() != nullptr)
-			&& (svrhs.data() != nullptr)
-			// TODO: Make sure this works on multiple platforms...
-			&& (StringViewCompareCI(svlhs, svrhs) == 0)
-			;
-	}
-}
-
-template<typename TString>
-std::wstring GetAsWString(const TString& tValue)
-{
-	if constexpr (isCompatTypeForAString<TString>())
-	{
-		const auto& saValue = asAStringViewCompatType(tValue);
-		const auto svaValue = static_cast<std::string_view>(saValue);
-		if (svaValue.size() == 0)
-		{
-			return {};
-		}
-
-		std::wstring swResult;
-		swResult.resize(saValue.length());
-		size_t nResultLength = 0;
-
-		size_t nSourceIndex = 0;
-		std::mbstate_t state = std::mbstate_t();
-		for (size_t nResultIndex = 0; nResultIndex < swResult.size(); ++nResultIndex)
-		{
-			auto nRemainingSourceSize = svaValue.size() - nSourceIndex;
-			if (nRemainingSourceSize <= 0)
-			{
-				break;
-			}
-
-			auto nConversionResult = std::mbrtowc(swResult.data() + nResultIndex, svaValue.data() + nSourceIndex, nRemainingSourceSize, &state);
-			if (nConversionResult == 0)
-			{
-				break;
-			}
-			if (nConversionResult == static_cast<size_t>(-1))
-			{
-				// Encoding error
-				break;
-			}
-			if (nConversionResult == static_cast<size_t>(-2))
-			{
-				// Partial read, then ran out of characters
-				break;
-			}
-			nSourceIndex += nConversionResult;
-			nResultLength++;
-		}
-		swResult.resize(nResultLength);
-
-		return swResult;
-	}
-	else
-	{
-		static_assert(VLR_DEPENDENT_FALSE, "Unhandled conversion case");
-	}
-
-	return {};
+	return AreEqualStringViews(oCompareSettings, svlhs, svrhs);
 }
 
 template<typename Tlhs, typename Trhs>
@@ -432,7 +491,108 @@ constexpr decltype(auto) AreEqualDifferentCharSize(const CompareSettings& oCompa
 		svrhs = swConvertedWString_rhs;
 	}
 
-	return AreEqualAsWStringCompat(oCompareSettings, svlhs, svrhs);
+	return AreEqualStringViews(oCompareSettings, svlhs, svrhs);
+}
+
+template<typename TStringView>
+constexpr decltype(auto) CompareStringViews(const CompareSettings& oCompareSettings, const TStringView& svlhs, const TStringView& svrhs)
+{
+	// Short-circuit for same buffer
+	if (svlhs.data() == svrhs.data())
+	{
+		return 0;
+	}
+	// Note: We allow strings which are "equivalent blank" to compare to true; this allows a blank string 
+	// compare will a NULL string to return true
+	if ((svlhs.size() == 0) && (svrhs.size() == 0))
+	{
+		return 0;
+	}
+
+	switch (oCompareSettings.m_eCaseSensitivity)
+	{
+	default:
+	case CaseSensitivity::CaseSensitive:
+		// Assuming std compare is efficient
+		return StringViewCompareCS(svlhs, svrhs);
+
+	case CaseSensitivity::CaseInsensitive:
+		if (svlhs.data() == nullptr)
+		{
+			// lhs was "shorter"
+			return -1;
+		}
+		if (svrhs.data() == nullptr)
+		{
+			// rhs was "shorter"
+			return 1;
+		}
+		return StringViewCompareCI(svlhs, svrhs);
+	}
+}
+
+template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(isCompatTypeForAString<Tlhs>() && isCompatTypeForAString<Trhs>())>>
+constexpr decltype(auto) CompareAsAStringCompat(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
+{
+	const auto& slhs = asAStringViewCompatType(tlhs);
+	const auto svlhs = static_cast<const string_view_compat_t<Tlhs>>(slhs);
+	const auto& srhs = asAStringViewCompatType(trhs);
+	const auto svrhs = static_cast<const string_view_compat_t<Trhs>>(srhs);
+
+	return CompareStringViews(oCompareSettings, svlhs, svrhs);
+}
+
+template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(isCompatTypeForWString<Tlhs>() && isCompatTypeForWString<Trhs>())>>
+constexpr decltype(auto) CompareAsWStringCompat(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
+{
+	const auto& slhs = asWStringViewCompatType(tlhs);
+	const auto svlhs = static_cast<const string_view_compat_t<Tlhs>>(slhs);
+	const auto& srhs = asWStringViewCompatType(trhs);
+	const auto svrhs = static_cast<const string_view_compat_t<Trhs>>(srhs);
+
+	return CompareStringViews(oCompareSettings, svlhs, svrhs);
+}
+
+template<typename Tlhs, typename Trhs>
+constexpr decltype(auto) CompareDifferentCharSize(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
+{
+	// Going to widen for comparison
+	std::wstring swConvertedWString_lhs;
+	std::wstring swConvertedWString_rhs;
+	std::wstring_view svlhs;
+	std::wstring_view svrhs;
+
+	if constexpr (!isCompatTypeForWString<Tlhs>())
+	{
+		swConvertedWString_lhs = GetAsWString(tlhs);
+		svlhs = swConvertedWString_lhs;
+	}
+	else if constexpr (std::is_base_of_v<std::wstring_view, decltype(asWStringViewCompatType(tlhs))>)
+	{
+		svlhs = asWStringViewCompatType(tlhs);
+	}
+	else
+	{
+		swConvertedWString_lhs = asWStringViewCompatType(tlhs);
+		svlhs = swConvertedWString_lhs;
+	}
+
+	if constexpr (!isCompatTypeForWString<Trhs>())
+	{
+		swConvertedWString_rhs = GetAsWString(trhs);
+		svrhs = swConvertedWString_rhs;
+	}
+	else if constexpr (std::is_base_of_v<std::wstring_view, decltype(asWStringViewCompatType(trhs))>)
+	{
+		svrhs = asWStringViewCompatType(trhs);
+	}
+	else
+	{
+		swConvertedWString_rhs = asWStringViewCompatType(trhs);
+		svrhs = swConvertedWString_rhs;
+	}
+
+	return CompareStringViews(oCompareSettings, svlhs, svrhs);
 }
 
 // Note: It would be more efficient to do inline per-character compare, rather than conversion; 
@@ -474,7 +634,7 @@ protected:
 	template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(detail::isCompatTypeForAString<Tlhs>() && detail::isCompatTypeForAString<Trhs>())>>
 	constexpr decltype(auto) choice_AreEqual(const Tlhs& tlhs, const Trhs& trhs, vlr::util::choice<0>&&) const
 	{
-		return detail::AreEqualAsStringCompat(m_oCompareSettings, tlhs, trhs);
+		return detail::AreEqualAsAStringCompat(m_oCompareSettings, tlhs, trhs);
 	}
 	template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(detail::isCompatTypeForWString<Tlhs>() && detail::isCompatTypeForWString<Trhs>())>>
 	constexpr decltype(auto) choice_AreEqual(const Tlhs& tlhs, const Trhs& trhs, vlr::util::choice<1>&&) const
@@ -488,6 +648,23 @@ protected:
 		return detail::AreEqualDifferentCharSize(m_oCompareSettings, tlhs, trhs);
 	}
 
+	template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(detail::isCompatTypeForAString<Tlhs>() && detail::isCompatTypeForAString<Trhs>())>>
+	constexpr decltype(auto) choice_Compare(const Tlhs& tlhs, const Trhs& trhs, vlr::util::choice<0>&&) const
+	{
+		return detail::CompareAsAStringCompat(m_oCompareSettings, tlhs, trhs);
+	}
+	template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(detail::isCompatTypeForWString<Tlhs>() && detail::isCompatTypeForWString<Trhs>())>>
+	constexpr decltype(auto) choice_Compare(const Tlhs& tlhs, const Trhs& trhs, vlr::util::choice<1>&&) const
+	{
+		return detail::CompareAsWStringCompat(m_oCompareSettings, tlhs, trhs);
+	}
+	// No direct compare possible as this point; some conversion will be necessary
+	template<typename Tlhs, typename Trhs>
+	constexpr decltype(auto) choice_Compare(const Tlhs& tlhs, const Trhs& trhs, vlr::util::choice<2>&&) const
+	{
+		return detail::CompareDifferentCharSize(m_oCompareSettings, tlhs, trhs);
+	}
+
 public:
 	template<typename TString>
 	constexpr decltype(auto) IsBlank(const TString& tValue) const
@@ -498,6 +675,11 @@ public:
 	constexpr decltype(auto) AreEqual(const Tlhs& tlhs, const Trhs& trhs) const
 	{
 		return choice_AreEqual(tlhs, trhs, vlr::util::choice<0>{});
+	}
+	template<typename Tlhs, typename Trhs>
+	constexpr decltype(auto) Compare(const Tlhs& tlhs, const Trhs& trhs) const
+	{
+		return choice_Compare(tlhs, trhs, vlr::util::choice<0>{});
 	}
 	template<typename TString, typename TPrefix>
 	constexpr decltype(auto) StringHasPrefix(const TString& tString, const TPrefix& tPrefix) const
@@ -561,6 +743,28 @@ constexpr decltype(auto) CI()
 	//return oComparator;
 	return CComparator{ CompareSettings::ForCaseInsensitive() };
 }
+
+// Note: Simple structs here for use in std containers (for example)
+// eg: std::map<std::string, std::string, StringCompare::asCaseInsensitive>
+// Note that CComparator is more optimal than doing a conversion to compare (by design)
+
+struct asCaseSensitive
+{
+	template<typename Tlhs, typename Trhs>
+	constexpr bool operator()(const Tlhs& tlhs, const Trhs& trhs) const
+	{
+		return (CS().Compare(tlhs, trhs) < 0);
+	}
+};
+
+struct asCaseInsensitive
+{
+	template<typename Tlhs, typename Trhs>
+	constexpr bool operator()(const Tlhs& tlhs, const Trhs& trhs) const
+	{
+		return (CI().Compare(tlhs, trhs) < 0);
+	}
+};
 
 VLR_NAMESPACE_END //(StringCompare)
 

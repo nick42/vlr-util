@@ -368,6 +368,162 @@ TEST(StringCompare, AreEqual)
 
 }
 
+TEST(StringCompare, Compare)
+{
+	auto fTestCompareLeftIsEqual = [&](const auto& oStringCompare, const auto& lhs, const auto& rhs)
+	{
+		EXPECT_EQ(oStringCompare.Compare(lhs, rhs), 0);
+	};
+	auto fTestCompareLeftIsLess = [&](const auto& oStringCompare, const auto& lhs, const auto& rhs)
+	{
+		EXPECT_LT(oStringCompare.Compare(lhs, rhs), 0);
+	};
+	auto fTestCompareLeftIsGreater = [&](const auto& oStringCompare, const auto& lhs, const auto& rhs)
+	{
+		EXPECT_GT(oStringCompare.Compare(lhs, rhs), 0);
+	};
+	auto fTestCompareLeftIsGreaterOrEqual = [&](const auto& oStringCompare, const auto& lhs, const auto& rhs)
+	{
+		EXPECT_GE(oStringCompare.Compare(lhs, rhs), 0);
+	};
+
+	auto fTestCompare_BasicValueCombinations = [&](const auto& oStringCompare)
+	{
+		// For lhs blank:
+		// - If rhs blank, =
+		// - If rhs non-blank, <
+		auto fTestCompare_a_Blank = [&](const auto& tValue)
+		{
+			fTestCompareLeftIsEqual(oStringCompare, tValue, pcaszNULL);
+			fTestCompareLeftIsEqual(oStringCompare, tValue, pcaszBlank);
+			fTestCompareLeftIsLess(oStringCompare, tValue, pcaszNotBlank);
+			fTestCompareLeftIsEqual(oStringCompare, tValue, saEmpty);
+			fTestCompareLeftIsEqual(oStringCompare, tValue, saBlank);
+			fTestCompareLeftIsLess(oStringCompare, tValue, saNotBlank);
+			fTestCompareLeftIsEqual(oStringCompare, tValue, svazEmpty);
+			fTestCompareLeftIsEqual(oStringCompare, tValue, svazBlank);
+			fTestCompareLeftIsLess(oStringCompare, tValue, svazNotBlank);
+		};
+		fTestCompare_a_Blank(pcaszNULL);
+		fTestCompare_a_Blank(pcaszBlank);
+		fTestCompare_a_Blank(saEmpty);
+		fTestCompare_a_Blank(saBlank);
+		fTestCompare_a_Blank(svazEmpty);
+		fTestCompare_a_Blank(svazBlank);
+
+		// For lhs non-blank:
+		// - If rhs blank, >
+		// - If rhs non-blank, =
+		auto fTestCompare_a_NotBlank = [&](const auto& tValue)
+		{
+			fTestCompareLeftIsGreater(oStringCompare, tValue, pcaszNULL);
+			fTestCompareLeftIsGreater(oStringCompare, tValue, pcaszBlank);
+			fTestCompareLeftIsEqual(oStringCompare, tValue, pcaszNotBlank);
+			fTestCompareLeftIsGreater(oStringCompare, tValue, saEmpty);
+			fTestCompareLeftIsGreater(oStringCompare, tValue, saBlank);
+			fTestCompareLeftIsEqual(oStringCompare, tValue, saNotBlank);
+			fTestCompareLeftIsGreater(oStringCompare, tValue, svazEmpty);
+			fTestCompareLeftIsGreater(oStringCompare, tValue, svazBlank);
+			fTestCompareLeftIsEqual(oStringCompare, tValue, svazNotBlank);
+		};
+		fTestCompare_a_NotBlank(pcaszNotBlank);
+		fTestCompare_a_NotBlank(saNotBlank);
+		fTestCompare_a_NotBlank(svazNotBlank);
+
+		auto fTestCompare_w_Blank = [&](const auto& tValue)
+		{
+			fTestCompareLeftIsEqual(oStringCompare, tValue, pcwszNULL);
+			fTestCompareLeftIsEqual(oStringCompare, tValue, pcwszBlank);
+			fTestCompareLeftIsLess(oStringCompare, tValue, pcwszNotBlank);
+			fTestCompareLeftIsEqual(oStringCompare, tValue, swEmpty);
+			fTestCompareLeftIsEqual(oStringCompare, tValue, swBlank);
+			fTestCompareLeftIsLess(oStringCompare, tValue, swNotBlank);
+			fTestCompareLeftIsEqual(oStringCompare, tValue, svwzEmpty);
+			fTestCompareLeftIsEqual(oStringCompare, tValue, svwzBlank);
+			fTestCompareLeftIsLess(oStringCompare, tValue, svwzNotBlank);
+		};
+		fTestCompare_w_Blank(pcwszNULL);
+		fTestCompare_w_Blank(pcwszBlank);
+		fTestCompare_w_Blank(swEmpty);
+		fTestCompare_w_Blank(swBlank);
+		fTestCompare_w_Blank(svwzEmpty);
+		fTestCompare_w_Blank(svwzBlank);
+
+		auto fTestCompre_w_NotBlank = [&](const auto& tValue)
+		{
+			fTestCompareLeftIsGreater(oStringCompare, tValue, pcwszNULL);
+			fTestCompareLeftIsGreater(oStringCompare, tValue, pcwszBlank);
+			fTestCompareLeftIsEqual(oStringCompare, tValue, pcwszNotBlank);
+			fTestCompareLeftIsGreater(oStringCompare, tValue, swEmpty);
+			fTestCompareLeftIsGreater(oStringCompare, tValue, swBlank);
+			fTestCompareLeftIsEqual(oStringCompare, tValue, swNotBlank);
+			fTestCompareLeftIsGreater(oStringCompare, tValue, svwzEmpty);
+			fTestCompareLeftIsGreater(oStringCompare, tValue, svwzBlank);
+			fTestCompareLeftIsEqual(oStringCompare, tValue, svwzNotBlank);
+		};
+		fTestCompre_w_NotBlank(pcwszNotBlank);
+		fTestCompre_w_NotBlank(swNotBlank);
+		fTestCompre_w_NotBlank(svwzNotBlank);
+	};
+
+	fTestCompare_BasicValueCombinations(oStringCompareCS);
+	fTestCompare_BasicValueCombinations(oStringCompareCI);
+
+	// Everything should be equal for case insensitive compare
+
+	auto fTestCompare_a_CaseInsensitive = [&](const auto& tValue)
+	{
+		EXPECT_EQ(oStringCompareCI.Compare(tValue, pcaszLower), 0);
+		EXPECT_EQ(oStringCompareCI.Compare(tValue, saLower), 0);
+		EXPECT_EQ(oStringCompareCI.Compare(tValue, svazLower), 0);
+		EXPECT_EQ(oStringCompareCI.Compare(tValue, pcaszUpper), 0);
+		EXPECT_EQ(oStringCompareCI.Compare(tValue, saUpper), 0);
+		EXPECT_EQ(oStringCompareCI.Compare(tValue, svazUpper), 0);
+		EXPECT_EQ(oStringCompareCI.Compare(tValue, pcaszMixed), 0);
+		EXPECT_EQ(oStringCompareCI.Compare(tValue, saMixed), 0);
+		EXPECT_EQ(oStringCompareCI.Compare(tValue, svazMixed), 0);
+	};
+	fTestCompare_a_CaseInsensitive(pcaszLower);
+	fTestCompare_a_CaseInsensitive(saLower);
+	fTestCompare_a_CaseInsensitive(svazLower);
+	fTestCompare_a_CaseInsensitive(pcaszUpper);
+	fTestCompare_a_CaseInsensitive(saUpper);
+	fTestCompare_a_CaseInsensitive(svazUpper);
+	fTestCompare_a_CaseInsensitive(pcaszMixed);
+	fTestCompare_a_CaseInsensitive(saMixed);
+	fTestCompare_a_CaseInsensitive(svazMixed);
+
+	auto fTestCompare_w_CaseInsensitive = [&](const auto& tValue)
+	{
+		EXPECT_EQ(oStringCompareCI.Compare(tValue, pcwszLower), 0);
+		EXPECT_EQ(oStringCompareCI.Compare(tValue, swLower), 0);
+		EXPECT_EQ(oStringCompareCI.Compare(tValue, svwzLower), 0);
+		EXPECT_EQ(oStringCompareCI.Compare(tValue, pcwszUpper), 0);
+		EXPECT_EQ(oStringCompareCI.Compare(tValue, swUpper), 0);
+		EXPECT_EQ(oStringCompareCI.Compare(tValue, svwzUpper), 0);
+		EXPECT_EQ(oStringCompareCI.Compare(tValue, pcwszMixed), 0);
+		EXPECT_EQ(oStringCompareCI.Compare(tValue, swMixed), 0);
+		EXPECT_EQ(oStringCompareCI.Compare(tValue, svwzMixed), 0);
+	};
+	fTestCompare_w_CaseInsensitive(pcwszLower);
+	fTestCompare_w_CaseInsensitive(swLower);
+	fTestCompare_w_CaseInsensitive(svwzLower);
+	fTestCompare_w_CaseInsensitive(pcwszUpper);
+	fTestCompare_w_CaseInsensitive(swUpper);
+	fTestCompare_w_CaseInsensitive(svwzUpper);
+	fTestCompare_w_CaseInsensitive(pcwszMixed);
+	fTestCompare_w_CaseInsensitive(swMixed);
+	fTestCompare_w_CaseInsensitive(svwzMixed);
+
+	EXPECT_LT(oStringCompareCS.Compare("bello", "hello"), 0);
+	EXPECT_LT(oStringCompareCI.Compare("bello", "hello"), 0);
+
+	EXPECT_LT(oStringCompareCS.Compare("Hello", "hello"), 0);
+	EXPECT_EQ(oStringCompareCI.Compare("Hello", "hello"), 0);
+
+	// TODO: Much more...
+}
+
 TEST(StringCompare, StringHasPrefix)
 {
 	auto fTestStringHasPrefix_AnythingHasBlankPrefix = [&](const vlr::StringCompare::CComparator& oStringCompare, const auto& tString)
@@ -450,7 +606,7 @@ TEST(StringCompare, StringHasPrefix)
 	EXPECT_EQ(oStringCompareCS.StringHasPrefix(svwzMixed, "vs"), false);
 }
 
-TEST(StringCompare, StringHasPpostfix)
+TEST(StringCompare, StringHasPostfix)
 {
 	auto fTestStringHasPostfix_AnythingHasBlankPostfix = [&](const vlr::StringCompare::CComparator& oStringCompare, const auto& tString)
 	{

@@ -89,7 +89,7 @@ public:
 
 public:
     // Note: It is safe to return the trailing end of a null-terminated string as null-terminated
-    [[nodiscard]] constexpr basic_zstring_view trailing_end( const size_type _Off = 0 )
+    [[nodiscard]] constexpr basic_zstring_view trailing_end( const size_type _Off = 0 ) const
     {
         _Check_offset( _Off );
         auto _Count = _Clamp_suffix_size( _Off, base_type::npos );

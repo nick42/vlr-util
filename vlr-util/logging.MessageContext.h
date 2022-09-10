@@ -3,6 +3,9 @@
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
+#include "include.fmt.h"
+
+#include "util.std_aliases.h"
 #include "zstring_view.h"
 
 VLR_NAMESPACE_BEGIN( vlr )
@@ -15,6 +18,27 @@ public:
 	tzstring_view m_svzFile;
 	int m_nLineNumber = 0;
 	tzstring_view m_svzFunction;
+
+public:
+	static constexpr auto svzPathSeparators = tzstring_view{ _T("/\\") };
+	constexpr tzstring_view GetFileNameOnly() const
+	{
+		auto nIndex = m_svzFile.find_last_of(svzPathSeparators);
+		if (nIndex == m_svzFile.npos)
+		{
+			return m_svzFile;
+		}
+		return m_svzFile.trailing_end(nIndex + 1);
+	}
+
+	auto GetCodePositionIndicator() const -> vlr::tstring
+	{
+		if (m_svzFile.empty())
+		{
+			return _T("[unknown]");
+		}
+		return fmt::format(_T("{}:{}"), GetFileNameOnly(), m_nLineNumber);
+	}
 
 public:
 	constexpr explicit CCodeContext() = default;
