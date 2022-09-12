@@ -3,6 +3,8 @@
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
+#include "util.static_assert.h"
+
 VLR_NAMESPACE_BEGIN( vlr )
 
 VLR_NAMESPACE_BEGIN( c_runtime )
@@ -22,7 +24,7 @@ inline auto GetFunction_strlen()
 	}
 	else
 	{
-		static_assert(VLR_DEPENDENT_FALSE, "Unhandled TChar type");
+		VLR_STATIC_FAIL("Unhandled TChar type");
 	}
 }
 

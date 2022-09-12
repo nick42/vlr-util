@@ -180,7 +180,7 @@
     <ClInclude Include="util.includes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="util.static_no_match.h">
+    <ClInclude Include="util.static_assert.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="as_string_view.h">

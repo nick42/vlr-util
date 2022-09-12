@@ -9,6 +9,7 @@
 #include "config.h"
 
 #include "util.choice.h"
+#include "util.static_assert.h"
 #include "util.types.h"
 
 VLR_NAMESPACE_BEGIN(vlr)
@@ -275,7 +276,7 @@ std::wstring GetAsWString(const TString& tValue)
 	}
 	else
 	{
-		static_assert(VLR_DEPENDENT_FALSE, "Unhandled conversion case");
+		VLR_STATIC_FAIL("Unhandled conversion case");
 	}
 
 	return {};
@@ -295,7 +296,7 @@ decltype(auto) StringViewCompareCS_ToShorterLength(TStringView svlhs, TStringVie
 	}
 	else
 	{
-		static_assert(VLR_DEPENDENT_FALSE, "Unhandled string_view type");
+		VLR_STATIC_FAIL("Unhandled string_view type");
 	}
 }
 
@@ -363,7 +364,7 @@ decltype(auto) StringViewCompareCI_ToShorterLength(TStringView svlhs, TStringVie
 		}
 		else
 		{
-			static_assert(VLR_DEPENDENT_FALSE, "Unhandled string_view type");
+			VLR_STATIC_FAIL("Unhandled string_view type");
 		}
 	}
 	else

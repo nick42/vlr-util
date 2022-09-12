@@ -73,7 +73,7 @@
     <ClInclude Include="util.OnValidAssignTo.h" />
     <ClInclude Include="util.range_checked_cast.h" />
     <ClInclude Include="util.Result.h" />
-    <ClInclude Include="util.static_no_match.h" />
+    <ClInclude Include="util.static_assert.h" />
     <ClInclude Include="util.std_aliases.h" />
     <ClInclude Include="util.types.h" />
     <ClInclude Include="util.types.linux.h" />

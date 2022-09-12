@@ -4,6 +4,7 @@
 #include "config.h"
 
 #include "util.choice.h"
+#include "util.static_assert.h"
 
 #undef min
 #undef max
@@ -72,7 +73,7 @@ inline auto range_checked_cast_choice( TSource nValue, choice<1>&& )
 			else
 			{
 				// This should always fit; should not call here
-				static_assert(VLR_DEPENDENT_FALSE);
+				VLR_STATIC_FAIL();
 			}
 		}
 		else // std::is_signed_v<TSource>
@@ -118,7 +119,7 @@ inline auto range_checked_cast_choice( TSource nValue, choice<1>&& )
 			else
 			{
 				// This should always fit; should not call here
-				static_assert(VLR_DEPENDENT_FALSE);
+				VLR_STATIC_FAIL();
 			}
 		}
 		else // std::is_signed_v<TSource>
@@ -126,7 +127,7 @@ inline auto range_checked_cast_choice( TSource nValue, choice<1>&& )
 			if constexpr (sizeof( TDest ) >= sizeof( TSource ))
 			{
 				// This should always fit; should not call here
-				static_assert(VLR_DEPENDENT_FALSE);
+				VLR_STATIC_FAIL();
 			}
 			else
 			{
