@@ -690,7 +690,7 @@ public:
 		const auto& tPrefix_ViewCompat = asStringViewCompatType(tPrefix);
 		const auto& svzPrefix = static_cast<string_view_compat_t<TPrefix>>(tPrefix_ViewCompat);
 
-		if (svzString.size() <= svzPrefix.size())
+		if (svzString.size() < svzPrefix.size())
 		{
 			return false;
 		}
@@ -706,7 +706,7 @@ public:
 		const auto& tPostfix_ViewCompat = asStringViewCompatType(tPostfix);
 		const auto& svzPostfix = static_cast<string_view_compat_t<TPostfix>>(tPostfix_ViewCompat);
 
-		if (svzString.size() <= svzPostfix.size())
+		if (svzString.size() < svzPostfix.size())
 		{
 			return false;
 		}
