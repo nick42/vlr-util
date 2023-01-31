@@ -534,7 +534,11 @@ TEST(StringCompare, StringHasPrefix)
 	auto fTestStringHasPrefix_LongerPrefixFalse = [&](const vlr::StringCompare::CComparator& oStringCompare, const auto& tString)
 	{
 		EXPECT_EQ(oStringCompare.StringHasPrefix(tString, "values"), false);
-		EXPECT_EQ(oStringCompare.StringHasPrefix(tString, "values"), false);
+		EXPECT_EQ(oStringCompare.StringHasPrefix(tString, L"values"), false);
+	};
+	auto fTestStringHasPrefix_AnythingHasSelfPrefix = [&](const vlr::StringCompare::CComparator& oStringCompare, const auto& tString)
+	{
+		EXPECT_EQ(oStringCompare.StringHasPrefix(tString, tString), true);
 	};
 	auto fTestStringHasPrefix_BasicValueCombinations = [&](const vlr::StringCompare::CComparator& oStringCompare)
 	{
@@ -547,6 +551,9 @@ TEST(StringCompare, StringHasPrefix)
 
 		fTestStringHasPrefix_LongerPrefixFalse(oStringCompare, svazNotBlank);
 		fTestStringHasPrefix_LongerPrefixFalse(oStringCompare, svwzNotBlank);
+
+		fTestStringHasPrefix_AnythingHasSelfPrefix(oStringCompare, svazNotBlank);
+		fTestStringHasPrefix_AnythingHasSelfPrefix(oStringCompare, svwzNotBlank);
 	};
 
 	// CI
@@ -618,6 +625,10 @@ TEST(StringCompare, StringHasPostfix)
 		EXPECT_EQ(oStringCompare.StringHasPostfix(tString, "values"), false);
 		EXPECT_EQ(oStringCompare.StringHasPostfix(tString, "values"), false);
 	};
+	auto fTestStringHasPrefix_AnythingHasSelfPostfix = [&](const vlr::StringCompare::CComparator& oStringCompare, const auto& tString)
+	{
+		EXPECT_EQ(oStringCompare.StringHasPrefix(tString, tString), true);
+	};
 	auto fTestStringHasPostfix_BasicValueCombinations = [&](const vlr::StringCompare::CComparator& oStringCompare)
 	{
 		fTestStringHasPostfix_AnythingHasBlankPostfix(oStringCompare, svazEmpty);
@@ -629,6 +640,9 @@ TEST(StringCompare, StringHasPostfix)
 
 		fTestStringHasPostfix_LongerPostfixFalse(oStringCompare, svazNotBlank);
 		fTestStringHasPostfix_LongerPostfixFalse(oStringCompare, svwzNotBlank);
+
+		fTestStringHasPrefix_AnythingHasSelfPostfix(oStringCompare, svazNotBlank);
+		fTestStringHasPrefix_AnythingHasSelfPostfix(oStringCompare, svwzNotBlank);
 	};
 
 	// CI
