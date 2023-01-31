@@ -111,6 +111,9 @@
     <ClCompile Include="strings.split.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="util.MRUCache.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="zstring_view.h">
@@ -119,5 +122,8 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\vlr-util\vcpkg.json" />
   </ItemGroup>
 </Project>

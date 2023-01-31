@@ -82,6 +82,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -184,6 +185,7 @@
     <ClCompile Include="util.IsNonZero.cpp" />
     <ClCompile Include="util.IsNotBlank.cpp" />
     <ClCompile Include="util.logical_zstring_view.cpp" />
+    <ClCompile Include="util.MRUCache.cpp" />
     <ClCompile Include="util.NonOwningSharedPtr.cpp" />
     <ClCompile Include="util.range_checked_cast.cpp" />
     <ClCompile Include="vlr-util.test.cpp" />
@@ -221,6 +223,9 @@
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="zstring_view.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\vlr-util\vcpkg.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
