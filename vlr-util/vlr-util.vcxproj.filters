@@ -219,6 +219,9 @@
     <ClInclude Include="util.MRUCache.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CaptureConsoleOut.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleContext.Runtime.CommandLine.cpp">
@@ -258,6 +261,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CloseEnough.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CaptureConsoleOut.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

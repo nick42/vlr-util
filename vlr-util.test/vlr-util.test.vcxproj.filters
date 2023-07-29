@@ -114,6 +114,9 @@
     <ClCompile Include="util.MRUCache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CaptureConsoleOutput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="zstring_view.h">

@@ -41,4 +41,20 @@ TEST(util_MRUCache, general)
 		EXPECT_EQ(sr, SResult::Success);
 		EXPECT_EQ(sCachedValue, "theAnswer");
 	}
+
+	oCache.AddValueToCache(1, "one");
+
+	// This should be gone from the cache:
+	{
+		std::string sCachedValue;
+		sr = oCache.GetCachedValue(42, sCachedValue);
+		EXPECT_EQ(sr, SResult::Success_NoWorkDone);
+	}
+	// And this should still be there:
+	{
+		std::string sCachedValue;
+		sr = oCache.GetCachedValue(1, sCachedValue);
+		EXPECT_EQ(sr, SResult::Success);
+		EXPECT_EQ(sCachedValue, "one");
+	}
 }

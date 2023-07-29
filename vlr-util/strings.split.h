@@ -57,20 +57,21 @@ struct Options_SplitStringAtDelimiter
 	bool m_bAddEmptyElementsForPostfixDelimiters = false;
 	bool m_bAddEmptyElementsForConsecutiveDelimiters = false;
 };
-SResult SplitStringAtDelimiter(const vlr::tstring_view svString, const DelimitersSpec& oDelimitersSpec, std::vector<vlr::tstring_view>& arrStringElements_Result, const Options_SplitStringAtDelimiter& options = {})
+template< typename TChar >
+SResult SplitStringAtDelimiter(const std::basic_string_view<TChar> svString, const DelimitersSpec& oDelimitersSpec, std::vector<std::basic_string_view<TChar>>& arrStringElements_Result, const Options_SplitStringAtDelimiter& options = {})
 {
 	const auto& arrDelimiters = oDelimitersSpec.GetDelimiters();
 
-	auto fIsDelimiter = [&](TCHAR cChar)
+	auto fIsDelimiter = [&](TChar cChar)
 	{
 		return (std::find(arrDelimiters.begin(), arrDelimiters.end(), cChar) != arrDelimiters.end());
 	};
 
-	TCHAR const* pCurrentElementStart = nullptr;
+	TChar const* pCurrentElementStart = nullptr;
 	size_t nCurrentElementLength = 0;
 	auto fAddCurrentElementToResults = [&]()
 	{
-		auto svCurrentElement = vlr::tstring_view{ pCurrentElementStart, nCurrentElementLength };
+		auto svCurrentElement = std::basic_string_view<TChar>{ pCurrentElementStart, nCurrentElementLength };
 		arrStringElements_Result.push_back(svCurrentElement);
 
 		pCurrentElementStart = {};
@@ -80,7 +81,7 @@ SResult SplitStringAtDelimiter(const vlr::tstring_view svString, const Delimiter
 
 	auto fAddEmptyElementToResults = [&]()
 	{
-		arrStringElements_Result.push_back(vlr::tstring_view{});
+		arrStringElements_Result.push_back(std::basic_string_view<TChar>{});
 	};
 
 	for (size_t nIndex = 0; nIndex != svString.size(); ++nIndex)
@@ -140,14 +141,16 @@ SResult SplitStringAtDelimiter(const vlr::tstring_view svString, const Delimiter
 	return SResult::Success;
 }
 
-SResult SplitStringAtDelimiter_Path(const vlr::tstring_view svString, std::vector<vlr::tstring_view>& arrStringElements_Result, const Options_SplitStringAtDelimiter& options = {})
+template< typename TChar >
+SResult SplitStringAtDelimiter_Path(const std::basic_string_view<TChar> svString, std::vector<std::basic_string_view<TChar>>& arrStringElements_Result, const Options_SplitStringAtDelimiter& options = {})
 {
 	return SplitStringAtDelimiter(svString, DelimitersSpec::ForPaths(), arrStringElements_Result, options);
 }
 
-vlr::tzstring_view StringWithoutPossiblePrefix(
-	vlr::tzstring_view svzValue,
-	vlr::tstring_view svPrefix,
+template< typename TChar >
+vlr::basic_zstring_view<TChar> StringWithoutPossiblePrefix(
+	vlr::basic_zstring_view<TChar> svzValue,
+	std::basic_string_view<TChar> svPrefix,
 	const StringCompare::CComparator& oStringCompare = StringCompare::CS())
 {
 	if (!oStringCompare.StringHasPrefix(svzValue, svPrefix))
@@ -157,9 +160,10 @@ vlr::tzstring_view StringWithoutPossiblePrefix(
 	return svzValue.trailing_end(svPrefix.length());
 }
 
-vlr::tstring_view StringWithoutPossiblePostfix(
-	vlr::tzstring_view svzValue,
-	vlr::tstring_view svPostfix,
+template< typename TChar >
+std::basic_string_view<TChar> StringWithoutPossiblePostfix(
+	vlr::basic_zstring_view<TChar> svzValue,
+	std::basic_string_view<TChar> svPostfix,
 	const StringCompare::CComparator& oStringCompare = StringCompare::CS())
 {
 	if (!oStringCompare.StringHasPostfix(svzValue, svPostfix))

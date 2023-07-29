@@ -1,11 +1,7 @@
 {
-  "name": "vlr-util",
+  "name": "vlr-util.test",
   "version-string": "0.1",
   "dependencies": [
-    "gsl-lite",
-    "boost",
-    "fmt",
-    "spdlog",
-    "utfcpp"
+    "gtest"
   ]
 }
