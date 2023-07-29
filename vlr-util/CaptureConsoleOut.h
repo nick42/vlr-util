@@ -47,6 +47,12 @@ void secure_close(int& fd);
 class CCapturePipeData
 {
 public:
+    using FOnCaptureData = std::function<void(const char*, size_t)>;
+
+protected:
+    FOnCaptureData m_fOnCaptureData;
+
+public:
     // Note: For each pipe we capture, we potentially create two replacement pipes, one for each direction
     struct PipeDirection
     {
@@ -64,9 +70,16 @@ public:
     int m_arrDupPipeHandles[2] = {};
     int m_nPreviousPipeHandle = {};
 
-    using FOnCaptureData = std::function<void(const char*, size_t)>;
-    FOnCaptureData m_fOnCaptureData;
     std::vector<char> m_arrInternalDataCapture;
+
+    FOnCaptureData m_fCaptureDataOverride;
+
+    template< typename TCallback >
+    decltype(auto) withDataCaptureOverride(const TCallback& tCallback)
+    {
+        m_fCaptureDataOverride = tCallback;
+        return *this;
+    }
 
 public:
     struct CaptureOptions
@@ -84,12 +97,6 @@ public:
         decltype(auto) withFileDescriptorToCapture(int nFileDescriptorToCapture)
         {
             m_nFileDescriptorToCapture = nFileDescriptorToCapture;
-            return *this;
-        }
-        template< typename TCallback >
-        decltype(auto) withOnDataCapture(const TCallback& tCallback)
-        {
-            m_fOnCaptureData = tCallback;
             return *this;
         }
     };
@@ -126,9 +133,17 @@ public:
 
 class CCaptureConsoleOut
 {
+public:
+    enum ECaptureFlags
+    {
+        CaptureStdOut = 1 << 0,
+        CaptureStdErr = 1 << 1,
+    };
+    static constexpr DWORD m_dwCaptureFlagsAll = CaptureStdOut | CaptureStdErr;
+
 protected:
-    std::shared_ptr<detail::CCapturePipeData> m_spCapturePipeData_StdOut;
-    std::shared_ptr<detail::CCapturePipeData> m_spCapturePipeData_StdErr;
+    std::shared_ptr<detail::CCapturePipeData> m_spCapturePipeData_StdOut = std::make_shared<detail::CCapturePipeData>();
+    std::shared_ptr<detail::CCapturePipeData> m_spCapturePipeData_StdErr = std::make_shared<detail::CCapturePipeData>();
 
 public:
     struct CaptureOptions
@@ -152,11 +167,11 @@ public:
     inline bool IsCaptureInProgress() const
     {
         auto bCaptureInProgress = false;
-        if (m_spCapturePipeData_StdOut && m_spCapturePipeData_StdOut->IsCaptureInProgress())
+        if (m_spCapturePipeData_StdOut->IsCaptureInProgress())
         {
             bCaptureInProgress = true;
         }
-        if (m_spCapturePipeData_StdErr && m_spCapturePipeData_StdErr->IsCaptureInProgress())
+        if (m_spCapturePipeData_StdErr->IsCaptureInProgress())
         {
             bCaptureInProgress = true;
         }
@@ -173,24 +188,31 @@ public:
         return CCaptureConsoleDataAnalysisHelper{ m_spCapturePipeData_StdErr };
     }
 
+    template< typename TCallback >
+    StandardResult SetCaptureDataOverride(const TCallback& fCaptureDataOverride, DWORD nForCaptureFlags = CCaptureConsoleOut::m_dwCaptureFlagsAll)
+    {
+        if (IsBitSet(nForCaptureFlags, CaptureStdOut))
+        {
+            m_spCapturePipeData_StdOut->m_fCaptureDataOverride = fCaptureDataOverride;
+        }
+        if (IsBitSet(nForCaptureFlags, CaptureStdErr))
+        {
+            m_spCapturePipeData_StdErr->m_fCaptureDataOverride = fCaptureDataOverride;
+        }
+
+        return StandardResult::Success;
+    }
+
     class CScopedConsoleDataCapture
     {
     protected:
         CCaptureConsoleOut& m_oCaptureConsoleOutput;
 
-    public:
-        enum ECaptureFlags
-        {
-            CaptureStdOut = 1 << 0,
-            CaptureStdErr = 1 << 1,
-        };
-        static constexpr DWORD m_dwCaptureFlagsAll = CaptureStdOut | CaptureStdErr;
-
     protected:
         StandardResult DoConstructor(DWORD nCaptureFlags);
         StandardResult DoDestructor();
     public:
-        CScopedConsoleDataCapture(CCaptureConsoleOut& oCaptureConsoleOutput, DWORD nCaptureFlags = m_dwCaptureFlagsAll)
+        CScopedConsoleDataCapture(CCaptureConsoleOut& oCaptureConsoleOutput, DWORD nCaptureFlags = CCaptureConsoleOut::m_dwCaptureFlagsAll)
             : m_oCaptureConsoleOutput{ oCaptureConsoleOutput }
         {
             DoConstructor(nCaptureFlags);
@@ -203,7 +225,7 @@ public:
         }
     };
 
-    auto GetScopedCapture(DWORD nCaptureFlags = CScopedConsoleDataCapture::m_dwCaptureFlagsAll)
+    auto GetScopedCapture(DWORD nCaptureFlags = CCaptureConsoleOut::m_dwCaptureFlagsAll)
     {
         return CScopedConsoleDataCapture(*this, nCaptureFlags);
     }

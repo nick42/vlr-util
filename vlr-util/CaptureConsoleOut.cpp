@@ -89,9 +89,9 @@ StandardResult CCapturePipeData::BeginCapture(const CaptureOptions& oCaptureOpti
 #endif
 
     // If the user has specified a custom callback for data, use that, else map to internal storage
-    if (oCaptureOptions.m_fOnCaptureData)
+    if (m_fCaptureDataOverride)
     {
-        m_fOnCaptureData = oCaptureOptions.m_fOnCaptureData;
+        m_fOnCaptureData = m_fCaptureDataOverride;
     }
     else
     {
@@ -104,6 +104,8 @@ StandardResult CCapturePipeData::BeginCapture(const CaptureOptions& oCaptureOpti
             }
         };
     }
+
+	m_bCaptureInProgress = true;
 
     return StandardResult::Success;
 }
@@ -145,6 +147,8 @@ StandardResult CCapturePipeData::EndCapture()
 #ifdef _MSC_VER
 	secure_close(m_arrDupPipeHandles[PipeDirection::Write]);
 #endif
+
+	m_bCaptureInProgress = false;
 
 	return StandardResult::Success;
 }
@@ -192,17 +196,11 @@ StandardResult CCaptureConsoleOut::BeginCapture(const CaptureOptions& oCaptureOp
 
 	if (oCaptureOptions.m_bCaptureStdOut)
 	{
-		m_spCapturePipeData_StdOut = std::make_shared<detail::CCapturePipeData>();
-		VLR_ASSERT_NONZERO_OR_RETURN_EXPRESSION(m_spCapturePipeData_StdOut, StandardResult::Failure);
-
 		sr = m_spCapturePipeData_StdOut->BeginCapture(stdout, STD_OUT_FD);
 		VLR_ASSERT_SR_SUCCEEDED_OR_RETURN_SRESULT(sr);
 	}
-	if (oCaptureOptions.m_bCaptureStdOut)
+	if (oCaptureOptions.m_bCaptureStdErr)
 	{
-		m_spCapturePipeData_StdErr = std::make_shared<detail::CCapturePipeData>();
-		VLR_ASSERT_NONZERO_OR_RETURN_EXPRESSION(m_spCapturePipeData_StdErr, StandardResult::Failure);
-
 		sr = m_spCapturePipeData_StdErr->BeginCapture(stderr, STD_ERR_FD);
 		VLR_ASSERT_SR_SUCCEEDED_OR_RETURN_SRESULT(sr);
 	}
@@ -214,12 +212,12 @@ StandardResult CCaptureConsoleOut::EndCapture()
 {
 	StandardResult sr;
 
-	if (m_spCapturePipeData_StdOut)
+	if (m_spCapturePipeData_StdOut->IsCaptureInProgress())
 	{
 		sr = m_spCapturePipeData_StdOut->EndCapture();
 		VLR_ASSERT_SR_SUCCEEDED_OR_RETURN_SRESULT(sr);
 	}
-	if (m_spCapturePipeData_StdErr)
+	if (m_spCapturePipeData_StdErr->IsCaptureInProgress())
 	{
 		sr = m_spCapturePipeData_StdErr->EndCapture();
 		VLR_ASSERT_SR_SUCCEEDED_OR_RETURN_SRESULT(sr);
