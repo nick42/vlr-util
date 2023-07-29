@@ -135,8 +135,19 @@ public:
     {
         bool m_bCaptureStdOut = true;
         bool m_bCaptureStdErr = true;
+
+        static constexpr CaptureOptions CaptureAll()
+        {
+            return []()
+            {
+                auto oCaptureOptions = CaptureOptions{};
+                oCaptureOptions.m_bCaptureStdOut = true;
+                oCaptureOptions.m_bCaptureStdOut = true;
+                return oCaptureOptions;
+            }();
+        }
     };
-    StandardResult BeginCapture(const CaptureOptions& oCaptureOptions = {});
+    StandardResult BeginCapture(const CaptureOptions& oCaptureOptions = CaptureOptions::CaptureAll());
     StandardResult EndCapture();
     inline bool IsCaptureInProgress() const
     {
@@ -160,6 +171,41 @@ public:
     auto GetDataAnalysisHelper_StdErr() const
     {
         return CCaptureConsoleDataAnalysisHelper{ m_spCapturePipeData_StdErr };
+    }
+
+    class CScopedConsoleDataCapture
+    {
+    protected:
+        CCaptureConsoleOut& m_oCaptureConsoleOutput;
+
+    public:
+        enum ECaptureFlags
+        {
+            CaptureStdOut = 1 << 0,
+            CaptureStdErr = 1 << 1,
+        };
+        static constexpr DWORD m_dwCaptureFlagsAll = CaptureStdOut | CaptureStdErr;
+
+    protected:
+        StandardResult DoConstructor(DWORD nCaptureFlags);
+        StandardResult DoDestructor();
+    public:
+        CScopedConsoleDataCapture(CCaptureConsoleOut& oCaptureConsoleOutput, DWORD nCaptureFlags = m_dwCaptureFlagsAll)
+            : m_oCaptureConsoleOutput{ oCaptureConsoleOutput }
+        {
+            DoConstructor(nCaptureFlags);
+        }
+        CScopedConsoleDataCapture(const CScopedConsoleDataCapture&) = delete;
+        CScopedConsoleDataCapture& operator=(const CScopedConsoleDataCapture&) = delete;
+        ~CScopedConsoleDataCapture()
+        {
+            DoDestructor();
+        }
+    };
+
+    auto GetScopedCapture(DWORD nCaptureFlags = CScopedConsoleDataCapture::m_dwCaptureFlagsAll)
+    {
+        return CScopedConsoleDataCapture(*this, nCaptureFlags);
     }
 
 protected:

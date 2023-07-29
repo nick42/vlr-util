@@ -246,6 +246,30 @@ StandardResult CCaptureConsoleOut::DoDestructor()
     return StandardResult::Success;
 }
 
+StandardResult CCaptureConsoleOut::CScopedConsoleDataCapture::DoConstructor(DWORD nCaptureFlags)
+{
+	StandardResult sr;
+
+	auto oCaptureOptions = CCaptureConsoleOut::CaptureOptions{};
+	oCaptureOptions.m_bCaptureStdOut = IsBitSet(nCaptureFlags, CaptureStdOut);
+	oCaptureOptions.m_bCaptureStdErr = IsBitSet(nCaptureFlags, CaptureStdErr);
+
+	sr = m_oCaptureConsoleOutput.BeginCapture(oCaptureOptions);
+	VLR_ASSERT_SR_SUCCEEDED_OR_RETURN_SRESULT(sr);
+
+	return StandardResult::Success;
+}
+
+StandardResult CCaptureConsoleOut::CScopedConsoleDataCapture::DoDestructor()
+{
+	StandardResult sr;
+
+	sr = m_oCaptureConsoleOutput.EndCapture();
+	VLR_ASSERT_SR_SUCCEEDED_OR_RETURN_SRESULT(sr);
+
+	return StandardResult::Success;
+}
+
 VLR_NAMESPACE_END //(util)
 
 VLR_NAMESPACE_END //(vlr)

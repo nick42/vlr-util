@@ -2,6 +2,7 @@
   "name": "vlr-util.test",
   "version-string": "0.1",
   "dependencies": [
-    "gtest"
+    "gtest",
+    "catch2",
   ]
 }

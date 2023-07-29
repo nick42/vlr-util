@@ -2,10 +2,24 @@
 //
 
 #include "pch.h"
+
+#include <array>
 #include <gtest/gtest.h>
+#include <catch2/catch_session.hpp>
 
 int main(int argc, char** argv)
 {
+	auto oCatchSession = Catch::Session{};
+
+	// Faking command line until we convert...
+	auto arrFakeCommandLine = std::vector<const char*>{ "vlr_util.test" };
+	int returnCode = oCatchSession.applyCommandLine((int)arrFakeCommandLine.size(), arrFakeCommandLine.data());
+	if (returnCode != 0) // Indicates a command line error
+		return returnCode;
+
+	auto nCatchResult = oCatchSession.run();
+	// Ignoring result...
+
 	testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
 }
