@@ -120,10 +120,34 @@ public:
     std::shared_ptr<detail::CCapturePipeData> m_spCapturePipeData;
     std::vector<std::string_view> m_arrTextLines;
 
+    StandardResult DecomposeCaptureDataInfoLines(std::vector<std::string_view>& arrTextLines) const;
+
 public:
     const std::vector<std::string_view>& GetAsTextLines();
 
     int FindMatchingLineIndex_Contains(std::string_view svLine, int nStartIndex = 0);
+
+    inline bool DoesOutputContainContent(std::string_view svLine)
+    {
+        return FindMatchingLineIndex_Contains(svLine) != -1;
+    }
+
+    // Requirements: Must be a collection (eg: begin()/end(), with elements which convert to std::string_view
+    template< typename TLineCollection >
+    inline bool DoesOutputContainSequence(const TLineCollection& tLineCollection)
+    {
+        int nCurrentIndex = 0;
+        for (const auto& tLine : tLineCollection)
+        {
+            nCurrentIndex = FindMatchingLineIndex_Contains(tLine, nCurrentIndex);
+            if (nCurrentIndex == -1)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
 public:
     CCaptureConsoleDataAnalysisHelper(const std::shared_ptr<detail::CCapturePipeData>& spCapturePipeData)

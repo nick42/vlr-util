@@ -155,20 +155,23 @@ StandardResult CCapturePipeData::EndCapture()
 
 VLR_NAMESPACE_END //(detail)
 
+StandardResult CCaptureConsoleDataAnalysisHelper::DecomposeCaptureDataInfoLines(std::vector<std::string_view>& arrTextLines) const
+{
+	auto& arrDataBuffer = m_spCapturePipeData->m_arrInternalDataCapture;
+	auto svDataBuffer = std::string_view{ arrDataBuffer.data(), arrDataBuffer.size() };
+
+	strings::SplitStringAtDelimiter(svDataBuffer, '\n', arrTextLines);
+
+	return StandardResult::Success;
+}
+
 const std::vector<std::string_view>& CCaptureConsoleDataAnalysisHelper::GetAsTextLines()
 {
 	if (m_arrTextLines.size() > 0)
 	{
 		return m_arrTextLines;
 	}
-	auto& arrDataBuffer = m_spCapturePipeData->m_arrInternalDataCapture;
-	if (arrDataBuffer.size() == 0)
-	{
-		return m_arrTextLines;
-	}
-	auto svDataBuffer = std::string_view{ arrDataBuffer.data(), arrDataBuffer.size() };
-
-	strings::SplitStringAtDelimiter(svDataBuffer, '\r\n', m_arrTextLines);
+	DecomposeCaptureDataInfoLines(m_arrTextLines);
 
 	return m_arrTextLines;
 }

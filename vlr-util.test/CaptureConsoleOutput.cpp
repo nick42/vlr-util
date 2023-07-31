@@ -8,9 +8,9 @@
 
 using vlr::StandardResult;
 
-auto svzCheckValue_StdOut = "Some text";
-auto svzCheckValue_StdErr = "Some error";
-auto svzCheckValue_Missing = "Didn't print this...";
+static constexpr auto svzCheckValue_StdOut = "Some text";
+static constexpr auto svzCheckValue_StdErr = "Some error";
+static constexpr auto svzCheckValue_Missing = "Didn't print this...";
 
 TEST_CASE("CaptureConsoleOut: general")
 {
@@ -153,5 +153,45 @@ TEST_CASE("CaptureConsoleOut: CaptureDataOverride")
 		CHECK(isValueInCapture(svzCheckValue_StdOut) == false);
 		CHECK(isValueInCapture(svzCheckValue_StdErr) == true);
 		CHECK(isValueInCapture(svzCheckValue_Missing) == false);
+	}
+}
+
+TEST_CASE("CCaptureConsoleDataAnalysisHelper::DoesOutputContainContent")
+{
+	StandardResult sr;
+
+	static constexpr auto svzSubsequentValue_StdOut = "Other text";
+
+	auto oCaptureConsoleOut = vlr::util::CCaptureConsoleOut{};
+
+	{
+		auto oScopedConsoleCapture = oCaptureConsoleOut.GetScopedCapture();
+
+		std::cout << svzCheckValue_StdOut << std::endl;
+		std::cout << svzSubsequentValue_StdOut << std::endl;
+	}
+
+	{
+		auto oDataAnalysisHelper_StdOut = oCaptureConsoleOut.GetDataAnalysisHelper_StdOut();
+
+		bool bContainsValues = false;
+
+		bContainsValues  = oDataAnalysisHelper_StdOut.DoesOutputContainContent(svzCheckValue_StdOut);
+		CHECK(bContainsValues == true);
+
+		bContainsValues = oDataAnalysisHelper_StdOut.DoesOutputContainContent(svzSubsequentValue_StdOut);
+		CHECK(bContainsValues == true);
+
+		auto arrExpectedSequence = std::vector<std::string>{ svzCheckValue_StdOut, svzSubsequentValue_StdOut };
+		bContainsValues = oDataAnalysisHelper_StdOut.DoesOutputContainSequence(arrExpectedSequence);
+		CHECK(bContainsValues == true);
+
+		auto arrBadSequence_OutOfOrder = std::vector<std::string>{ svzSubsequentValue_StdOut, svzCheckValue_StdOut };
+		bContainsValues = oDataAnalysisHelper_StdOut.DoesOutputContainSequence(arrBadSequence_OutOfOrder);
+		CHECK(bContainsValues == false);
+
+		auto arrBadSequence_OtherData = std::vector<std::string>{ svzCheckValue_StdOut, "Something else", svzSubsequentValue_StdOut};
+		bContainsValues = oDataAnalysisHelper_StdOut.DoesOutputContainSequence(arrBadSequence_OtherData);
+		CHECK(bContainsValues == false);
 	}
 }
