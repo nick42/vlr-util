@@ -8,6 +8,7 @@
 #define PCH_H
 
 #include <gtest/gtest.h>
+#include <catch2/catch_all.hpp>
 
 #include <vlr-util/config.h>
 

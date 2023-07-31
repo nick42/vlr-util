@@ -26,7 +26,7 @@ constexpr auto IsNonZero_choice( const TValue& tValue, choice<1>&& )
 }
 
 template< typename TValue >
-constexpr auto IsNonZero_choice( const TValue& tValue, choice<2>&& )
+constexpr auto IsNonZero_choice( const TValue* tValue, choice<2>&& )
 -> decltype(tValue != nullptr)
 {
 	return (tValue != nullptr);

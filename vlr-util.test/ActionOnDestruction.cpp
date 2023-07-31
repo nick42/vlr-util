@@ -2,12 +2,12 @@
 
 #include "vlr-util/ActionOnDestruction.h"
 
-TEST(ActionOnDestruction, general)
+TEST_CASE("ActionOnDestruction: general")
 {
 	int nValue = 42;
 	{
 		auto oOnDestroy_ClearValue = vlr::MakeActionOnDestruction([&] { nValue = 0; });
-		ASSERT_EQ(nValue, 42);
+		CHECK(nValue == 42);
 	}
-	ASSERT_EQ(nValue, 0);
+	CHECK(nValue == 0);
 }

@@ -29,7 +29,7 @@ protected:
 		{
 			if constexpr (ActionHasValidResult)
 			{
-				return {};
+				return TActionResult{};
 			}
 			else
 			{
