@@ -137,6 +137,9 @@
 #define VLR_ASSERT_SR_SUCCEEDED_OR_RETURN_FAILURE_VALUE( sr ) { auto&& _sr = (sr); VLR_ASSERT_NONZERO_OR_RETURN_EXPRESSION( _sr.isSuccess(), _tFailureValue ) }
 #define VLR_ASSERT_SR_SUCCEEDED_OR_CONTINUE( sr ) { auto&& _sr = (sr); VLR_ASSERT_NONZERO_OR_CONTINUE( _sr.isSuccess() ) }
 
+#define VLR_ON_SR_SUCCESS_RETURN_VALUE( sr ) { auto&& _sr = (sr); if (!_sr.isSuccess()) {} else { return _sr; } }
+#define VLR_ON_SR_ERROR_RETURN_VALUE( sr ) { auto&& _sr = (sr); if (_sr.isSuccess()) {} else { return _sr; } }
+
 #define VLR_ON_HR_S_OK__RETURN_HRESULT( hr ) { auto&& _hr = (hr); if (_hr != S_OK) {} else { return _hr; } }
 #define VLR_ON_HR_NON_S_OK__RETURN_HRESULT( hr ) { auto&& _hr = (hr); if (_hr == S_OK) {} else { return _hr; } }
 

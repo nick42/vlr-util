@@ -72,6 +72,10 @@ public:
 		m_nResultCode = hrResult;
 		return *this;
 	}
+	decltype(auto) asHRESULT() const
+	{
+		return m_nResultCode;
+	}
 
 public:
 	inline operator ResultCode() const
