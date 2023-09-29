@@ -24,11 +24,11 @@ struct HelperFor_MultiSZ
 
 	HRESULT ToStructuredData(
 		const TChar* pMultiSZ,
-		std::list<std_string>& oValueList );
+		std::vector<std_string>& oValueList );
 	inline decltype(auto) ToStructuredData(
 		const TChar* pMultiSZ )
 	{
-		std::list<std_string> oValueList;
+		std::vector<std_string> oValueList;
 		ToStructuredData( pMultiSZ, oValueList );
 		return oValueList;
 	}
@@ -36,6 +36,9 @@ struct HelperFor_MultiSZ
 		const TChar* pMultiSZ,
 		std::vector<vlr::basic_zstring_view<TChar>>& oValueCollection );
 
+	HRESULT ToMultiSz(
+		const std::vector<std_string>& oValueList,
+		std::vector<BYTE>& arrData);
 };
 
 template< typename TChar >
@@ -47,7 +50,7 @@ inline decltype(auto) MultiSZToStructuredData( const TChar* pMultiSZ )
 template< typename TChar >
 HRESULT HelperFor_MultiSZ<TChar>::ToStructuredData(
 	const TChar* pMultiSZ,
-	std::list<std_string>& oValueList )
+	std::vector<std_string>& oValueList )
 {
 	const auto* pBufferReadPtr = pMultiSZ;
 	while (pBufferReadPtr[0] != TChar{ 0 })
@@ -74,6 +77,41 @@ HRESULT HelperFor_MultiSZ<TChar>::ToStructuredData(
 		oValueCollection.push_back( svzCurrentString );
 		pBufferReadPtr += nCurrentStringLen + 1;
 	}
+
+	return S_OK;
+}
+
+template< typename TChar >
+HRESULT HelperFor_MultiSZ<TChar>::ToMultiSz(
+	const std::vector<std_string>& oValueList,
+	std::vector<BYTE>& arrData)
+{
+	size_t nAggregateCharCount = 0;
+	for (const auto& sValue : oValueList)
+	{
+		nAggregateCharCount += sValue.length() + 1;
+	}
+	// One additional for double NULL terminator
+	nAggregateCharCount += 1;
+
+	size_t nAggregateByteCount = nAggregateCharCount * sizeof(TChar);
+	arrData.resize(nAggregateByteCount);
+
+	BYTE* pDataWritePoint = arrData.data();
+	size_t nCountWrittenBytes = 0;
+
+	for (const auto& sValue : oValueList)
+	{
+		// Note: Writing string plus NULL terminator
+		size_t nStringLenPlusTerminatorBytes = (sValue.length() + 1) * sizeof(TChar);
+
+		memcpy_s(pDataWritePoint, arrData.size() - nCountWrittenBytes, sValue.c_str(), nStringLenPlusTerminatorBytes);
+		nCountWrittenBytes += nStringLenPlusTerminatorBytes;
+		pDataWritePoint += nStringLenPlusTerminatorBytes;
+	}
+	// Add extra NULL terminator
+	//VLR_ASSERT_COMPARE_OR_RETURN_EUNEXPECTED(arrData.size() - nCountWrittenBytes, == , 1);
+	*pDataWritePoint = 0;
 
 	return S_OK;
 }
