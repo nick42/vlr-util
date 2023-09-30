@@ -115,10 +115,17 @@ public:
     }
 #endif
 
+    inline auto toStdString() const
+    {
+        // This just casts to base type (ie: string_view), for which there is automatic conversion to std::string
+        return std::basic_string<_Elem>{ static_cast<const base_type&>(*this) };
+    }
+
     // Allow implicit casting to std::basic_string (to sorta enumate the implicit constructor for string_view)
     inline operator std::basic_string<_Elem>() const
     {
-        return std::basic_string<_Elem>{ static_cast<const base_type&>(*this) };
+        //return std::basic_string<_Elem>{ static_cast<const base_type&>(*this) };
+        return toStdString();
     }
 
     // Note: These methods copied from basic_string_view, cause they are not protected like they probably should be
