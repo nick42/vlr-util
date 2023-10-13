@@ -6,9 +6,9 @@
 #include "formatpf.h"
 #include "util.IsBitSet.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+VLR_NAMESPACE_BEGIN(vlr)
 
-VLR_NAMESPACE_BEGIN( enums )
+VLR_NAMESPACE_BEGIN(enums)
 
 template< typename TNumericType >
 class CFormatEnumBase
@@ -54,6 +54,6 @@ public:
 
 #define VLR_ON_CASE_RETURN_STRING_OF_VALUE( value ) case value: return _T(#value)
 
-VLR_NAMESPACE_END //( enums )
+VLR_NAMESPACE_END //(enums)
 
-VLR_NAMESPACE_END //( vlr )
+VLR_NAMESPACE_END //(vlr)

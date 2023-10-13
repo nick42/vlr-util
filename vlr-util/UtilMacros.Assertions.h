@@ -145,3 +145,7 @@
 
 #define VLR_ASSERT_ALLOCATED_OR_RETURN_STANDARD_ERROR( value ) VLR_ASSERT_NONZERO_OR_RETURN_EXPRESSION( value, E_OUTOFMEMORY )
 #define VLR_ASSERT_ALLOCATED_OR_RETURN_FAILURE_VALUE( value ) VLR_ASSERT_NONZERO_OR_RETURN_EXPRESSION( value, _tFailureValue )
+
+#define VLR_ASSERT_ON_UNHANDLED_SWITCH_CASE \
+	vlr::assert::HandleCheckFailure( _T("Assertion failed; unhandled switch case") ); \
+	[[fallthrough]]
