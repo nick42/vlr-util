@@ -164,6 +164,7 @@
     <ClCompile Include="CaptureConsoleOutput.cpp" />
     <ClCompile Include="CloseEnough.cpp" />
     <ClCompile Include="enums.RangeInfo.cpp" />
+    <ClCompile Include="enums.SmartEnum.cpp" />
     <ClCompile Include="formatpf.cpp" />
     <ClCompile Include="logging.LogMessage.cpp" />
     <ClCompile Include="logging.MessageContext.cpp" />
