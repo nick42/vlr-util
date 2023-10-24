@@ -2,8 +2,6 @@
 
 #include <optional>
 
-#include <boost/iterator/iterator_facade.hpp>
-
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
@@ -15,15 +13,19 @@ VLR_NAMESPACE_BEGIN( enums )
 
 // Sequential values iterator
 
-template< typename TNumericType, TNumericType tMaxValue, TNumericType tMinValue = 0, typename TDerefType = const TNumericType& >
-class sequential_range_iterator
-	: public boost::iterator_facade<sequential_range_iterator<TNumericType, tMaxValue, tMinValue, TDerefType>, TNumericType const, boost::bidirectional_traversal_tag, TDerefType>
+template <typename TNumericType, TNumericType tMaxValue, TNumericType tMinValue = 0, typename TDerefType = const TNumericType&>
+class SequentialRangeIterator
 {
-protected:
-	friend class boost::iterator_core_access;
+public:
+	using iterator_category = std::bidirectional_iterator_tag;
+	using value_type = TNumericType;
+	using difference_type = std::ptrdiff_t;
+	using pointer = TNumericType*;
+	using reference = TDerefType;
 
-private:
-	using this_type = sequential_range_iterator<TNumericType, tMaxValue, tMinValue, TDerefType>;
+protected:
+	bool m_bIsValid = false;
+	TNumericType m_tCurrent{};
 
 public:
 	static constexpr auto GetMinValue()
@@ -34,7 +36,7 @@ public:
 	{
 		return tMaxValue;
 	}
-	static constexpr auto IsValueInRange( TNumericType nValue )
+	static constexpr auto IsValueInRange(TNumericType nValue)
 	{
 		return true
 			&& (nValue >= tMinValue)
@@ -42,91 +44,94 @@ public:
 			;
 	}
 
-protected:
-	std::optional<TNumericType> m_onValue;
-
-protected:
-	constexpr void increment() noexcept
+	TNumericType operator*() const
 	{
-		if (!m_onValue.has_value())
+		if (!m_bIsValid)
 		{
-			return;
+			throw std::exception("Invalid iterator");
 		}
-		auto& nValue = m_onValue.value();
-
-		if (nValue >= tMaxValue)
-		{
-			m_onValue = {};
-			return;
-		}
-
-		++nValue;
-	}
-	constexpr void decrement() noexcept
-	{
-		if (!m_onValue.has_value())
-		{
-			return;
-		}
-		auto& nValue = m_onValue.value();
-
-		if (nValue <= tMinValue)
-		{
-			m_onValue = {};
-			return;
-		}
-
-		--nValue;
+		return m_tCurrent;
 	}
 
-	constexpr bool equal( const this_type& oOther ) const noexcept
+	SequentialRangeIterator& operator++()
+	{
+		if (m_tCurrent == tMaxValue)
+		{
+			m_bIsValid = false;
+			m_tCurrent = {};
+			return *this;
+		}
+		++m_tCurrent;
+		return *this;
+	}
+
+	SequentialRangeIterator operator++(int)
+	{
+		SequentialRangeIterator temp = *this;
+		++(*this);
+		return temp;
+	}
+
+	SequentialRangeIterator& operator--()
+	{
+		if (m_tCurrent == tMinValue)
+		{
+			m_bIsValid = false;
+			m_tCurrent = {};
+			return *this;
+		}
+		--m_tCurrent;
+		return *this;
+	}
+
+	SequentialRangeIterator operator--(int)
+	{
+		SequentialRangeIterator temp = *this;
+		--(*this);
+		return temp;
+	}
+
+	bool operator==(const SequentialRangeIterator& other) const
 	{
 		return true
-			&& (m_onValue == oOther.m_onValue)
-			;
+			&& (m_bIsValid == other.m_bIsValid)
+			&& (m_tCurrent == other.m_tCurrent);
 	}
 
-	constexpr TDerefType dereference() const
+	bool operator!=(const SequentialRangeIterator& other) const
 	{
-		ASSERT( m_onValue.has_value() );
-
-		// If we're returning a reference, return the reference to the actual value, else return a cast
-
-		if constexpr (std::is_reference_v<TDerefType>)
-		{
-			return m_onValue.value();
-		}
-		else
-		{
-			return static_cast<TDerefType>(m_onValue.value());
-		}
+		return !(*this == other);
 	}
 
 public:
-	constexpr sequential_range_iterator() noexcept = default;
-	explicit constexpr sequential_range_iterator( TNumericType nValue ) noexcept
-		: m_onValue{ nValue }
-	{
-		static_assert(tMaxValue >= tMinValue);
-		// TODO? static_assert that TNumericType is actually numeric?
+	explicit SequentialRangeIterator() = default;
+	explicit SequentialRangeIterator(TNumericType tCurrent)
+		: m_bIsValid{ true }
+		, m_tCurrent{ tCurrent }
+	{}
+};
 
-		if (nValue < tMinValue)
-		{
-			m_onValue = {};
-		}
-		else if (nValue >= tMaxValue)
-		{
-			m_onValue = {};
-		}
+template <typename T, T Min, T Max>
+class SequentialRange {
+public:
+	using iterator = SequentialRangeIterator<T, Min, Max>;
+
+	iterator begin() {
+		return iterator(Min);
+	}
+
+	iterator end() {
+		return iterator(Max + 1);
 	}
 };
+
 
 template< typename TNumericType, TNumericType tMaxValue, TNumericType tMinValue = 0, typename TDerefType = TNumericType const& >
 class CRangeInfoSequentialT
 {
 private:
 	using this_type = CRangeInfoSequentialT<TNumericType, tMaxValue, tMinValue, TDerefType>;
-	using iterator = sequential_range_iterator<TNumericType, tMaxValue, tMinValue, TDerefType>;
+	using iterator = SequentialRangeIterator<TNumericType, tMaxValue, tMinValue, TDerefType>;
 
 public:
 	static constexpr auto m_tMinValue = tMinValue;
@@ -205,15 +210,14 @@ using CRangeInfoSequential_Signed_Default = CRangeInfoSequential_DWORD_PTR<nMaxV
 
 // Bitmask iterator
 
-template< typename TNumericType, TNumericType tMaxValue, TNumericType tMinValue = 1, typename TDerefType = const TNumericType&, typename std::enable_if_t<vlr::util::IsSingleBitValue(tMaxValue)>* = nullptr >
-class bitmask_range_iterator
-	: public boost::iterator_facade<bitmask_range_iterator<TNumericType, tMaxValue, tMinValue, TNumericType>, TNumericType const, boost::bidirectional_traversal_tag>
-{
-protected:
-	friend class boost::iterator_core_access;
-
-private:
-	using this_type = bitmask_range_iterator<TNumericType, tMaxValue, tMinValue, TNumericType>;
+template <typename TNumericType, TNumericType tMaxValue, TNumericType tMinValue = 0, typename std::enable_if_t<vlr::util::IsSingleBitValue(tMaxValue)>* = nullptr>
+class BitmaskRangeIterator {
+public:
+	using iterator_category = std::bidirectional_iterator_tag;
+	using value_type = TNumericType;
+	using difference_type = std::ptrdiff_t;
+	using pointer = TNumericType*;
+	using reference = TNumericType&;
 
 public:
 	static constexpr auto GetMinValue()
@@ -225,104 +229,92 @@ public:
 		return tMaxValue;
 	}
 	// Note: Only single bit values are in range for a bitmask iterator
-	static constexpr auto IsValueInRange( TNumericType nValue )
+	static constexpr auto IsValueInRange(TNumericType nValue)
 	{
 		return true
 			&& (nValue >= tMinValue)
 			&& (nValue <= tMaxValue)
-			&& (vlr::util::IsSingleBitValue( nValue ))
+			&& (vlr::util::IsSingleBitValue(nValue))
 			;
 	}
 
 protected:
-	std::optional<TNumericType> m_onValue;
+	bool m_bIsValid = false;
+	TNumericType m_tCurrent{};
 
-protected:
-	constexpr void increment() noexcept
-	{
-		if (!m_onValue.has_value())
+public:
+	TNumericType operator*() const {
+		if (!m_bIsValid)
 		{
-			return;
+			throw std::exception("Invalid iterator");
 		}
-		auto& nValue = m_onValue.value();
-
-		if (nValue >= tMaxValue)
-		{
-			m_onValue = {};
-			return;
-		}
-
-		nValue <<= 1;
-	}
-	constexpr void decrement() noexcept
-	{
-		if (!m_onValue.has_value())
-		{
-			return;
-		}
-		auto& nValue = m_onValue.value();
-
-		if (nValue <= tMinValue)
-		{
-			m_onValue = {};
-			return;
-		}
-
-		nValue >>= 1;
+		return m_tCurrent;
 	}
 
-	constexpr bool equal( const this_type& oOther ) const noexcept
+	BitmaskRangeIterator& operator++()
+	{
+		if (m_tCurrent == tMaxValue)
+		{
+			m_bIsValid = false;
+			m_tCurrent = {};
+			return *this;
+		}
+		m_tCurrent = m_tCurrent << 1;
+		return *this;
+	}
+
+	BitmaskRangeIterator operator++(int)
+	{
+		SequentialRangeIterator temp = *this;
+		++(*this);
+		return temp;
+	}
+
+	BitmaskRangeIterator& operator--()
+	{
+		if (m_tCurrent == tMinValue)
+		{
+			m_bIsValid = false;
+			m_tCurrent = {};
+			return *this;
+		}
+		m_tCurrent = m_tCurrent >> 1;
+		return *this;
+	}
+
+	BitmaskRangeIterator operator--(int)
+	{
+		SequentialRangeIterator temp = *this;
+		--(*this);
+		return temp;
+	}
+
+	bool operator==(const BitmaskRangeIterator& other) const
 	{
 		return true
-			&& (m_onValue == oOther.m_onValue)
-			;
+			&& (m_bIsValid == other.m_bIsValid)
+			&& (m_tCurrent == other.m_tCurrent);
 	}
 
-	constexpr TDerefType dereference() const
+	bool operator!=(const BitmaskRangeIterator& other) const
 	{
-		ASSERT( m_onValue.has_value() );
-
-		// If we're returning a reference, return the reference to the actual value, else return a cast
-
-		if constexpr (std::is_reference_v<TDerefType>)
-		{
-			return m_onValue.value();
-		}
-		else
-		{
-			return static_cast<TDerefType>(m_onValue.value());
-		}
+		return !(*this == other);
 	}
 
 public:
-	constexpr bitmask_range_iterator() noexcept = default;
-	explicit constexpr bitmask_range_iterator( TNumericType nValue ) noexcept
-		: m_onValue{ nValue }
-	{
-		static_assert(tMaxValue >= tMinValue);
-		// TODO? static_assert that TNumericType is actually numeric?
-
-		if (!vlr::util::IsSingleBitValue( nValue ))
-		{
-			m_onValue = {};
-		}
-		else if (nValue < tMinValue)
-		{
-			m_onValue = {};
-		}
-		else if (nValue >= tMaxValue)
-		{
-			m_onValue = {};
-		}
-	}
+	explicit BitmaskRangeIterator() = default;
+	explicit BitmaskRangeIterator(TNumericType tCurrent)
+		: m_bIsValid{ true }
+		, m_tCurrent{ tCurrent }
+	{}
 };
 
-template< typename TNumericType, TNumericType tMaxValue, TNumericType tMinValue = 1, typename TDerefType = TNumericType const& >
+template< typename TNumericType, TNumericType tMaxValue, TNumericType tMinValue = 1 >
 class CRangeInfoBitmaskT
 {
 private:
-	using this_type = CRangeInfoBitmaskT<TNumericType, tMaxValue, tMinValue, TDerefType>;
-	using iterator = bitmask_range_iterator<TNumericType, tMaxValue, tMinValue, TDerefType>;
+	using this_type = CRangeInfoBitmaskT<TNumericType, tMaxValue, tMinValue>;
+	using iterator = BitmaskRangeIterator<TNumericType, tMaxValue, tMinValue>;
 
 public:
 	static constexpr auto m_tMinValue = tMinValue;
@@ -369,13 +361,13 @@ public:
 	constexpr CRangeInfoBitmaskT() noexcept = default;
 };
 
-template< DWORD_PTR nMaxValue, DWORD_PTR nMinValue = 1, typename TDerefType = const DWORD_PTR& >
+template< DWORD_PTR nMaxValue, DWORD_PTR nMinValue = 1 >
 class CRangeInfoBitmask_DWORD_PTR
-	: public CRangeInfoBitmaskT<DWORD_PTR, nMaxValue, nMinValue, TDerefType>
+	: public CRangeInfoBitmaskT<DWORD_PTR, nMaxValue, nMinValue>
 {
 private:
-	using this_type = CRangeInfoBitmask_DWORD_PTR<nMaxValue, nMinValue, TDerefType>;
-	using BaseClass = CRangeInfoBitmaskT<DWORD_PTR, nMaxValue, nMinValue, TDerefType>;
+	using this_type = CRangeInfoBitmask_DWORD_PTR<nMaxValue, nMinValue>;
+	using BaseClass = CRangeInfoBitmaskT<DWORD_PTR, nMaxValue, nMinValue>;
 
 public:
 	using BaseClass::begin;

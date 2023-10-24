@@ -4,7 +4,7 @@
 
 TEST( enums_RangeInfo, sequential_range_iterator )
 {
-	using TIterator_int_0to10 = vlr::enums::sequential_range_iterator<int, 10, 0>;
+	using TIterator_int_0to10 = vlr::enums::SequentialRangeIterator<int, 10, 0>;
 	using TRangeInfo_unsigned_0to10 = vlr::enums::CRangeInfoSequential_Unsigned_Default<10>;
 	using TRangeInfo_signed_0to10 = vlr::enums::CRangeInfoSequential_Signed_Default<10>;
 
