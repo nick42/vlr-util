@@ -1,7 +1,7 @@
 #pragma once
 
-#if VLR_CONFIG_INCLUDE_AFX
-#include <afxstr.h>
+#if VLR_CONFIG_INCLUDE_ATL_CSTRING
+#include <atlstr.h>
 #endif
 
 #include "UtilMacros.Namespace.h"

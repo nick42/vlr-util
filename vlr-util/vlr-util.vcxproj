@@ -38,6 +38,8 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="include.fmt.h" />
     <ClInclude Include="include.spdlog.h" />
+    <ClInclude Include="logging.Callbacks.h" />
+    <ClInclude Include="logging.LogMessage.DefaultImpl.h" />
     <ClInclude Include="logging.LogMessage.h" />
     <ClInclude Include="logging.MessageContext.h" />
     <ClInclude Include="ModuleContext.Compilation.h" />

@@ -19,14 +19,14 @@ using FormatStringT = std::basic_string_view<TCHAR>;
 
 VLR_NAMESPACE_END //( lib_fmt )
 
-#if VLR_CONFIG_INCLUDE_AFX
+#if VLR_CONFIG_INCLUDE_ATL_CSTRING
 
 // Note: If you have "custom" types which you want to pass as format parameters, you need to 
 // create template specializations which tell the library how to parse and format them.
 // This code essentially just converts CString to string_view, which is supported directly.
 // As of time of writing: https://fmt.dev/latest/api.html#formatting-user-defined-types
 
-#include <afxstr.h>
+#include <atlstr.h>
 
 #include "zstring_view.h"
 
@@ -41,7 +41,7 @@ struct fmt::formatter<CStringA>
 	template< typename ParseContext >
 	auto format( const CStringA& sParam, ParseContext& ctx )
 	{
-		return fmt::formatter<string_view>::format_to( ctx.begin(), "{}", vlr::zstring_view{ sParam } );
+		return fmt::formatter<std::string_view>::format_to( ctx.begin(), "{}", vlr::zstring_view{ sParam } );
 	}
 };
 
@@ -56,7 +56,7 @@ struct fmt::formatter<CStringW>
 	template< typename ParseContext >
 	auto format( const CStringW& sParam, ParseContext& ctx )
 	{
-		return fmt::formatter<wstring_view>::format_to( ctx.begin(), "{}", vlr::wzstring_view{ sParam } );
+		return fmt::formatter<std::wstring_view>::format_to( ctx.begin(), "{}", vlr::wzstring_view{ sParam } );
 	}
 };
 

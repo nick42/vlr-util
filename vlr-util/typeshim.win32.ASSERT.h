@@ -1,6 +1,7 @@
 #pragma once
 
-#ifdef _WIN32
+//#if defined(_WIN32) && VLR_CONFIG_INCLUDE_ATL_CSTRING
+#if defined(ASSERT)
 #else
 
 #include <assert.h>

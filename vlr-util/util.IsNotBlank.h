@@ -26,6 +26,22 @@ constexpr bool IsNotBlank_choice(const TValue& tValue, choice<1>&&)
 	return (vlr::wzstring_view{ tValue }.length() > 0);
 }
 
+//#ifdef VLR_CONFIG_INCLUDE_AFX
+//
+//template< typename TValue, typename std::enable_if_t<std::is_convertible_v<CStringA, const TValue&>>* = nullptr >
+//constexpr bool IsNotBlank_choice(const TValue& tValue, choice<2>&&)
+//{
+//	return (CStringA{ tValue }.GetLength() > 0);
+//}
+//
+//template< typename TValue, typename std::enable_if_t<std::is_convertible_v<CStringW, const TValue&>>* = nullptr >
+//constexpr bool IsNotBlank_choice(const TValue& tValue, choice<3>&&)
+//{
+//	return (CStringW{ tValue }.GetLength() > 0);
+//}
+//
+//#endif
+
 //template< typename TValue, typename TFallbackChoice >
 //constexpr bool IsNotBlank(const TValue& tValue, TFallbackChoice&&)
 //{

@@ -1,6 +1,7 @@
 #pragma once
 
 #ifdef _WIN32
+
 #else
 
 #ifdef UNICODE
@@ -20,6 +21,8 @@
 constexpr auto S_OK = HRESULT{0U};
 constexpr auto S_FALSE = HRESULT{1U};
 constexpr auto E_FAIL = HRESULT{0x80040005};
+
+#define _HRESULT_DEFINED
 
 #endif
 

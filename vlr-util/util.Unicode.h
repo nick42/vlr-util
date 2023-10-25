@@ -152,7 +152,7 @@ public:
 		return strOutput;
 	}
 
-#if VLR_CONFIG_INCLUDE_AFX
+#if VLR_CONFIG_INCLUDE_ATL_CSTRING
 	HRESULT MultiByte_to_UTF16(
 		std::string_view svValue,
 		CStringW& sOutput,
@@ -163,7 +163,6 @@ public:
 		CStringA& sOutput,
 		const StringConversionOptions& oStringConversionOptions = {},
 		StringConversionResults* pStringConversionResults = nullptr );
-#endif // VLR_CONFIG_INCLUDE_AFX
 
 	auto Inline_MultiByte_to_UTF16_CString(
 		std::string_view svValue,
@@ -183,6 +182,7 @@ public:
 		UTF16_to_MultiByte( svValue, sOutput, oStringConversionOptions, pStringConversionResults );
 		return sOutput;
 	}
+#endif // VLR_CONFIG_INCLUDE_ATL_CSTRING
 
 };
 

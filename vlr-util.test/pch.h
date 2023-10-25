@@ -7,7 +7,10 @@
 #ifndef PCH_H
 #define PCH_H
 
+#define GTEST_DONT_DEFINE_FAIL true
+#define GTEST_DONT_DEFINE_SUCCEED true
 #include <gtest/gtest.h>
+
 #include <catch2/catch_all.hpp>
 
 #include <vlr-util/config.h>

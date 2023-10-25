@@ -5,8 +5,10 @@
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
-#if VLR_CONFIG_INCLUDE_AFX
+#if VLR_CONFIG_INCLUDE_ATL_CSTRING
 #include <atlstr.h>
+using ATL::CStringA;
+using ATL::CStringW;
 #endif
 
 #ifndef __ATTR_SAL
@@ -15,14 +17,14 @@
 
 VLR_NAMESPACE_BEGIN( vlr )
 
-#if VLR_CONFIG_INCLUDE_AFX
-template<class _Elem>
-#if defined(_AFXDLL)
-using TStrTraitMFC = StrTraitMFC_DLL<_Elem>;
-#else
-using TStrTraitMFC = StrTraitMFC<_Elem>;
-#endif
-#endif
+//#if VLR_CONFIG_INCLUDE_ATL_CSTRING
+//template<class _Elem>
+//#if defined(_AFXDLL)
+//using TStrTraitMFC = ATL::StrTraitMFC_DLL<_Elem>;
+//#else
+//using TStrTraitMFC = ATL::StrTraitMFC<_Elem>;
+//#endif
+//#endif
 
 // Forward-declaring the class to specify the template param default (mirrors what string_view does)
 
@@ -50,8 +52,8 @@ public:
     using typename base_type::size_type;
     using typename base_type::difference_type;
 
-#if VLR_CONFIG_INCLUDE_AFX
-    using TCStringT = ATL::CStringT<_Elem, TStrTraitMFC<_Elem>>;
+#if VLR_CONFIG_INCLUDE_ATL_CSTRING
+    using TCStringT = CStringT< _Elem, StrTraitATL< _Elem, ChTraitsCRT< _Elem > > >;
     using TCStringT_length = decltype(std::declval<TCStringT>().GetLength());
 #endif
 
@@ -81,9 +83,9 @@ public:
         : base_type{ reinterpret_cast<const_pointer>(strValue.c_str()), strValue.length() }
     {}
 
-#if VLR_CONFIG_INCLUDE_AFX
+#if VLR_CONFIG_INCLUDE_ATL_CSTRING
     constexpr basic_zstring_view( const TCStringT& sValue ) noexcept
-        : base_type{ static_cast<const_pointer>(sValue), sValue.GetLength() }
+        : base_type{ static_cast<const const_pointer>(sValue.GetString()), static_cast<const size_type>(sValue.GetLength()) }
     {}
 #endif
 
@@ -103,7 +105,7 @@ public:
         return base_type::data();
     }
 
-#if VLR_CONFIG_INCLUDE_AFX
+#if VLR_CONFIG_INCLUDE_ATL_CSTRING
     // Allow explicit casting to CString only
     [[nodiscard]] explicit inline operator TCStringT() const
     {

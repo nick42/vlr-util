@@ -179,6 +179,8 @@ inline decltype(auto) ToStdString(const TString& tString, Arg&&... args)
 
 // std::string <- std::string_view
 
+#if VLR_CONFIG_INCLUDE_ATL_CSTRING
+
 inline decltype(auto) ToCStringA(std::string_view svValue)
 {
 	return CStringA{ svValue.data(), range_checked_cast<int>(svValue.length()) };
@@ -267,6 +269,8 @@ inline decltype(auto) ToCString( const TString& tString, Arg&&... args )
 		VLR_STATIC_FAIL("Unhandled character size");
 	}
 }
+
+#endif // VLR_CONFIG_INCLUDE_ATL_CSTRING
 
 VLR_NAMESPACE_END //( Convert )
 

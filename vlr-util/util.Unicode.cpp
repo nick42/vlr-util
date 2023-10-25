@@ -270,7 +270,7 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 		pStringConversionResults );
 }
 
-#if VLR_CONFIG_INCLUDE_AFX
+#if VLR_CONFIG_INCLUDE_ATL_CSTRING
 
 HRESULT CStringConversion::MultiByte_to_UTF16(
 	std::string_view svValue,
@@ -358,7 +358,7 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 	return S_OK;
 }
 
-#endif // VLR_CONFIG_INCLUDE_AFX
+#endif // VLR_CONFIG_INCLUDE_ATL_CSTRING
 
 VLR_NAMESPACE_END //( util )
 

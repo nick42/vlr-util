@@ -13,6 +13,10 @@
 
 VLR_NAMESPACE_BEGIN( vlr )
 
+#ifndef _HRESULT_DEFINED
+#pragma error("HRESULT not defined?")
+#endif
+
 using ResultCode = HRESULT;
 
 VLR_NAMESPACE_END //( vlr )

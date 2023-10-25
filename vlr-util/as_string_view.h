@@ -2,12 +2,9 @@
 
 #include <string_view>
 
-#ifdef WIN32
-#include <comdef.h>
-#endif
-
 #include "UtilMacros.Namespace.h"
 #include "config.h"
+#include "zstring_view.h"
 
 VLR_NAMESPACE_BEGIN( vlr )
 
@@ -26,9 +23,9 @@ public:
 		: base_type{ value }
 	{}
 	constexpr as_string_view( const std::string& value )
-		: base_type{ cpp::zstring_view{ value }  }
+		: base_type{ vlr::zstring_view{ value }  }
 	{}
-#if VLR_CONFIG_INCLUDE_AFX
+#if VLR_CONFIG_INCLUDE_ATL_CSTRING
 	constexpr as_string_view( const CStringA& sValue ) noexcept
 		: base_type{ static_cast<const_pointer>(sValue), sValue.GetLength() }
 	{}
@@ -55,12 +52,12 @@ public:
 	constexpr as_wstring_view( const std::u16string& value )
 		: base_type{ cpp::wzstring_view{ value } }
 	{}
-#if VLR_CONFIG_INCLUDE_AFX
+#if VLR_CONFIG_INCLUDE_ATL_CSTRING
 	constexpr as_wstring_view( const CStringW& sValue ) noexcept
 		: base_type{ static_cast<const_pointer>(sValue), sValue.GetLength() }
 	{}
 #endif
-#ifdef WIN32
+#if VLR_CONFIG_INCLUDE_WIN32_BSTR
 	constexpr as_wstring_view( const _bstr_t& bsValue ) noexcept
 		: base_type{ static_cast<const_pointer>(bsValue), bsValue.length() }
 	{}

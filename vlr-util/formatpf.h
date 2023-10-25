@@ -74,7 +74,7 @@ inline auto ConvertTo( const TSource& tSource )
 
 VLR_NAMESPACE_BEGIN( detail )
 
-#if VLR_CONFIG_INCLUDE_AFX
+#if VLR_CONFIG_INCLUDE_ATL_CSTRING
 
 template< typename TResult, typename TFormatString, typename... Arg >
 inline auto formatpf_to_TResult( TFormatString svFormatString, Arg&&... args )
@@ -110,7 +110,7 @@ inline auto formatpf_to_TResult( TFormatString svFormatString, Arg&&... args )
 //	return TResult{};
 //}
 
-#endif // VLR_CONFIG_INCLUDE_AFX
+#endif // VLR_CONFIG_INCLUDE_ATL_CSTRING
 
 VLR_NAMESPACE_END //( detail )
 

@@ -11,9 +11,18 @@ VLR_NAMESPACE_BEGIN( util )
 
 VLR_NAMESPACE_BEGIN( detail )
 
+template<typename From, typename To, typename = void>
+struct is_narrowing_conversion_impl : std::true_type {};
+
+template<typename From, typename To>
+struct is_narrowing_conversion_impl < From, To, std::void_t<decltype(To{ std::declval<From>() }) >> : std::false_type {};
+
+template<typename From, typename To>
+struct is_narrowing_conversion : is_narrowing_conversion_impl<From, To> {};
+
 template< typename TValue >
 constexpr auto IsNonZero_choice( const TValue& tValue, choice<0>&& )
--> std::enable_if_t<std::is_convertible_v<TValue, bool>, bool>
+-> std::enable_if_t<std::is_convertible_v<TValue, bool> && !is_narrowing_conversion<TValue, bool>::value, bool>
 {
 	return static_cast<bool>(tValue);
 }

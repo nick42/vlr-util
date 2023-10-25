@@ -11,9 +11,8 @@
 
 // add headers that you want to pre-compile here
 #include "framework.h"
-#ifdef WIN32
-#include <afx.h>
-#endif
+
+#include "config.h"
 
 #include "UtilMacros.Namespace.h"
 #include "UtilMacros.Assertions.h"

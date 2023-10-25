@@ -1,59 +1,109 @@
 #pragma once
 
+#include <atomic>
+
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
-#include "include.spdlog.h"
-
 #include "logging.MessageContext.h"
-#include "formatpf.h"
+#include "util.choice.h"
 #include "util.convert.StringConversion.h"
+
+#ifndef VLR_CONSUMER_IMPL_LOGGING_CALLBACKS
+#include "logging.LogMessage.DefaultImpl.h"
+#else
+#include "logging.Callbacks.h"
+#endif
 
 VLR_NAMESPACE_BEGIN(vlr)
 
 VLR_NAMESPACE_BEGIN(logging)
 
-inline auto GetLevel_spdlog(const CMessageContext& oMessageContext)
+inline void BootstrapCallbacksOnce()
 {
-	switch (oMessageContext.m_eLogicalLevel)
+	static std::atomic<bool> atomicRunThisTime = false;
+	if (atomicRunThisTime.exchange(true))
 	{
-	case LogicalLevel::Debug:
-		return spdlog::level::debug;
-	case LogicalLevel::Trace:
-	case LogicalLevel::Verbose:
-		return spdlog::level::trace;
-	default:
-	case LogicalLevel::Info:
-		return spdlog::level::info;
-	case LogicalLevel::Warning:
-		return spdlog::level::warn;
-	case LogicalLevel::Error:
-		return spdlog::level::err;
-	case LogicalLevel::Critical:
-		return spdlog::level::critical;
+		// Already ran
+		return;
 	}
+#ifndef VLR_CONSUMER_IMPL_LOGGING_CALLBACKS
+	Callbacks::getSharedInstanceMutable().m_fCheckCouldMessageBeLogged = &DefaultImpl::CheckCouldMessageBeLogged;
+	Callbacks::getSharedInstanceMutable().m_fLogMessage = &DefaultImpl::LogMessage;
+#endif
 }
+
+template <typename T>
+struct TFormatResult
+{
+	using type =
+		std::conditional_t<std::is_same<T, std::string>::value, std::string,
+		std::conditional_t<std::is_same<T, std::wstring>::value, std::wstring,
+		std::conditional_t<std::is_convertible<T, const char*>::value, std::string,
+		std::conditional_t<std::is_convertible<T, const wchar_t*>::value, std::wstring,
+		void>>>>;  // Default to void if no conversion found
+};
 
 template< typename TString >
 inline auto LogMessage(const CMessageContext& oMessageContext, const TString& tMessage)
+-> typename TFormatResult<TString>::type
 {
-	// TODO? Pre-checking based on message context, if message will be logged, early abort (before formatting)
+	BootstrapCallbacksOnce();
 
-	auto eLevel_spdlog = GetLevel_spdlog(oMessageContext);
-	spdlog::log(eLevel_spdlog, tMessage);
+	SResult sr;
+	const auto& oCallbacks = Callbacks::getSharedInstance();
+
+	sr = oCallbacks.m_fCheckCouldMessageBeLogged(oMessageContext);
+	if (sr != SResult::Success)
+	{
+		return {};
+	}
+
+	/*sr =*/ oCallbacks.m_fLogMessage(oMessageContext, util::Convert::ToStdString(tMessage));
 
 	return tMessage;
 }
 
 template< typename TFormatString, typename... Arg >
 inline auto LogMessagePF(const CMessageContext& oMessageContext, TFormatString svFormatString, Arg&&... args)
+-> typename TFormatResult<TFormatString>::type
 {
-	// TODO? Pre-checking based on message context, if message will be logged, early abort (before formatting)
+	BootstrapCallbacksOnce();
+
+	SResult sr;
+	const auto& oCallbacks = Callbacks::getSharedInstance();
+
+	sr = oCallbacks.m_fCheckCouldMessageBeLogged(oMessageContext);
+	if (sr != SResult::Success)
+	{
+		return {};
+	}
 
 	auto sMessage = formatpf(svFormatString, std::forward<Arg>(args)...);
 
-	auto eLevel_spdlog = GetLevel_spdlog(oMessageContext);
-	spdlog::log(eLevel_spdlog, sMessage);
+	/*sr =*/ oCallbacks.m_fLogMessage(oMessageContext, util::Convert::ToStdString(sMessage));
+
+	return sMessage;
+}
+
+template< typename TFormatString, typename... Arg >
+inline auto LogMessageFmt(const CMessageContext& oMessageContext, TFormatString svFormatString, Arg&&... args)
+-> typename TFormatResult<TFormatString>::type
+{
+	BootstrapCallbacksOnce();
+
+	SResult sr;
+	const auto& oCallbacks = Callbacks::getSharedInstance();
+
+	sr = oCallbacks.m_fCheckCouldMessageBeLogged(oMessageContext);
+	if (sr != SResult::Success)
+	{
+		return {};
+	}
+
+	auto sMessage = fmt::format(svFormatString, std::forward<Arg>(args)...);
+
+	/*sr =*/ oCallbacks.m_fLogMessage(oMessageContext, util::Convert::ToStdString(sMessage));
 
 	return sMessage;
 }
