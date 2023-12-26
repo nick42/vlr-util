@@ -9,7 +9,7 @@
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
-VLR_NAMESPACE_BEGIN(vlr)
+namespace vlr {
 
 template <typename T, typename TCostType = size_t, typename TCharType = T::value_type>
 typename TCostType GeneralizedLevenshteinDistanceCustomCost(
@@ -72,4 +72,4 @@ typename TCostType GeneralizedLevenshteinDistance(
         fGetDeltaCost);
 }
 
-VLR_NAMESPACE_END //(vlr)
+} // namespace vlr

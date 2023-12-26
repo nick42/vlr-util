@@ -4,6 +4,8 @@
 #include <vlr-util/UtilMacros.Namespace.h>
 #endif
 
+#include <vlr-util/config.h>
+
 #ifndef VLR_UTIL_EXCLUDE_UTIL_STDALIASES
 #include <vlr-util/util.std_aliases.h>
 #endif

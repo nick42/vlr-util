@@ -3,9 +3,9 @@
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( util )
+namespace util {
 
 constexpr auto ToLONGLONG( DWORD nValueLow, DWORD nValueHigh )
 -> LONGLONG
@@ -15,6 +15,6 @@ constexpr auto ToLONGLONG( DWORD nValueLow, DWORD nValueHigh )
 	return nValue;
 }
 
-VLR_NAMESPACE_END //( util )
+} // namespace util
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

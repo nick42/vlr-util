@@ -111,7 +111,6 @@
     <ClCompile Include="util.AutoCleanup_SC_HANDLE.cpp" />
     <ClCompile Include="util.Result.cpp" />
     <ClCompile Include="util.Unicode.cpp" />
-    <ClCompile Include="vlr-util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />

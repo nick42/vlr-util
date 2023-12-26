@@ -9,11 +9,11 @@
 #undef min
 #undef max
 
-VLR_NAMESPACE_BEGIN(vlr)
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN(util)
+namespace util {
 
-VLR_NAMESPACE_BEGIN(detail)
+namespace detail {
 
 template< typename TDest, typename TSource >
 constexpr bool SourceAlwaysFitsInDest()
@@ -149,7 +149,7 @@ inline auto range_checked_cast_choice(TSource nValue, choice<1>&&)
 	}
 }
 
-VLR_NAMESPACE_END //( detail )
+} // namespace detail
 
 template< typename TDest, typename TSource >
 constexpr auto range_checked_cast(TSource nValue)
@@ -157,6 +157,6 @@ constexpr auto range_checked_cast(TSource nValue)
 	return detail::range_checked_cast_choice<TDest>(nValue, choice<0>{});
 }
 
-VLR_NAMESPACE_END //( util )
+} // namespace util
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

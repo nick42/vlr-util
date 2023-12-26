@@ -5,9 +5,9 @@
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( util )
+namespace util {
 
 template< typename TAssignToValue, typename TProspectiveValue, typename std::enable_if_t<std::is_convertible_v<TProspectiveValue, TAssignToValue>>* = nullptr >
 constexpr void OnValidAssignTo( TAssignToValue& tValue, const std::optional<TProspectiveValue>& otProspectiveValue )
@@ -19,6 +19,6 @@ constexpr void OnValidAssignTo( TAssignToValue& tValue, const std::optional<TPro
 	tValue = otProspectiveValue.value();
 }
 
-VLR_NAMESPACE_END //( util )
+} // namespace util
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

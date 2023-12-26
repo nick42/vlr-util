@@ -6,9 +6,9 @@
 #include "logging.MessageContext.h"
 #include "util.Result.h"
 
-VLR_NAMESPACE_BEGIN(vlr)
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN(logging)
+namespace logging {
 
 class Callbacks
 {
@@ -31,6 +31,6 @@ public:
 	}
 };
 
-VLR_NAMESPACE_END //(logging)
+} // namespace logging
 
-VLR_NAMESPACE_END //(vlr)
+} // namespace vlr

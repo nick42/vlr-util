@@ -8,11 +8,11 @@
 #include "util.types.h"
 #include "util.convert.StringConversion.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( util )
+namespace util {
 
-VLR_NAMESPACE_BEGIN( Convert )
+namespace Convert {
 
 enum class DateTimeFormat
 {
@@ -30,11 +30,11 @@ struct FormatOptions_DateTime
 	{}
 };
 
-VLR_NAMESPACE_BEGIN( detail )
+namespace detail {
 
 #ifdef WIN32
 
-VLR_NAMESPACE_BEGIN( Windows )
+namespace Windows {
 
 inline auto ToDateTime_FILETIME( const FILETIME& oValue )
 -> vlr::types::DateTime
@@ -75,11 +75,11 @@ inline auto ToStdStringW( const vlr::types::DateTime& dtValue, const FormatOptio
 	return vlr::util::Convert::ToStdStringW( sValue );
 }
 
-VLR_NAMESPACE_END //( Windows )
+} // namespace Windows
 
 #endif
 
-VLR_NAMESPACE_END //( detail )
+} // namespace detail
 
 inline auto ToDateTime_FILETIME( const FILETIME& oValue )
 -> vlr::types::DateTime
@@ -130,8 +130,8 @@ inline decltype(auto) ToStdStringW( const vlr::types::DateTime& dtValue )
 	return ToStdStringW( dtValue, FormatOptions_DateTime{} );
 }
 
-VLR_NAMESPACE_END //( Convert )
+} // namespace Convert
 
-VLR_NAMESPACE_END //( util )
+} // namespace util
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

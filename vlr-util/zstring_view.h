@@ -15,7 +15,7 @@ using ATL::CStringW;
 #include "sal.h"
 #endif
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
 //#if VLR_CONFIG_INCLUDE_ATL_CSTRING
 //template<class _Elem>
@@ -105,6 +105,11 @@ public:
         return base_type::data();
     }
 
+    [[nodiscard]] constexpr auto asConstPtr() const
+    {
+        return base_type::data();
+    }
+
 #if VLR_CONFIG_INCLUDE_ATL_CSTRING
     // Allow explicit casting to CString only
     [[nodiscard]] explicit inline operator TCStringT() const
@@ -165,4 +170,4 @@ using tzstring_view = basic_zstring_view<TCHAR>;
 
 using tstring_view = std::basic_string_view<TCHAR>;
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

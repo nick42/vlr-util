@@ -11,11 +11,11 @@
 
 #include "zstring_view.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( util )
+namespace util {
 
-VLR_NAMESPACE_BEGIN( data_adaptor )
+namespace data_adaptor {
 
 template< typename TChar = TCHAR >
 struct HelperFor_MultiSZ
@@ -116,8 +116,8 @@ HRESULT HelperFor_MultiSZ<TChar>::ToMultiSz(
 	return S_OK;
 }
 
-VLR_NAMESPACE_END //( data_adaptor )
+} // namespace data_adaptor
 
-VLR_NAMESPACE_END //( util )
+} // namespace util
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

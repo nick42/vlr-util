@@ -7,11 +7,11 @@
 #include <debugapi.h>
 #endif
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( ModuleContext )
+namespace ModuleContext {
 
-VLR_NAMESPACE_BEGIN( Runtime )
+namespace Runtime {
 
 bool IsDebuggerAttached()
 {
@@ -24,8 +24,8 @@ bool IsDebuggerAttached()
 #endif
 }
 
-VLR_NAMESPACE_END //( Runtime )
+} // namespace Runtime
 
-VLR_NAMESPACE_END //( ModuleContext )
+} // namespace ModuleContext
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

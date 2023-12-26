@@ -13,9 +13,9 @@
 #include "util.Result.h"
 #include "UtilMacros.Assertions.h"
 
-VLR_NAMESPACE_BEGIN(vlr)
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN(CloseEnough)
+namespace CloseEnough {
 
 // This is declared early, because it will be passed through methods
 struct CandidateEval;
@@ -186,8 +186,8 @@ public:
 	}
 };
 
-VLR_NAMESPACE_END //(CloseEnough)
+} // namespace CloseEnough
 
 using CloseEnough::CCloseEnough;
 
-VLR_NAMESPACE_END //(vlr)
+} // namespace vlr

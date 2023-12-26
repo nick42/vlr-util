@@ -10,11 +10,11 @@
 
 #include "include.spdlog.h"
 
-VLR_NAMESPACE_BEGIN(vlr)
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN(logging)
+namespace logging {
 
-VLR_NAMESPACE_BEGIN(DefaultImpl)
+namespace DefaultImpl {
 
 inline auto GetLevel_spdlog(const CMessageContext& oMessageContext)
 {
@@ -74,8 +74,8 @@ inline SResult LogMessage(const CMessageContext& oMessageContext, const vlr::tst
 //	return sMessage;
 //}
 
-VLR_NAMESPACE_END //(DefaultImpl)
+} // namespace DefaultImpl
 
-VLR_NAMESPACE_END //(logging)
+} // namespace logging
 
-VLR_NAMESPACE_END //(vlr)
+} // namespace vlr

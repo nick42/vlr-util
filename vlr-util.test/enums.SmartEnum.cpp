@@ -3,7 +3,7 @@
 #include "vlr-util/enums.SmartEnum.h"
 #include "vlr-util/StringCompare.h"
 
-VLR_NAMESPACE_BEGIN(Color)
+namespace Color {
 
 enum EColor
 {
@@ -14,7 +14,7 @@ enum EColor
 };
 constexpr auto MAX_VALUE = Blue;
 
-VLR_NAMESPACE_END //(Color)
+} // namespace Color
 
 template<>
 class vlr::enums::CFormatEnum<Color::EColor>

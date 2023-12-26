@@ -11,13 +11,13 @@
 // Note: Some using aliases to allow us to specify the types which the fmt library expects 
 // for various method calls.
 
-VLR_NAMESPACE_BEGIN( lib_fmt )
+namespace lib_fmt {
 
 using FormatStringA = std::basic_string_view<char>;
 using FormatStringW = std::basic_string_view<wchar_t>;
 using FormatStringT = std::basic_string_view<TCHAR>;
 
-VLR_NAMESPACE_END //( lib_fmt )
+} // namespace lib_fmt
 
 #if VLR_CONFIG_INCLUDE_ATL_CSTRING
 

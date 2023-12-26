@@ -4,15 +4,13 @@
 // However, files listed here are ALL re-compiled if any one of them is updated between builds.
 // Do not add files here that you will be updating frequently as this negates the performance advantage.
 
-#ifndef PCH_H
-#define PCH_H
-
-#define GTEST_DONT_DEFINE_FAIL true
-#define GTEST_DONT_DEFINE_SUCCEED true
-#include <gtest/gtest.h>
-
-#include <catch2/catch_all.hpp>
+#pragma once
 
 #include <vlr-util/config.h>
 
-#endif //PCH_H
+#define GTEST_DONT_DEFINE_FAIL 1
+#define GTEST_DONT_DEFINE_SUCCEED 1
+
+#include <gtest/gtest.h>
+
+#include <catch2/catch_all.hpp>

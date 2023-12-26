@@ -6,7 +6,7 @@
 #include "config.h"
 #include "zstring_view.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
 class as_string_view
 	: public std::string_view
@@ -67,4 +67,4 @@ public:
 #endif
 };
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

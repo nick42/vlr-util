@@ -8,9 +8,9 @@
 
 #include "util.Result.h"
 
-VLR_NAMESPACE_BEGIN(vlr)
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN(util)
+namespace util {
 
 template< typename TKey, typename TValue >
 class CMRUCache
@@ -79,6 +79,6 @@ SResult CMRUCache<TKey, TValue>::AddValueToCache(const TKey& tKey, const TValue&
 	return SResult::Success;
 }
 
-VLR_NAMESPACE_END //( util )
+} // namespace util
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

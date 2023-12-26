@@ -4,11 +4,11 @@
 #include "util.convert.StringConversion.h"
 #include "UtilMacros.Assertions.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( ModuleContext )
+namespace ModuleContext {
 
-VLR_NAMESPACE_BEGIN( Runtime )
+namespace Runtime {
 
 HRESULT CConfigOptionsBase::RecordUnrecognizedOptions( const std::vector<std::string>& oOptionsArray )
 {
@@ -130,8 +130,8 @@ HRESULT CConfigOptionsBase::RecordParsedOptions(
 	return S_OK;
 }
 
-VLR_NAMESPACE_END //( Runtime )
+} // namespace Runtime
 
-VLR_NAMESPACE_END //( ModuleContext )
+} // namespace ModuleContext
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

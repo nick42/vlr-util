@@ -7,13 +7,13 @@
 
 #include "util.std_aliases.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( util )
+namespace util {
 
-VLR_NAMESPACE_BEGIN( api_adaptor )
+namespace api_adaptor {
 
-VLR_NAMESPACE_BEGIN( detail )
+namespace detail {
 
 template< typename TString, typename TStringBufferPtr = LPTSTR >
 struct StringBufferAccess
@@ -33,7 +33,7 @@ LPSTR StringBufferAccess<CStringA, LPSTR>::GetBufferPtr( CStringA& tString )
 	return tString.GetBuffer();
 }
 
-VLR_NAMESPACE_END //( detail )
+} // namespace detail
 
 template< typename TString, typename TStringBufferPtr = LPTSTR, typename TStringSize = DWORD >
 class COutString
@@ -60,8 +60,8 @@ public:
 	{}
 };
 
-VLR_NAMESPACE_END //( api_adaptor )
+} // namespace api_adaptor
 
-VLR_NAMESPACE_END //( util )
+} // namespace util
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

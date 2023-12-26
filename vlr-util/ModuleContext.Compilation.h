@@ -9,11 +9,11 @@
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( ModuleContext )
+namespace ModuleContext {
 
-VLR_NAMESPACE_BEGIN( Compilation )
+namespace Compilation {
 
 constexpr auto IsBuildPlatform_Win32()
 {
@@ -97,8 +97,8 @@ constexpr auto IsBuildType_Release()
 	return !IsBuildType_Debug();
 }
 
-VLR_NAMESPACE_END //( Compilation )
+} // namespace Compilation
 
-VLR_NAMESPACE_END //( ModuleContext )
+} // namespace ModuleContext
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

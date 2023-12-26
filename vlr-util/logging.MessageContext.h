@@ -8,9 +8,9 @@
 #include "util.std_aliases.h"
 #include "zstring_view.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( logging )
+namespace logging {
 
 class CCodeContext
 {
@@ -54,7 +54,7 @@ public:
 
 #define VLR_CODE_CONTEXT vlr::logging::CCodeContext{ _T(__FILE__), __LINE__, _T(__FUNCTION__) }
 
-VLR_NAMESPACE_BEGIN( LogicalLevel )
+namespace LogicalLevel {
 
 enum ELogicalLevel
 {
@@ -68,7 +68,7 @@ enum ELogicalLevel
 	Critical,
 };
 
-VLR_NAMESPACE_END //( LogicalLevel )
+} // namespace LogicalLevel
 
 class CMessageContext
 {
@@ -94,6 +94,6 @@ public:
 #define VLR_LOG_CONTEXT_DEFAULT vlr::logging::CMessageContext{ VLR_CODE_CONTEXT, vlr::logging::LogicalLevel::Info }
 #define VLR_LOG_CONTEXT_WARNING vlr::logging::CMessageContext{ VLR_CODE_CONTEXT, vlr::logging::LogicalLevel::Warning }
 
-VLR_NAMESPACE_END //( logging )
+} // namespace logging
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

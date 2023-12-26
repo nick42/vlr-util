@@ -7,9 +7,9 @@
 
 #include "util.LevenshteinDistance.h"
 
-VLR_NAMESPACE_BEGIN(vlr)
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN(CloseEnough)
+namespace CloseEnough {
 
 SResult CTransformType_BasicCharacterAdd::EvalForAddTransformStep(
 	CandidateEval& /*oCandidateEval*/)
@@ -149,6 +149,6 @@ SResult CCloseEnough::onConstructor()
 	return SResult::Success;
 }
 
-VLR_NAMESPACE_END //(CloseEnough)
+} // namespace CloseEnough
 
-VLR_NAMESPACE_END //(vlr)
+} // namespace vlr

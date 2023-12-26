@@ -7,11 +7,11 @@
 #include "util.IsBitSet.h"
 #include "util.range_checked_cast.h"
 
-VLR_NAMESPACE_BEGIN(vlr)
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN(util)
+namespace util {
 
-VLR_NAMESPACE_BEGIN(detail)
+namespace detail {
 
 static constexpr auto Severity_Success = (unsigned char)0;
 static constexpr auto Severity_Failure = (unsigned char)1;
@@ -52,7 +52,7 @@ inline constexpr auto MakeResultCode_Failure_Win32(unsigned long nResultCodeLong
 	return MakeResultCode(Severity_Failure, Facility_Win32, nResultCode);
 }
 
-VLR_NAMESPACE_END //(detail)
+} // namespace detail
 
 class SResult
 {
@@ -143,9 +143,9 @@ public:
 	{}
 };
 
-VLR_NAMESPACE_END //(util)
+} // namespace util
 
 using util::SResult;
 using StandardResult = SResult;
 
-VLR_NAMESPACE_END //(vlr)
+} // namespace vlr

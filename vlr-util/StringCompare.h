@@ -12,11 +12,11 @@
 #include "util.static_assert.h"
 #include "util.types.h"
 
-VLR_NAMESPACE_BEGIN(vlr)
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN(StringCompare)
+namespace StringCompare {
 
-VLR_NAMESPACE_BEGIN(detail)
+namespace detail {
 
 template<typename TString>
 constexpr bool isCompatTypeForAString()
@@ -110,7 +110,7 @@ constexpr decltype(auto) choice_asWStringViewCompatType(const TString& tValue, v
 	return detail::choice_asWStringViewCompatType(tValue, vlr::util::choice<2>{});
 }
 
-VLR_NAMESPACE_END //(detail)
+} // namespace detail
 
 template<typename TValue>
 constexpr decltype(auto) asAStringViewCompatType(const TValue& tValue)
@@ -148,7 +148,7 @@ constexpr decltype(auto) asStringViewCompatType(const TValue& tValue)
 	}
 }
 
-VLR_NAMESPACE_BEGIN(CaseSensitivity)
+namespace CaseSensitivity {
 
 enum ECaseSensitivity
 {
@@ -157,7 +157,7 @@ enum ECaseSensitivity
 	CaseInsensitive,
 };
 
-VLR_NAMESPACE_END //(CaseSensitivity)
+} // namespace CaseSensitivity
 
 struct CompareSettings
 {
@@ -183,7 +183,7 @@ struct CompareSettings
 	}
 };
 
-VLR_NAMESPACE_BEGIN(detail)
+namespace detail {
 
 // Note: This is an alternative method, per cpp docs; not currently used, as may not be optimal.
 // (ie: C-runtime methods for direct comparison without conversion might be faster)
@@ -614,7 +614,7 @@ constexpr decltype(auto) CompareDifferentCharSize(const CompareSettings& oCompar
 //	};
 //}
 
-VLR_NAMESPACE_END //(detail)
+} // namespace detail
 
 struct CComparator
 {
@@ -767,6 +767,6 @@ struct asCaseInsensitive
 	}
 };
 
-VLR_NAMESPACE_END //(StringCompare)
+} // namespace StringCompare
 
-VLR_NAMESPACE_END //(vlr)
+} // namespace vlr

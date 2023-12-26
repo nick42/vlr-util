@@ -3,7 +3,7 @@
 
 #include "UtilMacros.Assertions.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
 HRESULT CThreadPool::EnsurePoolInitialized()
 {
@@ -39,4 +39,4 @@ HRESULT CThreadPool::WaitForCompletion()
 	return S_OK;
 }
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

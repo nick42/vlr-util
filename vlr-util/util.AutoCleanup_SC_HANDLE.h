@@ -6,9 +6,9 @@
 #include "logging.LogMessage.h"
 #include "util.Result.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( util )
+namespace util {
 
 class CAutoCleanup_SC_HANDLE
 	: public CAutoCleanupBase
@@ -33,6 +33,6 @@ public:
 	}
 };
 
-VLR_NAMESPACE_END //( util )
+} // namespace util
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

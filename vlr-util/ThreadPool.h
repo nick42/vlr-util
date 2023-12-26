@@ -11,7 +11,7 @@
 
 // Note: Some conceptual ideas derived from blog: https://dens.website/articles/cpp-threadpool
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
 class CThreadPool
 {
@@ -58,13 +58,13 @@ public:
 	}
 };
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr
 
 #include <future>
 
 #include "UtilMacros.Assertions.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
 template< typename F >
 HRESULT CThreadPool::AddTaskToPool_ResultIgnored( F&& fTask )
@@ -98,4 +98,4 @@ HRESULT CThreadPool::AddTaskToPool_ResultAsFuture( F&& fTask, std::future<declty
 	return S_OK;
 }
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

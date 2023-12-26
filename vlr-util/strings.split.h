@@ -12,9 +12,9 @@
 #include "util.Result.h"
 #include "StringCompare.h"
 
-VLR_NAMESPACE_BEGIN(vlr)
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN(strings)
+namespace strings {
 
 struct DelimitersSpec
 {
@@ -173,6 +173,6 @@ std::basic_string_view<TChar> StringWithoutPossiblePostfix(
 	return svzValue.substr(0, svzValue.length() - svPostfix.length());
 }
 
-VLR_NAMESPACE_END //(strings)
+} // namespace strings
 
-VLR_NAMESPACE_END //(vlr)
+} // namespace vlr

@@ -5,11 +5,11 @@
 
 #include "util.choice.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( util )
+namespace util {
 
-VLR_NAMESPACE_BEGIN( detail )
+namespace detail {
 
 template<typename From, typename To, typename = void>
 struct is_narrowing_conversion_impl : std::true_type {};
@@ -24,7 +24,7 @@ template< typename TValue >
 constexpr auto IsNonZero_choice( const TValue& tValue, choice<0>&& )
 -> std::enable_if_t<std::is_convertible_v<TValue, bool> && !is_narrowing_conversion<TValue, bool>::value, bool>
 {
-	return static_cast<bool>(tValue);
+	return !!(tValue);
 }
 
 template< typename TValue >
@@ -41,7 +41,7 @@ constexpr auto IsNonZero_choice( const TValue* tValue, choice<2>&& )
 	return (tValue != nullptr);
 }
 
-VLR_NAMESPACE_END //( detail )
+} // namespace detail
 
 template< typename TValue >
 constexpr bool IsNonZero( const TValue& tValue )
@@ -49,6 +49,6 @@ constexpr bool IsNonZero( const TValue& tValue )
 	return detail::IsNonZero_choice( tValue, choice<0>{} );
 }
 
-VLR_NAMESPACE_END //( util )
+} // namespace util
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

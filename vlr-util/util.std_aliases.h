@@ -5,7 +5,7 @@
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
 // TODO? Replace this with non-preprocessor impl
 #ifndef UNICODE
@@ -17,4 +17,4 @@ using tstring = std::wstring;
 using string = std::string;
 using wstring = std::wstring;
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

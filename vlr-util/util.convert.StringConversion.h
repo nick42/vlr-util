@@ -10,11 +10,11 @@
 #include "util.Unicode.h"
 #include "util.types.h"
 
-VLR_NAMESPACE_BEGIN(vlr)
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN(util)
+namespace util {
 
-VLR_NAMESPACE_BEGIN(Convert)
+namespace Convert {
 
 // std::string <- std::string_view
 
@@ -88,7 +88,7 @@ inline auto ToStdStringW(const CStringW& swValue)
 	return std::wstring{ svValue };
 }
 
-VLR_NAMESPACE_BEGIN(detail)
+namespace detail {
 
 // Convertible to "matching" width string type; special case for type with operator conversion
 // Note: Necessary to resolve potential ambiguity in conversions
@@ -145,7 +145,7 @@ inline decltype(auto) ToStdStringW_choice(const TString& tString, vlr::util::cho
 	VLR_STATIC_FAIL("Unhandled conversion type");
 }
 
-VLR_NAMESPACE_END //( detail )
+} // namespace detail
 
 template< typename TString >
 inline decltype(auto) ToStdStringA(const TString& tString)
@@ -272,8 +272,8 @@ inline decltype(auto) ToCString( const TString& tString, Arg&&... args )
 
 #endif // VLR_CONFIG_INCLUDE_ATL_CSTRING
 
-VLR_NAMESPACE_END //( Convert )
+} // namespace Convert
 
-VLR_NAMESPACE_END //( util )
+} // namespace util
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

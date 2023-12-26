@@ -6,9 +6,9 @@
 #include "util.range_checked_cast.h"
 #include "util.CStringBufferAccess.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( util )
+namespace util {
 
 HRESULT CStringConversion::MultiByte_to_UTF16(
 	std::string_view svValue,
@@ -360,6 +360,6 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 
 #endif // VLR_CONFIG_INCLUDE_ATL_CSTRING
 
-VLR_NAMESPACE_END //( util )
+} // namespace util
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

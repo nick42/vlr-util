@@ -11,7 +11,7 @@
 #include "util.types.linux.h"
 #endif
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
 #ifndef _HRESULT_DEFINED
 #pragma error("HRESULT not defined?")
@@ -19,4 +19,4 @@ VLR_NAMESPACE_BEGIN( vlr )
 
 using ResultCode = HRESULT;
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

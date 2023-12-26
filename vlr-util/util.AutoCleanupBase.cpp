@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "util.AutoCleanupBase.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( util )
+namespace util {
 
 HRESULT CAutoCleanupBase::OnDestroy_DoCleanup()
 {
@@ -17,6 +17,6 @@ HRESULT CAutoCleanupBase::OnDestroy_DoCleanup()
 	return DoCleanup();
 }
 
-VLR_NAMESPACE_END //( util )
+} // namespace util
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

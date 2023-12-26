@@ -5,11 +5,11 @@
 
 #include "util.static_assert.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( c_runtime )
+namespace c_runtime {
 
-VLR_NAMESPACE_BEGIN( StringFunctions )
+namespace StringFunctions {
 
 template< typename TChar = TCHAR >
 inline auto GetFunction_strlen()
@@ -28,8 +28,8 @@ inline auto GetFunction_strlen()
 	}
 }
 
-VLR_NAMESPACE_END //( StringFunctions )
+} // namespace StringFunctions
 
-VLR_NAMESPACE_END //( c_runtime )
+} // namespace c_runtime
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

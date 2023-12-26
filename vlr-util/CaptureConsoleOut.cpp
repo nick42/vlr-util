@@ -6,11 +6,11 @@
 
 #include "strings.split.h"
 
-VLR_NAMESPACE_BEGIN(vlr)
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN(util)
+namespace util {
 
-VLR_NAMESPACE_BEGIN(detail)
+namespace detail {
 
 int secure_dup(int src)
 {
@@ -153,7 +153,7 @@ StandardResult CCapturePipeData::EndCapture()
 	return StandardResult::Success;
 }
 
-VLR_NAMESPACE_END //(detail)
+} // namespace detail
 
 StandardResult CCaptureConsoleDataAnalysisHelper::DecomposeCaptureDataInfoLines(std::vector<std::string_view>& arrTextLines) const
 {
@@ -271,6 +271,6 @@ StandardResult CCaptureConsoleOut::CScopedConsoleDataCapture::DoDestructor()
 	return StandardResult::Success;
 }
 
-VLR_NAMESPACE_END //(util)
+} // namespace util
 
-VLR_NAMESPACE_END //(vlr)
+} // namespace vlr

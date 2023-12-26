@@ -33,11 +33,11 @@
 
 #include "util.Result.h"
 
-VLR_NAMESPACE_BEGIN(vlr)
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN(util)
+namespace util {
 
-VLR_NAMESPACE_BEGIN(detail)
+namespace detail {
 
 int secure_dup(int src);
 void secure_pipe(int* pipes);
@@ -112,7 +112,7 @@ public:
     }
 };
 
-VLR_NAMESPACE_END //(detail)
+} // namespace detail
 
 class CCaptureConsoleDataAnalysisHelper
 {
@@ -268,6 +268,6 @@ public:
     }
 };
 
-VLR_NAMESPACE_END //(util)
+} // namespace util
 
-VLR_NAMESPACE_END //(vlr)
+} // namespace vlr

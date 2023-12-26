@@ -8,19 +8,19 @@
 
 #include "util.range_checked_cast.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( util )
+namespace util {
 
-VLR_NAMESPACE_BEGIN( Convert )
+namespace Convert {
 
 auto To_unit64( ULARGE_INTEGER nValue )
 {
 	return static_cast<uint64_t>(nValue.QuadPart);
 }
 
-VLR_NAMESPACE_END //( Convert )
+} // namespace Convert
 
-VLR_NAMESPACE_END //( util )
+} // namespace util
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

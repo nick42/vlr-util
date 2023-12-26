@@ -10,9 +10,9 @@
 #include "enums.RangeInfo.h"
 #include "util.static_assert.h"
 
-VLR_NAMESPACE_BEGIN(vlr)
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN(enums)
+namespace enums {
 
 template<typename TBaseEnum>
 class RangeCheckForEnum
@@ -119,6 +119,6 @@ public:
 	}
 };
 
-VLR_NAMESPACE_END //(enums)
+} // namespace enums
 
-VLR_NAMESPACE_END //(vlr)
+} // namespace vlr

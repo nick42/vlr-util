@@ -7,9 +7,9 @@
 
 #include "util.IsBitValue.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( enums )
+namespace enums {
 
 // Sequential values iterator
 
@@ -377,6 +377,6 @@ public:
 template< DWORD_PTR nMaxValue, DWORD_PTR nMinValue = 1 >
 using CRangeInfoBitmask_Unsigned_Default = CRangeInfoSequential_DWORD_PTR<nMaxValue, nMinValue>;
 
-VLR_NAMESPACE_END //( enums )
+} // namespace enums
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

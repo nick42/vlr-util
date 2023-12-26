@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "ops.NetworkTargetInfo.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( ops )
+namespace ops {
 
 vlr::tzstring_view CNetworkTargetInfo::GetNameForIntent_win32_OpenSCManager() const
 {
@@ -18,6 +18,6 @@ vlr::tzstring_view CNetworkTargetInfo::GetNameForIntent_win32_OpenSCManager() co
 	return m_sTargetName_Logical;
 }
 
-VLR_NAMESPACE_END //( ops )
+} // namespace ops
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

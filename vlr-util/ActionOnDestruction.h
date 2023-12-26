@@ -8,7 +8,7 @@
 
 #include "BaseWithVirtualDestructor.h"
 
-VLR_NAMESPACE_BEGIN(vlr)
+namespace vlr {
 
 template< typename TActionResult >
 class CActionOnDestruction
@@ -78,4 +78,4 @@ inline auto MakeActionOnDestruction(const TFunctor& fAction)
 	return CActionOnDestruction<decltype(std::declval<TFunctor>()())>{ fAction };
 }
 
-VLR_NAMESPACE_END //(vlr)
+} // namespace vlr

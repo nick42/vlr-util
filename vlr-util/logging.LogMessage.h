@@ -15,9 +15,9 @@
 #include "logging.Callbacks.h"
 #endif
 
-VLR_NAMESPACE_BEGIN(vlr)
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN(logging)
+namespace logging {
 
 inline void BootstrapCallbacksOnce()
 {
@@ -108,6 +108,6 @@ inline auto LogMessageFmt(const CMessageContext& oMessageContext, TFormatString 
 	return sMessage;
 }
 
-VLR_NAMESPACE_END //(logging)
+} // namespace logging
 
-VLR_NAMESPACE_END //(vlr)
+} // namespace vlr

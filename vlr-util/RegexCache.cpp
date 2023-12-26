@@ -3,7 +3,7 @@
 
 #include "logging.LogMessage.h"
 
-VLR_NAMESPACE_BEGIN(vlr)
+namespace vlr {
 
 SResult RegexCache::GetCompiledRegex(const vlr::tstring& sRegex, SPRegex& spCompiledRegex_Result)
 {
@@ -45,4 +45,4 @@ SResult RegexCache::GetCompiledRegex(const vlr::tstring& sRegex, SPRegex& spComp
 	}
 }
 
-VLR_NAMESPACE_END //(vlr)
+} // namespace vlr

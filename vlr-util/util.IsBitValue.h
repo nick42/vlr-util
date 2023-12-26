@@ -3,9 +3,9 @@
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( util )
+namespace util {
 
 template< typename TNumericType >
 constexpr bool IsSingleBitValue( TNumericType nValue )
@@ -27,6 +27,6 @@ constexpr bool IsSingleBitValue( TNumericType nValue )
 	return IsSingleBitValue( nValue >> 1 );
 }
 
-VLR_NAMESPACE_END //( util )
+} // namespace util
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

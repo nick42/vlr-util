@@ -9,7 +9,7 @@
 #include "config.h"
 #include "util.Result.h"
 
-VLR_NAMESPACE_BEGIN(vlr)
+namespace vlr {
 
 #ifdef UNICODE
 using tregex = std::wregex;
@@ -37,4 +37,4 @@ public:
 	}
 };
 
-VLR_NAMESPACE_END //(vlr)
+} // namespace vlr

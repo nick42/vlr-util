@@ -5,9 +5,9 @@
 
 #include "zstring_view.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( assert )
+namespace assert {
 
 void HandleCheckFailure( vlr::tzstring_view svzFailureMessage );
 
@@ -20,6 +20,6 @@ inline void HandleCheckFailure( vlr::tzstring_view /*svzFailureMessage*/ )
 
 #endif
 
-VLR_NAMESPACE_END //( assert )
+} // namespace assert
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

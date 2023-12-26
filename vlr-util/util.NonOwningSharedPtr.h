@@ -3,9 +3,9 @@
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
-VLR_NAMESPACE_BEGIN(vlr)
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN(detail)
+namespace detail {
 
 template<typename T>
 struct null_deleter
@@ -13,7 +13,7 @@ struct null_deleter
 	inline void operator()(T* /*pValue*/) {}
 };
 
-VLR_NAMESPACE_END //(detail)
+} // namespace detail
 
 template<typename T>
 constexpr auto MakeNonOwningSharedPtr(T* pInstance)
@@ -26,4 +26,4 @@ constexpr auto MakeNonOwningSharedPtr(const T* pInstance)
 	return std::shared_ptr<const T>{ pInstance, detail::null_deleter<T>{} };
 }
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

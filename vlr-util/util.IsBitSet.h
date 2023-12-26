@@ -3,9 +3,9 @@
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( util )
+namespace util {
 
 template< typename TValue, typename TBitValue >
 constexpr auto IsBitSet( TValue nValue, TBitValue nBitValue )
@@ -14,6 +14,6 @@ constexpr auto IsBitSet( TValue nValue, TBitValue nBitValue )
 	return ((nValue & tBitValueAsValue) == tBitValueAsValue);
 }
 
-VLR_NAMESPACE_END //( util )
+} // namespace util
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr

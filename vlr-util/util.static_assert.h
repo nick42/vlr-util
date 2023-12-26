@@ -3,9 +3,9 @@
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
-VLR_NAMESPACE_BEGIN( vlr )
+namespace vlr {
 
-VLR_NAMESPACE_BEGIN( util )
+namespace util {
 
 // Note: This good workaround suggested by MS, for conformance updates related to static_assert
 // See: https://docs.microsoft.com/en-us/cpp/overview/cpp-conformance-improvements?view=msvc-170
@@ -33,7 +33,7 @@ constexpr bool dependent_false = bValue;
 
 #define VLR_STATIC_FAIL(...) static_assert(VLR_DEPENDENT_FALSE, __VA_ARGS__)
 
-VLR_NAMESPACE_END //( util )
+} // namespace util
 
-VLR_NAMESPACE_END //( vlr )
+} // namespace vlr
 

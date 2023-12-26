@@ -263,9 +263,6 @@
     <ClCompile Include="util.Unicode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="vlr-util.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="RegexCache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
