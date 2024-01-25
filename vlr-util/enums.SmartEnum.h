@@ -21,11 +21,11 @@ class RangeCheckForEnum
 
 	static bool IsValueInRange(DWORD_PTR dwValue)
 	{
-		VLR_STATIC_FAIL("Not implemented in generic base");
+		VLR_TYPE_DEPENDENT_STATIC_FAIL(TBaseEnum, "Not implemented in generic base");
 	}
 	static TBaseEnum CheckedEnumCast(DWORD_PTR dwValue)
 	{
-		VLR_STATIC_FAIL("Not implemented in generic base");
+		VLR_TYPE_DEPENDENT_STATIC_FAIL(TBaseEnum, "Not implemented in generic base");
 	}
 };
 

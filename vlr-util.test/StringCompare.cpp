@@ -701,3 +701,54 @@ TEST(StringCompare, StringHasPostfix)
 	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svwzMixed, "uE"), true);
 	EXPECT_EQ(oStringCompareCS.StringHasPostfix(svwzMixed, "vs"), false);
 }
+
+TEST(StringCompare, StringFindIndexOfSubstring)
+{
+	auto fTestStringHasSubstring_AnyStringHasBlankSubstring = [&](const vlr::StringCompare::CComparator& oStringCompare, const auto& tString)
+	{
+		size_t nExpectedIndex = 0;
+		EXPECT_EQ(oStringCompare.StringFindIndexOfSubstring(tString, svazEmpty), nExpectedIndex);
+		EXPECT_EQ(oStringCompare.StringFindIndexOfSubstring(tString, svwzEmpty), nExpectedIndex);
+	};
+
+	fTestStringHasSubstring_AnyStringHasBlankSubstring(oStringCompareCS, svazEmpty);
+	fTestStringHasSubstring_AnyStringHasBlankSubstring(oStringCompareCS, svazBlank);
+	fTestStringHasSubstring_AnyStringHasBlankSubstring(oStringCompareCS, svazNotBlank);
+	fTestStringHasSubstring_AnyStringHasBlankSubstring(oStringCompareCS, svwzEmpty);
+	fTestStringHasSubstring_AnyStringHasBlankSubstring(oStringCompareCS, svwzBlank);
+	fTestStringHasSubstring_AnyStringHasBlankSubstring(oStringCompareCS, svwzNotBlank);
+
+	fTestStringHasSubstring_AnyStringHasBlankSubstring(oStringCompareCI, svazEmpty);
+	fTestStringHasSubstring_AnyStringHasBlankSubstring(oStringCompareCI, svazBlank);
+	fTestStringHasSubstring_AnyStringHasBlankSubstring(oStringCompareCI, svazNotBlank);
+	fTestStringHasSubstring_AnyStringHasBlankSubstring(oStringCompareCI, svwzEmpty);
+	fTestStringHasSubstring_AnyStringHasBlankSubstring(oStringCompareCI, svwzBlank);
+	fTestStringHasSubstring_AnyStringHasBlankSubstring(oStringCompareCI, svwzNotBlank);
+
+	fTestStringHasSubstring_AnyStringHasBlankSubstring(oStringCompareCS, "test");
+	fTestStringHasSubstring_AnyStringHasBlankSubstring(oStringCompareCS, L"test");
+
+	fTestStringHasSubstring_AnyStringHasBlankSubstring(oStringCompareCI, "test");
+	fTestStringHasSubstring_AnyStringHasBlankSubstring(oStringCompareCI, L"test");
+
+	auto fTestStringHasSubstring_Valid = [&](const vlr::StringCompare::CComparator& oStringCompare, const auto& tString, const auto& tSubstring, size_t nExpectedIndex)
+	{
+		EXPECT_EQ(oStringCompare.StringFindIndexOfSubstring(tString, tSubstring), nExpectedIndex);
+	};
+
+	fTestStringHasSubstring_Valid(oStringCompareCS, "testme", "me", 4);
+	fTestStringHasSubstring_Valid(oStringCompareCS, L"testme", L"me", 4);
+	fTestStringHasSubstring_Valid(oStringCompareCI, "testme", "me", 4);
+	fTestStringHasSubstring_Valid(oStringCompareCI, L"testme", L"me", 4);
+
+	auto fTestStringHasSubstring_Invalid = [&](const vlr::StringCompare::CComparator& oStringCompare, const auto& tString, const auto& tSubstring)
+	{
+		size_t nExpectedIndex = std::string_view::npos;
+		EXPECT_EQ(oStringCompare.StringFindIndexOfSubstring(tString, tSubstring), nExpectedIndex);
+	};
+
+	fTestStringHasSubstring_Invalid(oStringCompareCS, "testme", "you");
+	fTestStringHasSubstring_Invalid(oStringCompareCS, L"testme", L"you");
+	fTestStringHasSubstring_Invalid(oStringCompareCI, "testme", "you");
+	fTestStringHasSubstring_Invalid(oStringCompareCI, L"testme", L"you");
+}

@@ -6,8 +6,10 @@
 
 #ifdef UNICODE
 #define TCHAR wchar_t
+#define _T(x) L##x
 #else
 #define TCHAR char
+#define _T(x) x
 #endif
 
 #define CHAR char

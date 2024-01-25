@@ -73,7 +73,7 @@ inline auto range_checked_cast_choice(TSource nValue, choice<1>&&)
 			else
 			{
 				// This should always fit; should not call here
-				VLR_STATIC_FAIL();
+				VLR_TYPE_DEPENDENT_STATIC_FAIL(TDest);
 			}
 		}
 		else // std::is_signed_v<TSource>
@@ -119,7 +119,7 @@ inline auto range_checked_cast_choice(TSource nValue, choice<1>&&)
 			else
 			{
 				// This should always fit; should not call here
-				VLR_STATIC_FAIL();
+				VLR_TYPE_DEPENDENT_STATIC_FAIL(TDest);
 			}
 		}
 		else // std::is_signed_v<TSource>
@@ -127,7 +127,7 @@ inline auto range_checked_cast_choice(TSource nValue, choice<1>&&)
 			if constexpr (sizeof(TDest) >= sizeof(TSource))
 			{
 				// This should always fit; should not call here
-				VLR_STATIC_FAIL();
+				VLR_TYPE_DEPENDENT_STATIC_FAIL(TDest);
 			}
 			else
 			{

@@ -24,7 +24,7 @@ inline auto GetFunction_strlen()
 	}
 	else
 	{
-		VLR_STATIC_FAIL("Unhandled TChar type");
+		VLR_TYPE_DEPENDENT_STATIC_FAIL(TChar, "Unhandled TChar type");
 	}
 }
 

@@ -276,7 +276,7 @@ std::wstring GetAsWString(const TString& tValue)
 	}
 	else
 	{
-		VLR_STATIC_FAIL("Unhandled conversion case");
+		VLR_TYPE_DEPENDENT_STATIC_FAIL(TString, "Unhandled conversion case");
 	}
 
 	return {};
@@ -296,7 +296,7 @@ decltype(auto) StringViewCompareCS_ToShorterLength(TStringView svlhs, TStringVie
 	}
 	else
 	{
-		VLR_STATIC_FAIL("Unhandled string_view type");
+		VLR_TYPE_DEPENDENT_STATIC_FAIL(TStringView, "Unhandled string_view type");
 	}
 }
 
@@ -364,7 +364,7 @@ decltype(auto) StringViewCompareCI_ToShorterLength(TStringView svlhs, TStringVie
 		}
 		else
 		{
-			VLR_STATIC_FAIL("Unhandled string_view type");
+			VLR_TYPE_DEPENDENT_STATIC_FAIL(TStringView, "Unhandled string_view type");
 		}
 	}
 	else
@@ -454,7 +454,7 @@ constexpr decltype(auto) AreEqualAsWStringCompat(const CompareSettings& oCompare
 }
 
 template<typename Tlhs, typename Trhs>
-constexpr decltype(auto) AreEqualDifferentCharSize(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
+inline decltype(auto) AreEqualDifferentCharSize(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
 {
 	// Going to widen for comparison
 	std::wstring swConvertedWString_lhs;
@@ -555,7 +555,7 @@ constexpr decltype(auto) CompareAsWStringCompat(const CompareSettings& oCompareS
 }
 
 template<typename Tlhs, typename Trhs>
-constexpr decltype(auto) CompareDifferentCharSize(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
+inline decltype(auto) CompareDifferentCharSize(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
 {
 	// Going to widen for comparison
 	std::wstring swConvertedWString_lhs;
@@ -714,6 +714,38 @@ public:
 		const auto& svzPostfixOfString = svzString.substr(nStartIndex, svzPostfix.size());
 
 		return AreEqual(svzPostfixOfString, svzPostfix);
+	}
+	template<typename TString, typename TSubstring>
+	constexpr decltype(auto) StringFindIndexOfSubstring(const TString& tString, const TSubstring& tSubstring) const
+	{
+		const auto& tString_ViewCompat = asStringViewCompatType(tString);
+		const auto& svzString = static_cast<string_view_compat_t<TString>>(tString_ViewCompat);
+		const auto& tSubstring_ViewCompat = asStringViewCompatType(tSubstring);
+		const auto& svzSubstring = static_cast<string_view_compat_t<TSubstring>>(tSubstring_ViewCompat);
+
+		using TPotentialSubstringType = string_view_compat_t<TString>;
+		using TResult = typename TPotentialSubstringType::size_type;
+
+		if (svzString.size() < svzSubstring.size())
+		{
+			return TResult{ svzString.npos };
+		}
+		TResult nStartIndex = 0;
+		for (; nStartIndex + svzSubstring.size() <= svzString.size(); ++nStartIndex)
+		{
+			auto svzPotentialSubstringMatch = TPotentialSubstringType{ svzString.data() + nStartIndex, svzSubstring.size() };
+			if (AreEqual(svzPotentialSubstringMatch, svzSubstring))
+			{
+				return nStartIndex;
+			}
+		}
+
+		return TResult{ svzString.npos };
+	}
+	template<typename TString, typename TSubstring>
+	constexpr decltype(auto) StringHasSubstring(const TString& tString, const TSubstring& tSubstring) const
+	{
+		return StringFindIndexOfSubstring(tString, tSubstring) != std::string_view::npos;
 	}
 
 public:

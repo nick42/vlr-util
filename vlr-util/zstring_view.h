@@ -152,14 +152,14 @@ protected:
 
     constexpr size_type _Clamp_suffix_size( const size_type _Off, const size_type _Size ) const noexcept {
         // trims _Size to the longest it can be assuming a string at/after _Off
-        return (_STD min)(_Size, base_type::size() - _Off);
+        return (std::min)(_Size, base_type::size() - _Off);
     }
 
     [[noreturn]] static void _Xran() {
 #ifdef _WIN32
-        _STD _Xout_of_range( "invalid string_view position" );
+        std::_Xout_of_range( "invalid string_view position" );
 #else
-        _STD __throw_out_of_range( "invalid string_view position" );
+        std::__throw_out_of_range( "invalid string_view position" );
 #endif
     }
 };

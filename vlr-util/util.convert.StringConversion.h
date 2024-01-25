@@ -25,12 +25,20 @@ inline auto ToStdStringA(std::string_view svValue)
 
 inline auto ToStdStringA(std::wstring_view svValue)
 {
+#ifdef WIN32
 	return CStringConversion{}.Inline_UTF16_to_MultiByte_StdString(svValue);
+#else
+	static_assert();
+#endif
 }
 
 inline auto ToStdStringW(std::string_view svValue)
 {
+#ifdef WIN32
 	return CStringConversion{}.Inline_MultiByte_to_UTF16_StdString(svValue);
+#else
+	static_assert();
+#endif
 }
 
 inline auto ToStdStringW(std::wstring_view svValue)
@@ -64,6 +72,8 @@ inline decltype(auto) ToStdStringW(const std::wstring& sValue)
 
 // std::string <- CString
 
+#if VLR_CONFIG_INCLUDE_ATL_CSTRING
+
 inline auto ToStdStringA(const CStringA& saValue)
 {
 	auto svValue = std::string_view{ saValue.GetString(), util::range_checked_cast<size_t>(saValue.GetLength()) };
@@ -87,6 +97,8 @@ inline auto ToStdStringW(const CStringW& swValue)
 	auto svValue = std::wstring_view{ swValue.GetString(), util::range_checked_cast<size_t>(swValue.GetLength()) };
 	return std::wstring{ svValue };
 }
+
+#endif // VLR_CONFIG_INCLUDE_ATL_CSTRING
 
 namespace detail {
 
@@ -137,12 +149,12 @@ inline decltype(auto) ToStdStringW_choice(const TString& tString, vlr::util::cho
 template< typename TString >
 inline decltype(auto) ToStdStringA_choice(const TString& tString, vlr::util::choice<3>&&)
 {
-	VLR_STATIC_FAIL("Unhandled conversion type");
+	VLR_TYPE_DEPENDENT_STATIC_FAIL(TString, "Unhandled conversion type");
 }
 template< typename TString >
 inline decltype(auto) ToStdStringW_choice(const TString& tString, vlr::util::choice<3>&&)
 {
-	VLR_STATIC_FAIL("Unhandled conversion type");
+	VLR_TYPE_DEPENDENT_STATIC_FAIL(TString, "Unhandled conversion type");
 }
 
 } // namespace detail
@@ -173,7 +185,7 @@ inline decltype(auto) ToStdString(const TString& tString, Arg&&... args)
 	}
 	else
 	{
-		VLR_STATIC_FAIL("Unhandled character size");
+		VLR_TYPE_DEPENDENT_STATIC_FAIL(TString, "Unhandled character size");
 	}
 }
 
@@ -266,7 +278,7 @@ inline decltype(auto) ToCString( const TString& tString, Arg&&... args )
 	}
 	else
 	{
-		VLR_STATIC_FAIL("Unhandled character size");
+		VLR_TYPE_DEPENDENT_STATIC_FAIL(TString, "Unhandled character size");
 	}
 }
 
