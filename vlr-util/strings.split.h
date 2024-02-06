@@ -16,12 +16,31 @@ namespace vlr {
 
 namespace strings {
 
+template <typename TChar = TCHAR>
 struct DelimitersSpec
 {
 public:
-	std::vector<TCHAR> m_arrDelimiters;
+	std::vector<TChar> m_arrDelimiters;
 
-	inline static const auto arrDelimiters_PathSeparators = std::vector<TCHAR>{ _T('/'), _T('\\') };
+	//inline static const auto arrDelimiters_PathSeparators = std::vector<TChar>{ _T('/'), _T('\\') };
+	static const std::vector<TChar>& GetDelimiters_PathSeparators()
+	{
+		static const auto arrDelimiters = [] {
+			if constexpr (std::is_same_v<TChar, char>)
+			{
+				return std::vector<TChar>{ '/', '\\' };
+			}
+			else if constexpr (std::is_same_v<TChar, wchar_t>)
+			{
+				return std::vector<TChar>{ L'/', L'\\' };
+			}
+			else
+			{
+				std::vector<TChar>{ _T('/'), _T('\\') };
+			}
+		}();
+		return arrDelimiters;
+	}
 
 	const auto& GetDelimiters() const
 	{
@@ -29,25 +48,25 @@ public:
 		{
 			return m_arrDelimiters;
 		}
-		return arrDelimiters_PathSeparators;
+		return GetDelimiters_PathSeparators();
 	}
 
 public:
 	inline static auto ForPaths()
 	{
-		return DelimitersSpec{ arrDelimiters_PathSeparators };
+		return DelimitersSpec{ GetDelimiters_PathSeparators()};
 	}
 
 public:
 	DelimitersSpec() = default;
-	DelimitersSpec(const std::vector<TCHAR>& arrDelimiters)
+	DelimitersSpec(const std::vector<TChar>& arrDelimiters)
 		: m_arrDelimiters{ arrDelimiters }
 	{}
-	DelimitersSpec(std::vector<TCHAR>&& arrDelimiters)
+	DelimitersSpec(std::vector<TChar>&& arrDelimiters)
 		: m_arrDelimiters{ std::move(arrDelimiters) }
 	{}
-	DelimitersSpec(TCHAR cCharacter)
-		: m_arrDelimiters{ std::vector<TCHAR>{cCharacter} }
+	DelimitersSpec(TChar cCharacter)
+		: m_arrDelimiters{ std::vector<TChar>{cCharacter} }
 	{}
 };
 
@@ -57,8 +76,8 @@ struct Options_SplitStringAtDelimiter
 	bool m_bAddEmptyElementsForPostfixDelimiters = false;
 	bool m_bAddEmptyElementsForConsecutiveDelimiters = false;
 };
-template< typename TChar >
-SResult SplitStringAtDelimiter(const std::basic_string_view<TChar> svString, const DelimitersSpec& oDelimitersSpec, std::vector<std::basic_string_view<TChar>>& arrStringElements_Result, const Options_SplitStringAtDelimiter& options = {})
+template <typename TChar>
+SResult SplitStringAtDelimiter(const std::basic_string_view<TChar> svString, const DelimitersSpec<TChar>& oDelimitersSpec, std::vector<std::basic_string_view<TChar>>& arrStringElements_Result, const Options_SplitStringAtDelimiter& options = {})
 {
 	const auto& arrDelimiters = oDelimitersSpec.GetDelimiters();
 
@@ -141,10 +160,10 @@ SResult SplitStringAtDelimiter(const std::basic_string_view<TChar> svString, con
 	return SResult::Success;
 }
 
-template< typename TChar >
+template <typename TChar>
 SResult SplitStringAtDelimiter_Path(const std::basic_string_view<TChar> svString, std::vector<std::basic_string_view<TChar>>& arrStringElements_Result, const Options_SplitStringAtDelimiter& options = {})
 {
-	return SplitStringAtDelimiter(svString, DelimitersSpec::ForPaths(), arrStringElements_Result, options);
+	return SplitStringAtDelimiter(svString, DelimitersSpec<TChar>::ForPaths(), arrStringElements_Result, options);
 }
 
 template< typename TChar >

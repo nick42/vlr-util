@@ -118,12 +118,12 @@ HRESULT CConfigOptionsBase::RecordParsedOptions(
 		VLR_ASSERT_NOTBLANK_OR_RETURN_EUNEXPECTED( oOptionHandler.m_svzOptionName );
 		VLR_ASSERT_NONZERO_OR_RETURN_EUNEXPECTED( oOptionHandler.m_fOnOptionValue );
 
-		if (oParsedVariablesMap.count( oOptionHandler.m_svzOptionName ) == 0)
+		if (oParsedVariablesMap.count(oOptionHandler.m_svzOptionName.toStdString()) == 0)
 		{
 			continue;
 		}
 
-		const auto& oOptionValue = oParsedVariablesMap[oOptionHandler.m_svzOptionName];
+		const auto& oOptionValue = oParsedVariablesMap[oOptionHandler.m_svzOptionName.toStdString()];
 		oOptionHandler.m_fOnOptionValue( oOptionValue );
 	}
 

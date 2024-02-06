@@ -144,15 +144,28 @@ inline decltype(auto) ToStdStringW_choice(const TString& tString, vlr::util::cho
 	return ToStdStringW(static_cast<std::string_view>(tString));
 }
 
+// Special case for zstring_view, since conversion may be explicit
+
+template< typename TString, typename std::enable_if_t<std::is_same_v<TString, vlr::zstring_view>>* = nullptr >
+inline decltype(auto) ToStdStringA_choice(const TString& tString, vlr::util::choice<3>&&)
+{
+	return tString.toStdString();
+}
+template< typename TString, typename std::enable_if_t<std::is_same_v<TString, vlr::wzstring_view>>* = nullptr >
+inline decltype(auto) ToStdStringW_choice(const TString& tString, vlr::util::choice<3>&&)
+{
+	return tString.toStdString();
+}
+
 // Do not know how to convert this type
 
 template< typename TString >
-inline decltype(auto) ToStdStringA_choice(const TString& tString, vlr::util::choice<3>&&)
+inline decltype(auto) ToStdStringA_choice(const TString& tString, vlr::util::choice<4>&&)
 {
 	VLR_TYPE_DEPENDENT_STATIC_FAIL(TString, "Unhandled conversion type");
 }
 template< typename TString >
-inline decltype(auto) ToStdStringW_choice(const TString& tString, vlr::util::choice<3>&&)
+inline decltype(auto) ToStdStringW_choice(const TString& tString, vlr::util::choice<4>&&)
 {
 	VLR_TYPE_DEPENDENT_STATIC_FAIL(TString, "Unhandled conversion type");
 }

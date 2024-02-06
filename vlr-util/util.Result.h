@@ -39,7 +39,7 @@ inline constexpr auto MakeResultCode_Failure_CallSpecific(unsigned short nResult
 }
 inline constexpr auto MakeResultCode_Failure_CallSpecific(unsigned long nResultCodeLong)
 {
-	auto nResultCode = range_checked_cast<unsigned short>(nResultCodeLong);
+	auto nResultCode = vlr::util::range_checked_cast<unsigned short>(nResultCodeLong);
 	return MakeResultCode(Severity_Failure, Facility_CallSpecific, nResultCode);
 }
 inline constexpr auto MakeResultCode_Failure_Win32(unsigned short nResultCode)
@@ -48,7 +48,7 @@ inline constexpr auto MakeResultCode_Failure_Win32(unsigned short nResultCode)
 }
 inline constexpr auto MakeResultCode_Failure_Win32(unsigned long nResultCodeLong)
 {
-	auto nResultCode = range_checked_cast<unsigned short>(nResultCodeLong);
+	auto nResultCode = vlr::util::range_checked_cast<unsigned short>(nResultCodeLong);
 	return MakeResultCode(Severity_Failure, Facility_Win32, nResultCode);
 }
 
@@ -76,6 +76,10 @@ public:
 	{
 		return m_nResultCode;
 	}
+	decltype(auto) asWin32Code() const
+	{
+		return (m_nResultCode & 0xFFFF);
+	}
 
 public:
 	inline operator ResultCode() const
@@ -96,11 +100,16 @@ public:
 	{
 		return SResult{ E_FAIL };
 	}
+	static inline auto ForHRESULT(HRESULT hr)
+	{
+		return SResult{ hr };
+	}
 
 	static inline auto For_win32_ErrorCode(DWORD dwErrorCode)
 	{
 		return SResult{}.withHRESULT(detail::MakeResultCode_Failure_Win32(dwErrorCode));
 	}
+#ifdef WIN32
 	static inline auto For_win32_LastError()
 	{
 		auto dwLastError = ::GetLastError();
@@ -117,6 +126,7 @@ public:
 			return For_win32_LastError();
 		}
 	}
+#endif
 
 	static inline auto ForCallSpecificResult(unsigned long nResultCode)
 	{
@@ -145,6 +155,9 @@ public:
 	constexpr SResult(HRESULT hrResult)
 		: m_nResultCode{ hrResult }
 	{}
+private:
+	// Note: Block implicit conversion frm bool, as this is a potential pitfall
+	constexpr SResult(bool /*bValue*/) {}
 };
 
 } // namespace util

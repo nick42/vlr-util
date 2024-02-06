@@ -98,6 +98,11 @@ public:
         return basic_zstring_view{ base_type::data() + _Off, _Count, StringIsNullTerminated{} };
     }
 
+    [[nodiscard]] constexpr decltype(auto) asStringView() const
+    {
+        return static_cast<const base_type&>(*this);
+    }
+
     // It is "safe" to return the direct pointer implicitly as a null-terminated string
     // (ie: this is the anticipated main usage for this class)
     [[nodiscard]] constexpr operator const_pointer() const
@@ -105,7 +110,7 @@ public:
         return base_type::data();
     }
 
-    [[nodiscard]] constexpr auto asConstPtr() const
+    [[nodiscard]] constexpr decltype(auto) asConstPtr() const
     {
         return base_type::data();
     }
@@ -129,11 +134,12 @@ public:
     }
 
     // Allow implicit casting to std::basic_string (to sorta enumate the implicit constructor for string_view)
-    inline operator std::basic_string<_Elem>() const
-    {
-        //return std::basic_string<_Elem>{ static_cast<const base_type&>(*this) };
-        return toStdString();
-    }
+    //inline operator std::basic_string<_Elem>() const
+    //{
+    //    //return std::basic_string<_Elem>{ static_cast<const base_type&>(*this) };
+    //    return toStdString();
+    //}
+    // Note: Not allowing for this, to eliminate ambiguity. This should also probably be explicit (see toStdString()).
 
     // Note: These methods copied from basic_string_view, cause they are not protected like they probably should be
 protected:

@@ -15,7 +15,10 @@ void HandleCheckFailure( vlr::tzstring_view svzFailureMessage );
 
 inline void HandleCheckFailure( vlr::tzstring_view /*svzFailureMessage*/ )
 {
+	// Note: This works poorly when not compiling with MFC; figure out something better for default
+#ifdef _MFC_VER
 	ASSERT( 0 );
+#endif
 }
 
 #endif

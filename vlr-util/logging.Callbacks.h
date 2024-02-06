@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 

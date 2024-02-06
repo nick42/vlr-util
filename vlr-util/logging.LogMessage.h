@@ -8,6 +8,7 @@
 #include "logging.MessageContext.h"
 #include "util.choice.h"
 #include "util.convert.StringConversion.h"
+#include "formatpf.h"
 
 #ifndef VLR_CONSUMER_IMPL_LOGGING_CALLBACKS
 #include "logging.LogMessage.DefaultImpl.h"
@@ -30,8 +31,14 @@ inline void BootstrapCallbacksOnce()
 #ifndef VLR_CONSUMER_IMPL_LOGGING_CALLBACKS
 	Callbacks::getSharedInstanceMutable().m_fCheckCouldMessageBeLogged = &DefaultImpl::CheckCouldMessageBeLogged;
 	Callbacks::getSharedInstanceMutable().m_fLogMessage = &DefaultImpl::LogMessage;
+#elif defined(VLR_CONSUMER_BOOTSTRAP_LOGGING_CALLBACKS)
+	VLR_CONSUMER_BOOTSTRAP_LOGGING_CALLBACKS;
 #endif
 }
+
+// Note: Not returning the formatted message eliminates some potential (spurious) static analysis warnings, if not utilized
+
+#ifdef VLR_LOGGING_RETURN_FORMATTED_MESSAGE
 
 template <typename T>
 struct TFormatResult
@@ -44,8 +51,24 @@ struct TFormatResult
 		void>>>>;  // Default to void if no conversion found
 };
 
+#define VLR_LOGGING_FORMATTED_MESSAGE_RESULT_EMPTY {}
+#define VLR_LOGGING_FORMATTED_MESSAGE_RESULT sMessage
+
+#else
+
+template <typename T>
+struct TFormatResult
+{
+	using type = void;
+};
+
+#define VLR_LOGGING_FORMATTED_MESSAGE_RESULT_EMPTY
+#define VLR_LOGGING_FORMATTED_MESSAGE_RESULT
+
+#endif
+
 template< typename TString >
-inline auto LogMessage(const CMessageContext& oMessageContext, const TString& tMessage)
+inline auto LogMessage(const CMessageContext& oMessageContext, const TString& sMessage)
 -> typename TFormatResult<TString>::type
 {
 	BootstrapCallbacksOnce();
@@ -56,12 +79,12 @@ inline auto LogMessage(const CMessageContext& oMessageContext, const TString& tM
 	sr = oCallbacks.m_fCheckCouldMessageBeLogged(oMessageContext);
 	if (sr != SResult::Success)
 	{
-		return {};
+		return VLR_LOGGING_FORMATTED_MESSAGE_RESULT_EMPTY;
 	}
 
-	/*sr =*/ oCallbacks.m_fLogMessage(oMessageContext, util::Convert::ToStdString(tMessage));
+	/*sr =*/ oCallbacks.m_fLogMessage(oMessageContext, util::Convert::ToStdString(sMessage));
 
-	return tMessage;
+	return VLR_LOGGING_FORMATTED_MESSAGE_RESULT;
 }
 
 template< typename TFormatString, typename... Arg >
@@ -76,14 +99,14 @@ inline auto LogMessagePF(const CMessageContext& oMessageContext, TFormatString s
 	sr = oCallbacks.m_fCheckCouldMessageBeLogged(oMessageContext);
 	if (sr != SResult::Success)
 	{
-		return {};
+		return VLR_LOGGING_FORMATTED_MESSAGE_RESULT_EMPTY;
 	}
 
 	auto sMessage = formatpf(svFormatString, std::forward<Arg>(args)...);
 
 	/*sr =*/ oCallbacks.m_fLogMessage(oMessageContext, util::Convert::ToStdString(sMessage));
 
-	return sMessage;
+	return VLR_LOGGING_FORMATTED_MESSAGE_RESULT;
 }
 
 template< typename TFormatString, typename... Arg >
@@ -98,15 +121,18 @@ inline auto LogMessageFmt(const CMessageContext& oMessageContext, TFormatString 
 	sr = oCallbacks.m_fCheckCouldMessageBeLogged(oMessageContext);
 	if (sr != SResult::Success)
 	{
-		return {};
+		return VLR_LOGGING_FORMATTED_MESSAGE_RESULT_EMPTY;
 	}
 
 	auto sMessage = fmt::format(svFormatString, std::forward<Arg>(args)...);
 
 	/*sr =*/ oCallbacks.m_fLogMessage(oMessageContext, util::Convert::ToStdString(sMessage));
 
-	return sMessage;
+	return VLR_LOGGING_FORMATTED_MESSAGE_RESULT;
 }
+
+#undef VLR_LOGGING_FORMATTED_MESSAGE_RESULT_EMPTY
+#undef VLR_LOGGING_FORMATTED_MESSAGE_RESULT
 
 } // namespace logging
 

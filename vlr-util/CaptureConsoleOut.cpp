@@ -160,7 +160,7 @@ StandardResult CCaptureConsoleDataAnalysisHelper::DecomposeCaptureDataInfoLines(
 	auto& arrDataBuffer = m_spCapturePipeData->m_arrInternalDataCapture;
 	auto svDataBuffer = std::string_view{ arrDataBuffer.data(), arrDataBuffer.size() };
 
-	strings::SplitStringAtDelimiter(svDataBuffer, '\n', arrTextLines);
+	strings::SplitStringAtDelimiter<char>(svDataBuffer, '\n', arrTextLines);
 
 	return StandardResult::Success;
 }
