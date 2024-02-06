@@ -132,6 +132,10 @@ public:
 	{
 		return IsBitSet(m_nResultCode, 0x80000000);
 	}
+	constexpr auto isSet() const
+	{
+		return m_nResultCode != Uninitialized;
+	}
 
 public:
 	vlr::tstring ToString() const;

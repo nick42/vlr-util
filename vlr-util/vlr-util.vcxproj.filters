@@ -231,6 +231,9 @@
     <ClInclude Include="logging.LogMessage.DefaultImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DynamicLoadedFunction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleContext.Runtime.CommandLine.cpp">
