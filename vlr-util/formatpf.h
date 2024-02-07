@@ -28,8 +28,6 @@ inline decltype(auto) ConvertTo_choice( const TSource& tSource, vlr::util::choic
 	return static_cast<TResult>(tSource);
 }
 
-#if VLR_CONFIG_INCLUDE_ATL_CSTRING
-
 // The ToStdString case(s)
 
 template< typename TResult, typename TSource, typename std::enable_if_t<std::is_same_v<std::decay_t<TResult>, std::string>>* = nullptr >
@@ -43,6 +41,8 @@ inline decltype(auto) ConvertTo_choice( const TSource& tSource, vlr::util::choic
 {
 	return util::Convert::ToStdStringW( tSource );
 }
+
+#if VLR_CONFIG_INCLUDE_ATL_CSTRING
 
 // The ToCString case(s)
 

@@ -105,11 +105,11 @@ public:
 		return SResult{ hr };
 	}
 
+#ifdef WIN32
 	static inline auto For_win32_ErrorCode(DWORD dwErrorCode)
 	{
 		return SResult{}.withHRESULT(detail::MakeResultCode_Failure_Win32(dwErrorCode));
 	}
-#ifdef WIN32
 	static inline auto For_win32_LastError()
 	{
 		auto dwLastError = ::GetLastError();
