@@ -129,7 +129,7 @@ HRESULT CStringConversion::MultiByte_to_UTF16(
 	const StringConversionOptions& oStringConversionOptions /*= {}*/,
 	StringConversionResults* pStringConversionResults /*= nullptr*/ )
 {
-	auto oStringConversionOptions_Updated = StringConversionOptions{ oStringConversionOptions }.WithNullTerminatedString( true );
+	auto oStringConversionOptions_Updated = StringConversionOptions{ oStringConversionOptions }.withNullTerminatedString(true);
 
 	return MultiByte_to_UTF16(
 		static_cast<std::string_view>(svValue),
@@ -146,7 +146,7 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 	const StringConversionOptions& oStringConversionOptions /*= {}*/,
 	StringConversionResults* pStringConversionResults /*= nullptr*/ )
 {
-	auto oStringConversionOptions_Updated = StringConversionOptions{ oStringConversionOptions }.WithNullTerminatedString( true );
+	auto oStringConversionOptions_Updated = StringConversionOptions{ oStringConversionOptions }.withNullTerminatedString(true);
 
 	return UTF16_to_MultiByte(
 		static_cast<std::wstring_view>(svValue),
@@ -171,7 +171,7 @@ HRESULT CStringConversion::MultiByte_to_UTF16(
 		strOutput.resize( nOutputBufferSizeChars );
 		auto nOutputBufferSizeBytes = nOutputBufferSizeChars * sizeof( wchar_t );
 
-		auto oStringConversionOptions_Local = StringConversionOptions{ oStringConversionOptions }.With_GenerateResultNotNullTerminated( true );
+		auto oStringConversionOptions_Local = StringConversionOptions{ oStringConversionOptions }.withGenerateResultNotNullTerminated(true);
 		auto oStringConversionResults = StringConversionResults{};
 
 		hr = MultiByte_to_UTF16(
@@ -208,14 +208,17 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 {
 	HRESULT hr;
 
-	auto nOutputBufferSizeChars = svValue.length();
+	// Note: The maximum length of a converted string, I believe, is 4x the (chars) length of the source string.
+	// ie: If every source char is converted into an extended MBCS 4byte character.
+	// If longer is possible, than this can fail.
+	auto nOutputBufferSizeChars = svValue.length() * 4;
 
 	while (true)
 	{
 		strOutput.resize( nOutputBufferSizeChars );
 		auto nOutputBufferSizeBytes = nOutputBufferSizeChars * sizeof( char );
 
-		auto oStringConversionOptions_Local = StringConversionOptions{ oStringConversionOptions }.With_GenerateResultNotNullTerminated( true );
+		auto oStringConversionOptions_Local = StringConversionOptions{ oStringConversionOptions }.withGenerateResultNotNullTerminated(true);
 		auto oStringConversionResults = StringConversionResults{};
 
 		hr = UTF16_to_MultiByte(
@@ -287,7 +290,7 @@ HRESULT CStringConversion::MultiByte_to_UTF16(
 		auto oOutputBufferAccess = GetCStringBufferAccess( sOutput, range_checked_cast<int>(nOutputBufferSizeChars) );
 		auto nOutputBufferSizeBytes = nOutputBufferSizeChars * sizeof( wchar_t );
 
-		auto oStringConversionOptions_Local = StringConversionOptions{ oStringConversionOptions }.With_GenerateResultNotNullTerminated( true );
+		auto oStringConversionOptions_Local = StringConversionOptions{ oStringConversionOptions }.withGenerateResultNotNullTerminated(true);
 		auto oStringConversionResults = StringConversionResults{};
 
 		hr = MultiByte_to_UTF16(
@@ -330,7 +333,7 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 		auto oOutputBufferAccess = GetCStringBufferAccess( sOutput, range_checked_cast<int>(nOutputBufferSizeChars) );
 		auto nOutputBufferSizeBytes = nOutputBufferSizeChars * sizeof( char );
 
-		auto oStringConversionOptions_Local = StringConversionOptions{ oStringConversionOptions }.With_GenerateResultNotNullTerminated( true );
+		auto oStringConversionOptions_Local = StringConversionOptions{ oStringConversionOptions }.withGenerateResultNotNullTerminated(true);
 		auto oStringConversionResults = StringConversionResults{};
 
 		hr = UTF16_to_MultiByte(

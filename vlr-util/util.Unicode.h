@@ -19,31 +19,61 @@ struct StringConversionOptions
 public:
 	bool m_bInputStringIsNullTerminated = false;
 	bool m_bGenerateResultNotNullTerminated = false;
+	UINT m_nCodePage = CP_UTF8;
+	DWORD m_dwFlags_MultiByteToWideChar = 0;
+	DWORD m_dwFlags_WideCharToMultiByte = 0;
 
 public:
-	inline auto& WithNullTerminatedString( bool bValue = true )
+	inline auto& withNullTerminatedString(bool bValue = true)
 	{
 		m_bInputStringIsNullTerminated = bValue;
 		return *this;
 	}
-	inline auto& With_GenerateResultNotNullTerminated( bool bValue = true )
+	inline auto& withGenerateResultNotNullTerminated(bool bValue = true)
 	{
 		m_bGenerateResultNotNullTerminated = bValue;
 		return *this;
 	}
+	inline decltype(auto) withCodePage(UINT nCodePage)
+	{
+		m_nCodePage = nCodePage;
+		return *this;
+	}
+	// Note: This is arbitrary and can change between systems. Try not to use.
+	// See: https://learn.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar
+	inline decltype(auto) withCodePage_SystemDefaultASCII()
+	{
+		m_nCodePage = 0; // CP_ACP
+		return *this;
+	}
+	inline decltype(auto) withCodePage_UTF8()
+	{
+		m_nCodePage = CP_UTF8;
+		return *this;
+	}
+	inline decltype(auto) withFlags_MultiByteToWideChar(DWORD dwFlags_MultiByteToWideChar)
+	{
+		m_dwFlags_MultiByteToWideChar = dwFlags_MultiByteToWideChar;
+		return *this;
+	}
+	inline decltype(auto) withFlags_WideCharToMultiByte(DWORD dwFlags_WideCharToMultiByte)
+	{
+		m_dwFlags_WideCharToMultiByte = dwFlags_WideCharToMultiByte;
+		return *this;
+	}
 
 public:
-	UINT GetCodePageIdentifier() const
+	inline UINT GetCodePageIdentifier() const
 	{
-		return CP_UTF8;
+		return m_nCodePage;
 	}
-	DWORD OnMultiByteToWideChar_GetFlags() const
+	inline DWORD OnMultiByteToWideChar_GetFlags() const
 	{
-		return 0;
+		return m_dwFlags_MultiByteToWideChar;
 	}
-	DWORD OnWideCharToMultiByte_GetFlags() const
+	inline DWORD OnWideCharToMultiByte_GetFlags() const
 	{
-		return 0;
+		return m_dwFlags_WideCharToMultiByte;
 	}
 	const CHAR* OnWideCharToMultiByte_GetDefaultChar() const
 	{
