@@ -27,6 +27,16 @@
 #include <comdef.h>
 #endif
 
+// Other options which can be defined (partial list:
+
+// VLR_FALLBACK_Inline_UTF16_to_MultiByte_StdString
+// Prototype: std::string function(std::wstring_view svValue, const StringConversionOptions & oConversionOptions);
+// Used by: string conversion code, if native conversion is not available
+
+// VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString
+// Prototype: std::wstring function(std::string_view svValue, const StringConversionOptions & oConversionOptions);
+// Used by: string conversion code, if native conversion is not available
+
 #ifndef _STD
 #define _STD std::
 #endif

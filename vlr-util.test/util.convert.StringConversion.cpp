@@ -50,3 +50,31 @@ TEST( util_convert_StringConversion, general )
 	fTestConvertToAllTargetTypes( saTest );
 	fTestConvertToAllTargetTypes( swTest );
 }
+
+TEST(StringConversion, NonASCII)
+{
+	using namespace vlr::util;
+
+	std::string saTest = "caractères ASCII";
+
+	auto swValue = Convert::ToStdStringW_FromSystemDefaultASCII(saTest);
+	//std::wcout << L"Test string (UTF16): " << swValue << std::endl;
+	//for (auto cChar : swValue)
+	//{
+	//	std::wcout << std::hex << (unsigned short)cChar << L" ";
+	//}
+	//std::wcout << std::endl;
+
+	// Note: Valid UTF16 encoding obtained (manually) via online resource
+	// (https://www.browserling.com/tools/utf16-encode)
+	std::vector<unsigned short> vecExpectedValue{ 0x63, 0x61, 0x72, 0x61, 0x63, 0x74, 0xe8, 0x72, 0x65, 0x73, 0x20, 0x41, 0x53, 0x43, 0x49, 0x49 };
+
+	{
+		size_t nExpectedValueIndex = 0;
+		for (auto cChar : swValue)
+		{
+			ASSERT_LT(nExpectedValueIndex, vecExpectedValue.size());
+			EXPECT_EQ(cChar, vecExpectedValue[nExpectedValueIndex++]);
+		}
+	}
+}

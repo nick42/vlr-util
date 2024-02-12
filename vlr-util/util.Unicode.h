@@ -14,6 +14,9 @@ namespace util {
 
 struct StringConversionResults;
 
+// Note: We want StringConversionOptions to be as constexpr constructable (for default case) as possible,
+// so that the compiler can inline and optimize that case as much as possible.
+
 struct StringConversionOptions
 {
 public:
@@ -85,6 +88,17 @@ public:
 		// Note: If codepage if UTF7/UTF8, this must be NULL
 		return nullptr;
 	}
+
+public:
+	static constexpr auto ForSystemDefaultASCIIIngress()
+	{
+		StringConversionOptions theInstance;
+		theInstance.m_nCodePage = CP_ACP;
+		return theInstance;
+	}
+
+	// Make sure we instantiate a constexpr default constructor if possible
+	constexpr StringConversionOptions() = default;
 };
 
 struct StringConversionResults
