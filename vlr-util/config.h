@@ -37,6 +37,12 @@
 // Prototype: std::wstring function(std::string_view svValue, const StringConversionOptions & oConversionOptions);
 // Used by: string conversion code, if native conversion is not available
 
+// VLR_CONFIG_ASSERTIONS_INCLUDE_FUNCTION
+// Define this to have assertion failure messages include the function name as a context prefix
+
+// VLR_CONFIG_ASSERTIONS_FAILURE_MESSAGE_PREFIX
+// Define this to specify a custom assertion failure message prefix (as _T("...") string)
+
 #ifndef _STD
 #define _STD std::
 #endif

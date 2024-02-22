@@ -167,15 +167,30 @@ inline decltype(auto) ToStdStringW_choice(const TString& tString, const StringCo
 	return tString.toStdString();
 }
 
+#if VLR_CONFIG_INCLUDE_WIN32_BSTR
+
+template< typename TString, typename std::enable_if_t<std::is_same_v<TString, _bstr_t>>* = nullptr >
+inline decltype(auto) ToStdStringA_choice(const TString& tString, const StringConversionOptions& oConversionOptions, vlr::util::choice<4>&&)
+{
+	return ToStdStringA(std::wstring{ static_cast<const wchar_t*>(tString), static_cast<std::wstring::size_type>(tString.length()) }, oConversionOptions);
+}
+template< typename TString, typename std::enable_if_t<std::is_same_v<TString, _bstr_t>>* = nullptr >
+inline decltype(auto) ToStdStringW_choice(const TString& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<4>&&)
+{
+	return std::wstring{ static_cast<const wchar_t*>(tString), static_cast<std::wstring::size_type>(tString.length()) };
+}
+
+#endif
+
 // Do not know how to convert any other types; static assert if we fall through
 
 template< typename TString >
-inline decltype(auto) ToStdStringA_choice(const TString& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<4>&&)
+inline decltype(auto) ToStdStringA_choice(const TString& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<5>&&)
 {
 	VLR_TYPE_DEPENDENT_STATIC_FAIL(TString, "Unhandled conversion type");
 }
 template< typename TString >
-inline decltype(auto) ToStdStringW_choice(const TString& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<4>&&)
+inline decltype(auto) ToStdStringW_choice(const TString& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<5>&&)
 {
 	VLR_TYPE_DEPENDENT_STATIC_FAIL(TString, "Unhandled conversion type");
 }
@@ -295,6 +310,20 @@ inline decltype(auto) ToCStringW(const std::wstring& sValue, const StringConvers
 	auto svValue = std::wstring_view{ sValue };
 	return ToCStringW(svValue, oConversionOptions);
 }
+
+#if VLR_CONFIG_INCLUDE_WIN32_BSTR
+
+inline decltype(auto) ToCStringA(const _bstr_t& bsString, const StringConversionOptions& oConversionOptions = {})
+{
+	return ToCStringA(ToStdStringW(bsString), oConversionOptions);
+}
+
+inline decltype(auto) ToCStringW(const _bstr_t& bsString, const StringConversionOptions& oConversionOptions = {})
+{
+	return ToCStringW(ToStdStringW(bsString), oConversionOptions);
+}
+
+#endif
 
 // Generic version for "CStringT", based on compilation type
 // (passes any additional arguments through)

@@ -6,6 +6,8 @@
 
 #pragma once
 
+#define VLR_CONFIG_ASSERTIONS_INCLUDE_FUNCTION
+
 #include <vlr-util/config.h>
 
 #define GTEST_DONT_DEFINE_FAIL 1

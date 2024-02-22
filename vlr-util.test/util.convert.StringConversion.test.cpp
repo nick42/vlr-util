@@ -19,6 +19,7 @@ TEST( util_convert_StringConversion, general )
 	const auto svzwTest = vlr::wzstring_view{ strwTest };
 	const auto saTest = CStringA{ pcaszTestString };
 	const auto swTest = CStringW{ pcwszTestString };
+	const auto bsTest = _bstr_t{ pcwszTestString };
 
 	auto fTestConvertToAllTargetTypes = [&]( const auto& tString )
 	{
@@ -41,14 +42,15 @@ TEST( util_convert_StringConversion, general )
 		EXPECT_STREQ( tString_asCStringT, pcszTestString );
 	};
 
-	fTestConvertToAllTargetTypes( straTest );
-	fTestConvertToAllTargetTypes( strwTest );
-	fTestConvertToAllTargetTypes( svaTest );
-	fTestConvertToAllTargetTypes( svwTest );
-	fTestConvertToAllTargetTypes( svzaTest );
-	fTestConvertToAllTargetTypes( svzwTest );
-	fTestConvertToAllTargetTypes( saTest );
-	fTestConvertToAllTargetTypes( swTest );
+	fTestConvertToAllTargetTypes(straTest);
+	fTestConvertToAllTargetTypes(strwTest);
+	fTestConvertToAllTargetTypes(svaTest);
+	fTestConvertToAllTargetTypes(svwTest);
+	fTestConvertToAllTargetTypes(svzaTest);
+	fTestConvertToAllTargetTypes(svzwTest);
+	fTestConvertToAllTargetTypes(saTest);
+	fTestConvertToAllTargetTypes(swTest);
+	fTestConvertToAllTargetTypes(bsTest);
 }
 
 TEST(StringConversion, NonASCII)

@@ -64,7 +64,12 @@ public:
 	}
 };
 
-using SEColor = vlr::enums::SmartEnum<Color::EColor, Color::Unknown, vlr::enums::CFormatEnum<Color::EColor>, vlr::enums::RangeCheckForEnum<Color::EColor>>;
+using SEColor = vlr::enums::SmartEnum<
+	Color::EColor,
+	Color::Unknown,
+	vlr::enums::CFormatEnum<Color::EColor>,
+	vlr::enums::RangeCheckForEnum<Color::EColor>
+>;
 
 TEST(SmartEnum, general)
 {

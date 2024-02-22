@@ -33,7 +33,7 @@
     <ClCompile Include="util.IsNonZero.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Assertions.cpp">
+    <ClCompile Include="Assertions.test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AutoRevertingAssignment.cpp">
@@ -57,7 +57,7 @@
     <ClCompile Include="util.range_checked_cast.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.convert.StringConversion.cpp">
+    <ClCompile Include="util.convert.StringConversion.test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="util.api_adaptor.OutString.cpp">
@@ -117,7 +117,7 @@
     <ClCompile Include="CaptureConsoleOutput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="enums.SmartEnum.cpp">
+    <ClCompile Include="enums.SmartEnum.test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

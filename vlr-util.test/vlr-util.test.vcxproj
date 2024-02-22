@@ -157,14 +157,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ActionOnDestruction.cpp" />
-    <ClCompile Include="Assertions.cpp" />
+    <ClCompile Include="Assertions.test.cpp" />
     <ClCompile Include="as_span.cpp" />
     <ClCompile Include="AutoFreeResource.cpp" />
     <ClCompile Include="AutoRevertingAssignment.cpp" />
     <ClCompile Include="CaptureConsoleOutput.cpp" />
     <ClCompile Include="CloseEnough.cpp" />
     <ClCompile Include="enums.RangeInfo.cpp" />
-    <ClCompile Include="enums.SmartEnum.cpp" />
+    <ClCompile Include="enums.SmartEnum.test.cpp" />
     <ClCompile Include="formatpf.cpp" />
     <ClCompile Include="logging.LogMessage.cpp" />
     <ClCompile Include="logging.MessageContext.cpp" />
@@ -180,7 +180,7 @@
     <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="util.api_adaptor.OutString.cpp" />
     <ClCompile Include="util.choice.cpp" />
-    <ClCompile Include="util.convert.StringConversion.cpp" />
+    <ClCompile Include="util.convert.StringConversion.test.cpp" />
     <ClCompile Include="util.data_adaptor.MultiSZ.cpp" />
     <ClCompile Include="util.IsBitSet.cpp" />
     <ClCompile Include="util.IsBitValue.cpp" />

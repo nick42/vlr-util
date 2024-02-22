@@ -8,19 +8,34 @@
 #include "util.IsNonZero.h"
 #include "util.IsNotBlank.h"
 
+#ifdef VLR_CONFIG_ASSERTIONS_INCLUDE_FUNCTION
+#define VLR_ASSERTION_FUNCTION_NAME _T("[") _T(__FUNCTION__) _T("] ")
+#else
+#define VLR_ASSERTION_FUNCTION_NAME
+#endif
+
+#ifdef VLR_CONFIG_ASSERTIONS_FAILURE_MESSAGE_PREFIX
+#define VLR_ASSERTION_FAILURE_MESSAGE_PREFIX VLR_CONFIG_ASSERTIONS_FAILURE_MESSAGE_PREFIX
+#else
+#define VLR_ASSERTION_FAILURE_MESSAGE_PREFIX _T("Assertion failed; ")
+#endif
+
 #define VLR_ASSERTIONS_EVALUATE_COMPARISON( lhs, op, rhs ) ( (lhs) op (rhs) )
 
 // Note: Assuming string literal at this point, so preprocessor concat works
 // TODO: Convert to formatting, if/when we have the applicable library dependency
 
+#define VLR_ASSERTIONS_HANDLE_CHECK_FAILURE( pcszFailureMessage ) \
+	vlr::assert::HandleCheckFailure( VLR_ASSERTION_FUNCTION_NAME VLR_ASSERTION_FAILURE_MESSAGE_PREFIX pcszFailureMessage );
+
 #define VLR_ASSERTIONS_HANDLE_FAILURE_NONZERO( pcszValueName ) \
-	vlr::assert::HandleCheckFailure( _T("Assertion failed; nonzero value: ") pcszValueName );
+	VLR_ASSERTIONS_HANDLE_CHECK_FAILURE( _T("nonzero value: ") pcszValueName );
 
 #define VLR_ASSERTIONS_HANDLE_FAILURE_NONTBLANK( pcszValueName ) \
-	vlr::assert::HandleCheckFailure( _T("Assertion failed; notblank value: ") pcszValueName );
+	VLR_ASSERTIONS_HANDLE_CHECK_FAILURE( _T("notblank value: ") pcszValueName );
 
 #define VLR_ASSERTIONS_HANDLE_FAILURE_COMPARE( lhs, op, rhs ) \
-	vlr::assert::HandleCheckFailure( _T("Assertion failed; compare failure: ") _T(#lhs) _T(#op) _T(#rhs) );
+	VLR_ASSERTIONS_HANDLE_CHECK_FAILURE( _T("compare failure: ") _T(#lhs) _T(#op) _T(#rhs) );
 
 #define VLR_ASSERTIONS_RETURN_NULL return;
 
@@ -28,7 +43,7 @@
 
 #define VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION( expression ) \
 { \
-	vlr::assert::HandleCheckFailure( _T("Assertion failed (general)") ); \
+	vlr::assert::HandleCheckFailure( VLR_ASSERTION_FUNCTION_NAME _T("Assertion failed (general)") ); \
 	VLR_ASSERTIONS_RETURN_EXPRESSION( expression ) \
 }
 
@@ -147,5 +162,5 @@
 #define VLR_ASSERT_ALLOCATED_OR_RETURN_FAILURE_VALUE( value ) VLR_ASSERT_NONZERO_OR_RETURN_EXPRESSION( value, _tFailureValue )
 
 #define VLR_ASSERT_ON_UNHANDLED_SWITCH_CASE \
-	vlr::assert::HandleCheckFailure( _T("Assertion failed; unhandled switch case") ); \
+	VLR_ASSERTIONS_HANDLE_CHECK_FAILURE( _T("unhandled switch case") ); \
 	[[fallthrough]]
