@@ -8,6 +8,24 @@
 #include "util.std_aliases.h"
 #include "zstring_view.h"
 
+#if VLR_CONFIG_LOG_CONTEXT_INCLUDE_FILE
+#define VLR_LOG_CONTEXT_FILE _T(__FILE__)
+#else
+#define VLR_LOG_CONTEXT_FILE
+#endif
+
+#if VLR_CONFIG_LOG_CONTEXT_INCLUDE_LINE
+#define VLR_LOG_CONTEXT_LINE __LINE__
+#else
+#define VLR_LOG_CONTEXT_LINE 0
+#endif
+
+#if VLR_CONFIG_LOG_CONTEXT_INCLUDE_FUNCTION
+#define VLR_LOG_CONTEXT_FUNCTION _T(__FUNCTION__)
+#else
+#define VLR_LOG_CONTEXT_FUNCTION
+#endif
+
 namespace vlr {
 
 namespace logging {
@@ -52,7 +70,7 @@ public:
 	{}
 };
 
-#define VLR_CODE_CONTEXT vlr::logging::CCodeContext{ _T(__FILE__), __LINE__, _T(__FUNCTION__) }
+#define VLR_CODE_CONTEXT vlr::logging::CCodeContext{ VLR_LOG_CONTEXT_FILE, VLR_LOG_CONTEXT_LINE, VLR_LOG_CONTEXT_FUNCTION }
 
 namespace LogicalLevel {
 

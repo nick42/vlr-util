@@ -5,6 +5,7 @@
 
 #include <functional>
 
+#include "logging.MessageContext.h"
 #include "zstring_view.h"
 
 namespace vlr {
@@ -14,7 +15,7 @@ namespace assert {
 class Callbacks
 {
 public:
-	using FHandleCheckFailure = std::function<void(vlr::tzstring_view svzFailureMessage)>;
+	using FHandleCheckFailure = std::function<void(const vlr::logging::CMessageContext& oMessageContext, vlr::tzstring_view svzFailureMessage)>;
 
 	FHandleCheckFailure m_fHandleCheckFailure;
 
@@ -30,12 +31,12 @@ public:
 	}
 };
 
-inline void HandleCheckFailure(vlr::tzstring_view svzFailureMessage)
+inline void HandleCheckFailure(const vlr::logging::CMessageContext& oMessageContext, vlr::tzstring_view svzFailureMessage)
 {
 	const auto& fHandleCheckFailure = Callbacks::getSharedInstance().m_fHandleCheckFailure;
 	if (fHandleCheckFailure)
 	{
-		return fHandleCheckFailure(svzFailureMessage);
+		return fHandleCheckFailure(oMessageContext, svzFailureMessage);
 	}
 
 	// Note: This works poorly when not compiling with MFC; figure out something better for default

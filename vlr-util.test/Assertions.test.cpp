@@ -1,14 +1,17 @@
 #include "pch.h"
 
+#include <functional>
+
+#include "vlr-util/logging.MessageContext.h"
 #include "vlr-util/zstring_view.h"
 
-static std::function<void(vlr::tzstring_view svzFailureMessage)> g_fOnCheckFailure;
+static std::function<void(const vlr::logging::CMessageContext& oMessageContext, vlr::tzstring_view svzFailureMessage)> g_fOnCheckFailure;
 
-void MyHandleCheckFailure(vlr::tzstring_view svzFailureMessage)
+void MyHandleCheckFailure(const vlr::logging::CMessageContext& oMessageContext, vlr::tzstring_view svzFailureMessage)
 {
 	if (g_fOnCheckFailure)
 	{
-		g_fOnCheckFailure(svzFailureMessage);
+		g_fOnCheckFailure(oMessageContext, svzFailureMessage);
 	}
 }
 
@@ -21,7 +24,7 @@ TEST(Assertions, HandleCheckFailure)
 	vlr::assert::Callbacks::getSharedInstanceMutable().m_fHandleCheckFailure = &MyHandleCheckFailure;
 
 	std::vector<vlr::tstring> vecAssertions;
-	g_fOnCheckFailure = [&](vlr::tzstring_view svzFailureMessage) {
+	g_fOnCheckFailure = [&](const vlr::logging::CMessageContext& oMessageContext, vlr::tzstring_view svzFailureMessage) {
 		vecAssertions.push_back(svzFailureMessage.toStdString());
 	};
 	auto oOnDestory_ClearCallback = vlr::MakeActionOnDestruction([&] { g_fOnCheckFailure = {}; });

@@ -27,7 +27,7 @@
 #include <comdef.h>
 #endif
 
-// Other options which can be defined (partial list:
+// Other options which can be defined (partial list):
 
 // VLR_FALLBACK_Inline_UTF16_to_MultiByte_StdString
 // Prototype: std::string function(std::wstring_view svValue, const StringConversionOptions & oConversionOptions);
@@ -42,6 +42,21 @@
 
 // VLR_CONFIG_ASSERTIONS_FAILURE_MESSAGE_PREFIX
 // Define this to specify a custom assertion failure message prefix (as _T("...") string)
+
+// Which elements are included in the logging context
+// Note: By default (if config elements not defined), we include all data
+
+#if (!defined(VLR_CONFIG_LOG_CONTEXT_INCLUDE_FILE))
+#define VLR_CONFIG_LOG_CONTEXT_INCLUDE_FILE 1
+#endif
+
+#if (!defined(VLR_CONFIG_LOG_CONTEXT_INCLUDE_LINE))
+#define VLR_CONFIG_LOG_CONTEXT_INCLUDE_LINE 1
+#endif
+
+#if (!defined(VLR_CONFIG_LOG_CONTEXT_INCLUDE_FUNCTION))
+#define VLR_CONFIG_LOG_CONTEXT_INCLUDE_FUNCTION 1
+#endif
 
 #ifndef _STD
 #define _STD std::

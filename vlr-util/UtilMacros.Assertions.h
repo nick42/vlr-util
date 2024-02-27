@@ -4,6 +4,7 @@
 #include "config.h"
 
 #include "AssertionHandling_Config.h"
+#include "logging.MessageContext.h"
 #include "zstring_view.h"
 #include "util.IsNonZero.h"
 #include "util.IsNotBlank.h"
@@ -26,7 +27,7 @@
 // TODO: Convert to formatting, if/when we have the applicable library dependency
 
 #define VLR_ASSERTIONS_HANDLE_CHECK_FAILURE( pcszFailureMessage ) \
-	vlr::assert::HandleCheckFailure( VLR_ASSERTION_FUNCTION_NAME VLR_ASSERTION_FAILURE_MESSAGE_PREFIX pcszFailureMessage );
+	vlr::assert::HandleCheckFailure( VLR_CODE_CONTEXT, VLR_ASSERTION_FUNCTION_NAME VLR_ASSERTION_FAILURE_MESSAGE_PREFIX pcszFailureMessage );
 
 #define VLR_ASSERTIONS_HANDLE_FAILURE_NONZERO( pcszValueName ) \
 	VLR_ASSERTIONS_HANDLE_CHECK_FAILURE( _T("nonzero value: ") pcszValueName );
@@ -43,7 +44,7 @@
 
 #define VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION( expression ) \
 { \
-	vlr::assert::HandleCheckFailure( VLR_ASSERTION_FUNCTION_NAME _T("Assertion failed (general)") ); \
+	vlr::assert::HandleCheckFailure( VLR_CODE_CONTEXT, VLR_ASSERTION_FUNCTION_NAME _T("Assertion failed (general)") ); \
 	VLR_ASSERTIONS_RETURN_EXPRESSION( expression ) \
 }
 
