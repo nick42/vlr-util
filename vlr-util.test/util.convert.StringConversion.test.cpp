@@ -40,6 +40,11 @@ TEST( util_convert_StringConversion, general )
 		EXPECT_STREQ( tString_asCStringW, pcwszTestString );
 		auto tString_asCStringT = Convert::ToCString( tString );
 		EXPECT_STREQ( tString_asCStringT, pcszTestString );
+
+		// to _bstr_t
+
+		auto tString_as_bstr_t = Convert::To_bstr_t(tString);
+		EXPECT_STREQ(static_cast<LPCWSTR>(tString_as_bstr_t), pcwszTestString);
 	};
 
 	fTestConvertToAllTargetTypes(straTest);

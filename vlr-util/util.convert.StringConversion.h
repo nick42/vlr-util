@@ -347,6 +347,43 @@ inline decltype(auto) ToCString( const TString& tString, Arg&&... args )
 
 #endif // VLR_CONFIG_INCLUDE_ATL_CSTRING
 
+#if VLR_CONFIG_INCLUDE_WIN32_BSTR
+
+namespace detail {
+
+inline decltype(auto) To_bstr_t_choice(const _bstr_t& bsString, const StringConversionOptions & /*oConversionOptions*/, vlr::util::choice<0>&&)
+{
+	return bsString;
+}
+
+// Note: Unfortunately, _bstr_t doesn't have a size-based constructor...
+
+template <typename TString, typename std::enable_if_t<std::is_convertible_v<const TString&, std::wstring_view>>* = nullptr>
+inline decltype(auto) To_bstr_t_choice(const TString& tString, const StringConversionOptions & /*oConversionOptions*/, vlr::util::choice<1>&&)
+{
+	auto svString = static_cast<std::wstring_view>(tString);
+	auto bsString = ::SysAllocStringLen(svString.data(), static_cast<UINT>(svString.size()));
+	return _bstr_t{ bsString, false };
+}
+
+template <typename TString>
+inline decltype(auto) To_bstr_t_choice(const TString& tString, const StringConversionOptions& oConversionOptions, vlr::util::choice<2>&&)
+{
+	auto swString = ToStdStringW(tString, oConversionOptions);
+	auto bsString = ::SysAllocStringLen(swString.data(), static_cast<UINT>(swString.length()));
+	return _bstr_t{ bsString, false };
+}
+
+} // namespace detail
+
+template <typename TString>
+inline decltype(auto) To_bstr_t(const TString& tString, const StringConversionOptions& oConversionOptions = {})
+{
+	return detail::To_bstr_t_choice(tString, oConversionOptions, vlr::util::choice<0>{});
+}
+
+#endif
+
 } // namespace Convert
 
 } // namespace util
