@@ -12,13 +12,15 @@
 #define _T(x) x
 #endif
 
-#define CHAR char
-#define WCHAR wchar_t
-#define DWORD uint32_t
-#define HRESULT uint32_t
-#define BOOL uint8_t
-#define INT int32_t
-#define UINT uint32_t
+// Note: BOOL is defined as int in Windows
+using BOOL = int;
+using CHAR = char;
+using WCHAR = wchar_t;
+using DWORD = uint32_t;
+using DWORD_PTR = unsigned int;
+using HRESULT = uint32_t;
+using INT = int;
+using UINT = unsigned int;
 
 constexpr auto S_OK = HRESULT{0U};
 constexpr auto S_FALSE = HRESULT{1U};

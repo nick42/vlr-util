@@ -12,6 +12,36 @@ namespace vlr {
 
 namespace util {
 
+namespace CodePageWin32 {
+
+// Note: This must match defines in WinNls.h; code from there for reference:
+//
+//  Code Page Default Values.
+//  Please Use Unicode, either UTF-16 (as in WCHAR) or UTF-8 (code page CP_ACP)
+//
+//#define CP_ACP                    0           // default to ANSI code page
+//#define CP_OEMCP                  1           // default to OEM  code page
+//#define CP_MACCP                  2           // default to MAC  code page
+//#define CP_THREAD_ACP             3           // current thread's ANSI code page
+//#define CP_SYMBOL                 42          // SYMBOL translations
+//
+//#define CP_UTF7                   65000       // UTF-7 translation
+//#define CP_UTF8                   65001       // UTF-8 translation
+
+
+enum ECodePageWin32
+{
+	ANSI = 0,
+	OEM = 1,
+	MAC = 2,
+	ANSI_CurrentThread = 3,
+	SYMBOL = 42,
+	UTF7 = 65000,
+	UTF8 = 65001,
+};
+
+} // namespace CodePageWin32
+
 struct StringConversionResults;
 
 // Note: We want StringConversionOptions to be as constexpr constructable (for default case) as possible,
@@ -22,7 +52,7 @@ struct StringConversionOptions
 public:
 	bool m_bInputStringIsNullTerminated = false;
 	bool m_bGenerateResultNotNullTerminated = false;
-	UINT m_nCodePage = CP_UTF8;
+	UINT m_nCodePage = CodePageWin32::UTF8;
 	DWORD m_dwFlags_MultiByteToWideChar = 0;
 	DWORD m_dwFlags_WideCharToMultiByte = 0;
 
@@ -46,12 +76,12 @@ public:
 	// See: https://learn.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar
 	inline decltype(auto) withCodePage_SystemDefaultASCII()
 	{
-		m_nCodePage = 0; // CP_ACP
+		m_nCodePage = CodePageWin32::ANSI;
 		return *this;
 	}
 	inline decltype(auto) withCodePage_UTF8()
 	{
-		m_nCodePage = CP_UTF8;
+		m_nCodePage = CodePageWin32::UTF8;
 		return *this;
 	}
 	inline decltype(auto) withFlags_MultiByteToWideChar(DWORD dwFlags_MultiByteToWideChar)
