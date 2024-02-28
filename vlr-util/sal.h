@@ -2601,7 +2601,11 @@ extern "C" {
 
 #else // ][
 #ifndef PAL_STDCPP_COMPAT
+#ifdef __APPLE__
+    // Apple compiler defines this, apparently...
+#else
     #define __null
+#endif
     #define __notnull
 #endif // !PAL_STDCPP_COMPAT
     #define __maybenull
