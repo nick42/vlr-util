@@ -21,7 +21,8 @@ static constexpr auto Facility_Win32 = (unsigned short)7;
 
 inline constexpr auto MakeResultCode(unsigned char nSeverityCode, unsigned short nFacilityCode, unsigned short nResultCode)
 {
-	return ResultCode{ ((unsigned long)(nSeverityCode) << 31) | ((unsigned long)(nFacilityCode) << 16) | ((unsigned long)(nResultCode)) };
+	// Note: Ensure we're using 32bit uint explicitly; on other platforms, long may be 64bit
+	return ResultCode{ ((uint32_t)(nSeverityCode) << 31) | ((uint32_t)(nFacilityCode) << 16) | ((uint32_t)(nResultCode)) };
 }
 
 inline constexpr auto MakeResultCode_Success(unsigned short nFacilityCode, unsigned short nResultCode)
@@ -115,7 +116,7 @@ public:
 		auto dwLastError = ::GetLastError();
 		return For_win32_ErrorCode(dwLastError);
 	}
-	static inline auto ForCall_win32(BOOL bSuccess)
+	static inline auto ForCall_win32(WIN_BOOL bSuccess)
 	{
 		if (bSuccess)
 		{

@@ -21,4 +21,9 @@ namespace vlr {
 
 using ResultCode = HRESULT;
 
+// Windows has a historical type define for BOOL as int. We do not want to define/use this directly, as
+// other platform compilers (eg: Xcode) may define BOOL as bool, and thus get a different type. When 
+// making method to be compatible with Win32 (in this library), use this type instead.
+using WIN_BOOL = int;
+
 } // namespace vlr

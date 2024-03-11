@@ -113,7 +113,7 @@ public:
 		// Note: If codepage if UTF7/UTF8, this must be NULL
 		return nullptr;
 	}
-	BOOL* OnWideCharToMultiByte_GetUsedDefaultChar( StringConversionResults* /*pStringConversionResults*/ ) const
+	WIN_BOOL* OnWideCharToMultiByte_GetUsedDefaultChar(StringConversionResults* /*pStringConversionResults*/) const
 	{
 		// Note: If codepage if UTF7/UTF8, this must be NULL
 		return nullptr;

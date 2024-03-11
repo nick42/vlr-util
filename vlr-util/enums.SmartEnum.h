@@ -50,7 +50,7 @@ class RangeCheckForEnum_Selector
 public:
 	static inline bool IsValueInRange(TBaseEnum eValue)
 	{
-		if constexpr (std::is_invocable_v<typename RangeCheckType::IsValueInRange, eValue>)
+		if constexpr (std::is_invocable_v<typename RangeCheckType::IsValueInRange, TBaseEnum>)
 		{
 			return RangeCheckType::IsValueInRange(eValue);
 		}
@@ -61,7 +61,7 @@ public:
 	}
 	static inline TBaseEnum CheckedEnumCast(DWORD_PTR dwValue)
 	{
-		if constexpr (std::is_invocable_v<typename RangeCheckType::CheckedEnumCast, dwValue>)
+		if constexpr (std::is_invocable_v<typename RangeCheckType::CheckedEnumCast, TBaseEnum>)
 		{
 			return RangeCheckType::CheckedEnumCast(dwValue);
 		}
@@ -80,7 +80,7 @@ template<
 >
 class SmartEnum
 {
-	using ThisType = SmartEnum< TBaseEnum, tDefaultValue, TEnumFormatter, TRangeInfo >;
+	using ThisType = SmartEnum<TBaseEnum, tDefaultValue, TEnumFormatter, TRangeInfo>;
 	using EnumFormatter = TEnumFormatter;
 	using RangeInfo = TRangeInfo;
 

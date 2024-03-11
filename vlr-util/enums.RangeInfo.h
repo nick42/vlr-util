@@ -48,7 +48,7 @@ public:
 	{
 		if (!m_bIsValid)
 		{
-			throw std::exception("Invalid iterator");
+			throw std::logic_error("Invalid iterator");
 		}
 		return m_tCurrent;
 	}
@@ -246,7 +246,7 @@ public:
 	TNumericType operator*() const {
 		if (!m_bIsValid)
 		{
-			throw std::exception("Invalid iterator");
+			throw std::logic_error("Invalid iterator");
 		}
 		return m_tCurrent;
 	}

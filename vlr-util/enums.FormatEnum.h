@@ -23,7 +23,7 @@ public:
 	template< typename TTestValue, typename TAction >
 	static inline HRESULT OnBitSet_DoAction( TNumericType nValue, TTestValue nBitValue, const TAction& fAction )
 	{
-		if (!util.IsBitSet( nValue, nBitValue ))
+		if (!util::IsBitSet( nValue, nBitValue ))
 		{
 			return S_FALSE;
 		}
