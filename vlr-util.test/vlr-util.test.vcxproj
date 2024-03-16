@@ -157,6 +157,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ActionOnDestruction.cpp" />
+    <ClCompile Include="AppOptionSpecifiedValue.test.cpp" />
     <ClCompile Include="Assertions.test.cpp" />
     <ClCompile Include="as_span.cpp" />
     <ClCompile Include="AutoFreeResource.cpp" />
@@ -177,6 +178,7 @@
     <ClCompile Include="RegexCache.cpp" />
     <ClCompile Include="strings.split.cpp" />
     <ClCompile Include="StringCompare.cpp" />
+    <ClCompile Include="TestAssignment.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="util.api_adaptor.OutString.cpp" />
     <ClCompile Include="util.choice.cpp" />

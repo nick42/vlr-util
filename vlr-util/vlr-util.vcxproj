@@ -22,7 +22,7 @@
     <ClInclude Include="ActionOnDestruction.h" />
     <ClInclude Include="AppOptions.h" />
     <ClInclude Include="AppOptionSource.h" />
-    <ClInclude Include="AppOptionValue.h" />
+    <ClInclude Include="AppOptionSpecifiedValue.h" />
     <ClInclude Include="AssertionHandling_Config.h" />
     <ClInclude Include="as_span.h" />
     <ClInclude Include="as_string_view.h" />
@@ -98,7 +98,7 @@
     <ClInclude Include="zstring_view.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AppOptionValue.cpp" />
+    <ClCompile Include="AppOptionSpecifiedValue.cpp" />
     <ClCompile Include="CaptureConsoleOut.cpp" />
     <ClCompile Include="CloseEnough.cpp" />
     <ClCompile Include="ModuleContext.Runtime.CommandLine.cpp" />

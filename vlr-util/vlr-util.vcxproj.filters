@@ -240,7 +240,7 @@
     <ClInclude Include="AppOptionSource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AppOptionValue.h">
+    <ClInclude Include="AppOptionSpecifiedValue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="util.overloaded.h">
@@ -287,7 +287,7 @@
     <ClCompile Include="CaptureConsoleOut.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AppOptionValue.cpp">
+    <ClCompile Include="AppOptionSpecifiedValue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
