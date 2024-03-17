@@ -172,6 +172,132 @@ TEST(AppOptionSpecifiedValue, ExtractOptionValueTo_Int)
 	}
 }
 
+TEST(AppOptionSpecifiedValue, ExtractOptionValueTo_int_invalid)
+{
+	auto oValue = CAppOptionSpecifiedValue{}
+		.withName(_T("Options::Path::Name"))
+		.withSource(vlr::AppOptionSource::ExplicitViaCode)
+		.withValue("SomethingElse")
+		;
+
+	{
+		int32_t tValue{};
+		auto sr = oValue.ExtractOptionValueTo<decltype(tValue)>(tValue);
+		EXPECT_EQ(sr, S_FALSE);
+	}
+
+	{
+		uint32_t tValue{};
+		auto sr = oValue.ExtractOptionValueTo<decltype(tValue)>(tValue);
+		EXPECT_EQ(sr, S_FALSE);
+	}
+
+	{
+		uint64_t tValue{};
+		auto sr = oValue.ExtractOptionValueTo<decltype(tValue)>(tValue);
+		EXPECT_EQ(sr, S_FALSE);
+	}
+
+	{
+		double tValue{};
+		auto sr = oValue.ExtractOptionValueTo<decltype(tValue)>(tValue);
+		EXPECT_EQ(sr, S_FALSE);
+	}
+}
+
+TEST(AppOptionSpecifiedValue, ExtractOptionValueTo_bool)
+{
+	{
+		auto oValue = CAppOptionSpecifiedValue{}
+			.withName(_T("Options::Path::Name"))
+			.withSource(vlr::AppOptionSource::ExplicitViaCode)
+			.withValue("True")
+			;
+
+		bool tValue{};
+		auto sr = oValue.ExtractOptionValueTo<decltype(tValue)>(tValue);
+		EXPECT_EQ(sr, S_OK);
+		EXPECT_EQ(tValue, true);
+	}
+
+	{
+		auto oValue = CAppOptionSpecifiedValue{}
+			.withName(_T("Options::Path::Name"))
+			.withSource(vlr::AppOptionSource::ExplicitViaCode)
+			.withValue(L"True")
+			;
+
+		bool tValue{};
+		auto sr = oValue.ExtractOptionValueTo<decltype(tValue)>(tValue);
+		EXPECT_EQ(sr, S_OK);
+		EXPECT_EQ(tValue, true);
+	}
+
+	{
+		auto oValue = CAppOptionSpecifiedValue{}
+			.withName(_T("Options::Path::Name"))
+			.withSource(vlr::AppOptionSource::ExplicitViaCode)
+			.withValue("False")
+			;
+
+		bool tValue{};
+		auto sr = oValue.ExtractOptionValueTo<decltype(tValue)>(tValue);
+		EXPECT_EQ(sr, S_OK);
+		EXPECT_EQ(tValue, false);
+	}
+
+	{
+		auto oValue = CAppOptionSpecifiedValue{}
+			.withName(_T("Options::Path::Name"))
+			.withSource(vlr::AppOptionSource::ExplicitViaCode)
+			.withValue(L"False")
+			;
+
+		bool tValue{};
+		auto sr = oValue.ExtractOptionValueTo<decltype(tValue)>(tValue);
+		EXPECT_EQ(sr, S_OK);
+		EXPECT_EQ(tValue, false);
+	}
+
+	{
+		auto oValue = CAppOptionSpecifiedValue{}
+			.withName(_T("Options::Path::Name"))
+			.withSource(vlr::AppOptionSource::ExplicitViaCode)
+			.withValue(1)
+			;
+
+		bool tValue{};
+		auto sr = oValue.ExtractOptionValueTo<decltype(tValue)>(tValue);
+		EXPECT_EQ(sr, S_OK);
+		EXPECT_EQ(tValue, true);
+	}
+
+	{
+		auto oValue = CAppOptionSpecifiedValue{}
+			.withName(_T("Options::Path::Name"))
+			.withSource(vlr::AppOptionSource::ExplicitViaCode)
+			.withValue(0)
+			;
+
+		bool tValue{};
+		auto sr = oValue.ExtractOptionValueTo<decltype(tValue)>(tValue);
+		EXPECT_EQ(sr, S_OK);
+		EXPECT_EQ(tValue, false);
+	}
+
+	{
+		auto oValue = CAppOptionSpecifiedValue{}
+			.withName(_T("Options::Path::Name"))
+			.withSource(vlr::AppOptionSource::ExplicitViaCode)
+			.withValue("SomethingElse")
+			;
+
+		bool tValue{};
+		auto sr = oValue.ExtractOptionValueTo<decltype(tValue)>(tValue);
+		EXPECT_EQ(sr, S_FALSE);
+	}
+}
+
 TEST(AppOptionSpecifiedValue, CacheOptionValueAs)
 {
 	auto oValue = CAppOptionSpecifiedValue{}

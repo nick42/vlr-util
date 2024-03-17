@@ -134,6 +134,7 @@ public:
 	SResult ConvertOptionValueTo(uint32_t& nValue) const;
 	SResult ConvertOptionValueTo(uint64_t& nValue) const;
 	SResult ConvertOptionValueTo(double& nValue) const;
+	SResult ConvertOptionValueTo(bool& bValue) const;
 
 	template <typename TValue>
 	SResult ExtractOptionValueTo(TValue& tValue) const

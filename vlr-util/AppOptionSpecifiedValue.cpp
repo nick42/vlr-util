@@ -1,12 +1,55 @@
 #include "pch.h"
 #include "AppOptionSpecifiedValue.h"
 
+#include <string>
+
 #include "vlr-util/strings.split.h"
 #include "vlr-util/util.convert.StringConversion.h"
 #include "vlr-util/util.overloaded.h"
 #include "vlr-util/util.range_checked_cast.h"
 
 namespace vlr {
+
+namespace {
+
+// Note: The std:: conversion method throw exceptions on errors, so convert to result
+
+template <typename TConversionCallable>
+SResult ConvertStringToResult_StdLib(const TConversionCallable& fConversion)
+{
+	try
+	{
+		fConversion();
+	}
+	catch (const std::invalid_argument& /*ex*/)
+	{
+		return S_FALSE;
+	}
+	catch (const std::out_of_range& /*ex*/)
+	{
+		return S_FALSE;
+	}
+
+	return S_OK;
+}
+
+template <typename TBoundConverstionFunction, typename TResult>
+SResult ConvertStringToNumber_StdLib(const TBoundConverstionFunction& fConverstionFunction, size_t nExpectedConversionLength, TResult& tResult)
+{
+	using TDest = TResult;
+
+	std::size_t nSizeConverted{};
+	return ConvertStringToResult_StdLib([&] {
+		auto nValue = fConverstionFunction(&nSizeConverted);
+		if (nSizeConverted != nExpectedConversionLength)
+		{
+			throw std::invalid_argument{"Failed conversion"};
+		}
+		tResult = vlr::util::range_checked_cast<TDest>(nValue);
+	});
+}
+
+}
 
 SResult CAppOptionSpecifiedValue::SetAppOptionName(vlr::tzstring_view svzNativeOptionName)
 {
@@ -171,11 +214,17 @@ SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(int32_t& nValue) const
 		using TValue = std::decay_t<decltype(tValue)>;
 		if constexpr (std::is_same_v<TValue, std::string>)
 		{
-			nValue = vlr::util::range_checked_cast<TDest>(std::atoi(tValue.c_str()));
+			auto fConversionFunction = [&](auto pSize) {
+				return std::stoi(tValue, pSize, 10);
+			};
+			return ConvertStringToNumber_StdLib(fConversionFunction, tValue.length(), nValue);
 		}
 		else if constexpr (std::is_same_v<TValue, std::wstring>)
 		{
-			nValue = vlr::util::range_checked_cast<TDest>(std::wcstol(tValue.c_str(), nullptr, 10));
+			auto fConversionFunction = [&](auto pSize) {
+				return std::stoi(tValue, pSize, 10);
+			};
+			return ConvertStringToNumber_StdLib(fConversionFunction, tValue.length(), nValue);
 		}
 		else if constexpr (std::is_same_v<TValue, int32_t>)
 		{
@@ -226,11 +275,17 @@ SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(uint32_t& nValue) const
 		using TValue = std::decay_t<decltype(tValue)>;
 		if constexpr (std::is_same_v<TValue, std::string>)
 		{
-			nValue = vlr::util::range_checked_cast<TDest>(std::stoul(tValue.c_str()));
+			auto fConversionFunction = [&](auto pSize) {
+				return std::stoul(tValue, pSize, 10);
+			};
+			return ConvertStringToNumber_StdLib(fConversionFunction, tValue.length(), nValue);
 		}
 		else if constexpr (std::is_same_v<TValue, std::wstring>)
 		{
-			nValue = vlr::util::range_checked_cast<TDest>(std::wcstoul(tValue.c_str(), nullptr, 10));
+			auto fConversionFunction = [&](auto pSize) {
+				return std::stoul(tValue, pSize, 10);
+			};
+			return ConvertStringToNumber_StdLib(fConversionFunction, tValue.length(), nValue);
 		}
 		else if constexpr (std::is_same_v<TValue, int32_t>)
 		{
@@ -281,11 +336,17 @@ SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(uint64_t& nValue) const
 		using TValue = std::decay_t<decltype(tValue)>;
 		if constexpr (std::is_same_v<TValue, std::string>)
 		{
-			nValue = vlr::util::range_checked_cast<TDest>(std::stoull(tValue.c_str()));
+			auto fConversionFunction = [&](auto pSize) {
+				return std::stoull(tValue, pSize, 10);
+			};
+			return ConvertStringToNumber_StdLib(fConversionFunction, tValue.length(), nValue);
 		}
 		else if constexpr (std::is_same_v<TValue, std::wstring>)
 		{
-			nValue = vlr::util::range_checked_cast<TDest>(std::wcstoull(tValue.c_str(), nullptr, 10));
+			auto fConversionFunction = [&](auto pSize) {
+				return std::stoull(tValue, pSize, 10);
+			};
+			return ConvertStringToNumber_StdLib(fConversionFunction, tValue.length(), nValue);
 		}
 		else if constexpr (std::is_same_v<TValue, int32_t>)
 		{
@@ -336,11 +397,17 @@ SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(double& nValue) const
 		using TValue = std::decay_t<decltype(tValue)>;
 		if constexpr (std::is_same_v<TValue, std::string>)
 		{
-			nValue = std::stod(tValue.c_str());
+			auto fConversionFunction = [&](auto pSize) {
+				return std::stod(tValue, pSize);
+			};
+			return ConvertStringToNumber_StdLib(fConversionFunction, tValue.length(), nValue);
 		}
 		else if constexpr (std::is_same_v<TValue, std::wstring>)
 		{
-			nValue = std::wcstod(tValue.c_str(), nullptr);
+			auto fConversionFunction = [&](auto pSize) {
+				return std::stod(tValue, pSize);
+			};
+			return ConvertStringToNumber_StdLib(fConversionFunction, tValue.length(), nValue);
 		}
 		else if constexpr (std::is_same_v<TValue, int32_t>)
 		{
@@ -361,6 +428,99 @@ SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(double& nValue) const
 		else if constexpr (std::is_same_v<TValue, bool>)
 		{
 			nValue = tValue ? 1 : 0;
+		}
+		else if constexpr (std::is_same_v<TValue, std::vector<BYTE>>)
+		{
+			return S_FALSE;
+		}
+		else if constexpr (std::is_same_v<TValue, std::vector<vlr::tstring>>)
+		{
+			return S_FALSE;
+		}
+		else
+		{
+			VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION(S_FALSE);
+		}
+
+		// Note: This is unreachable code in the cases where we return early; suppress the warning
+#pragma warning(push)
+#pragma warning(disable: 4702)
+		return S_OK;
+	}, m_vNativeOptionValue);
+#pragma warning(pop)
+}
+
+SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(bool& bValue) const
+{
+	using TDest = bool;
+
+	auto oStringCompare = StringCompare::CI();
+	static constexpr auto svzTrue = tzstring_view{ _T("true") };
+	static constexpr auto svzFalse = tzstring_view{ _T("false") };
+
+	return std::visit([&](auto&& tValue) -> SResult {
+		using TValue = std::decay_t<decltype(tValue)>;
+		if constexpr (std::is_same_v<TValue, std::string>)
+		{
+			if (oStringCompare.AreEqual(tValue, svzTrue))
+			{
+				bValue = true;
+			}
+			else if (oStringCompare.AreEqual(tValue, svzFalse))
+			{
+				bValue = false;
+			}
+			else
+			{
+				auto fConversionFunction = [&](auto pSize) {
+					return std::stol(tValue, pSize, 10);
+				};
+				long nValue{};
+				auto sr = ConvertStringToNumber_StdLib(fConversionFunction, tValue.length(), nValue);
+				VLR_ON_HR_NON_S_OK__RETURN_HRESULT(sr);
+				bValue = (nValue != 0);
+			}
+		}
+		else if constexpr (std::is_same_v<TValue, std::wstring>)
+		{
+			if (oStringCompare.AreEqual(tValue, svzTrue))
+			{
+				bValue = true;
+			}
+			else if (oStringCompare.AreEqual(tValue, svzFalse))
+			{
+				bValue = false;
+			}
+			else
+			{
+				auto fConversionFunction = [&](auto pSize) {
+					return std::stol(tValue, pSize, 10);
+				};
+				long nValue{};
+				auto sr = ConvertStringToNumber_StdLib(fConversionFunction, tValue.length(), nValue);
+				VLR_ON_HR_NON_S_OK__RETURN_HRESULT(sr);
+				bValue = (nValue != 0);
+			}
+		}
+		else if constexpr (std::is_same_v<TValue, int32_t>)
+		{
+			bValue = (tValue != 0);
+		}
+		else if constexpr (std::is_same_v<TValue, uint32_t>)
+		{
+			bValue = (tValue != 0);
+		}
+		else if constexpr (std::is_same_v<TValue, uint64_t>)
+		{
+			bValue = (tValue != 0);
+		}
+		else if constexpr (std::is_same_v<TValue, double>)
+		{
+			bValue = (tValue != 0);
+		}
+		else if constexpr (std::is_same_v<TValue, bool>)
+		{
+			bValue = tValue;
 		}
 		else if constexpr (std::is_same_v<TValue, std::vector<BYTE>>)
 		{
