@@ -45,6 +45,17 @@ protected:
 public:
 	SResult AddSpecifiedValue(const SPCAppOptionSpecifiedValue& spAppOptionSpecifiedValue);
 
+	inline auto GetCount_SpecifiedValues() const
+	{
+		auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+		return m_mapSpecifiedNameToSpecifiedValue.size();
+	}
+	inline auto GetCount_PrePreparedValues() const
+	{
+		auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+		return m_mapNormalizedNameToSpecifiedValue.size();
+	}
+
 	SResult FindSpecifiedValueByName(const vlr::tstring& sSpecifiedName, SPCAppOptionSpecifiedValue& spAppOptionSpecifiedValue) const;
 
 	SResult FindSpecifiedValuesMatchingNormalizedName(

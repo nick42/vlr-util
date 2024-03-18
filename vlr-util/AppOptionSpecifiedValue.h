@@ -215,6 +215,18 @@ public:
 		throw std::logic_error(fmt::format("Cached value for option '{}' is not the requested type", util::Convert::ToStdStringA(m_sNormalizedOptionName)));
 	}
 
+public:
+	CAppOptionSpecifiedValue() = default;
+	template <typename TValue>
+	CAppOptionSpecifiedValue(
+		SEAppOptionSource eAppOptionSource,
+		vlr::tstring_view svNativeOptionName,
+		const TValue& tValue)
+		: m_eAppOptionSource{ eAppOptionSource }
+		, m_sNativeOptionName{ svNativeOptionName }
+	{
+		withValue(tValue);
+	}
 };
 using SPCAppOptionSpecifiedValue = std::shared_ptr<CAppOptionSpecifiedValue>;
 
