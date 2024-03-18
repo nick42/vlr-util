@@ -44,6 +44,17 @@ VLR_DEFINE_APP_OPTION(DefinedValue, uint32_t, 0);
 
 }
 
+// Ensure we can get the default value in a constexpr context
+struct TestConstexprDefaultValue
+{
+	void foo(uint32_t nValue = Options::AppOptionAccess::DefinedAnswer::GetDefaultValue())
+	{}
+};
+static constexpr auto GetDefinedAnswerDefault()
+{
+	return Options::AppOptionAccess::DefinedAnswer::GetDefaultValue();
+}
+
 TEST(AppOptionAccess, GetValue_FromDefined_Default)
 {
 	SResult sr;

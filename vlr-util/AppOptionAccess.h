@@ -52,13 +52,19 @@ const TValue& CAppOptionAccess<TValue>::GetValueOrDefault() const
 	return spAppOptionSpecifiedValue->GetCachedValueInline_OrThrow<TValue>();
 }
 
+// Note: This should compile IFF DefaultValue is convertable to ValueType
+
 #define VLR_DEFINE_APP_OPTION(StructName, ValueType, DefaultValue) \
 struct StructName \
 	: public ::vlr::CAppOptionAccess<ValueType> \
 { \
 public: \
+	static constexpr decltype(auto) GetDefaultValue() { return (DefaultValue); } \
+	static auto GetOptionName() { return fmt::format(_T("{}::{}"), GetNamespacePath(), _T(#StructName)); } \
+\
+	/*template <typename TDefaultValue, typename std::enable_if_t<std::is_convertible_v<TDefaultValue, ValueType>>* = nullptr>*/ \
 	StructName() \
-		: ::vlr::CAppOptionAccess<ValueType>{ fmt::format(_T("{}::{}"), GetNamespacePath(), _T(#StructName)), DefaultValue } \
+		: ::vlr::CAppOptionAccess<ValueType>{ GetOptionName(), (DefaultValue) } \
 	{} \
 };
 
