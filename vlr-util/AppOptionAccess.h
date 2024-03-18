@@ -12,6 +12,10 @@ protected:
 	TValue m_tValue_Default{};
 
 public:
+	// Returns:
+	// - If value specified, a pointer to the value
+	// - If no value specified, nullptr
+	const TValue* GetSpecifiedValuePtr() const;
 	const TValue& GetValueOrDefault() const;
 
 public:
@@ -29,6 +33,29 @@ public:
 		, m_tValue_Default{ std::move(tValue_Default) }
 	{}
 };
+
+template <typename TValue>
+const TValue* CAppOptionAccess<TValue>::GetSpecifiedValuePtr() const
+{
+	SResult sr;
+
+	auto& oAppOptions = CAppOptions::GetSharedInstance();
+
+	SPCAppOptionSpecifiedValue spAppOptionSpecifiedValue;
+	sr = oAppOptions.PopulateSpecifiedValueForOption<TValue>(m_sNormalizedOptionName, spAppOptionSpecifiedValue);
+	if (sr != S_OK)
+	{
+		return nullptr;
+	}
+	if (!spAppOptionSpecifiedValue)
+	{
+		// No value specified for this option
+		return nullptr;
+	}
+
+	const auto& oValue = spAppOptionSpecifiedValue->GetCachedValueInline_OrThrow<TValue>();
+	return &oValue;
+}
 
 template <typename TValue>
 const TValue& CAppOptionAccess<TValue>::GetValueOrDefault() const

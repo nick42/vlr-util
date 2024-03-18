@@ -26,7 +26,8 @@ TEST(AppOptionAccess, GetValueOrDefault)
 			;
 
 		sr = CAppOptions::GetSharedInstance().AddSpecifiedValue(spValue);
-		EXPECT_EQ(sr, S_OK);
+		// Note: May be S_FALSE is previously set in another method
+		EXPECT_TRUE(sr.isSuccess());
 	}
 
 	{
@@ -41,6 +42,7 @@ static constexpr auto GetNamespacePath() { return vlr::tzstring_view{ _T("Option
 
 VLR_DEFINE_APP_OPTION(DefinedAnswer, uint32_t, 42);
 VLR_DEFINE_APP_OPTION(DefinedValue, uint32_t, 0);
+VLR_DEFINE_APP_OPTION(DefinedValueNoSet, uint32_t, 0);
 
 }
 
@@ -86,11 +88,44 @@ TEST(AppOptionAccess, GetValue_FromDefined_ExplicitSet)
 			;
 
 		sr = CAppOptions::GetSharedInstance().AddSpecifiedValue(spValue);
-		EXPECT_EQ(sr, S_OK);
+		// Note: May be S_FALSE is previously set in another method
+		EXPECT_TRUE(sr.isSuccess());
 	}
 
 	{
 		auto nValue = Options::AppOptionAccess::DefinedValue{}.GetValueOrDefault();
 		EXPECT_EQ(nValue, 42);
+	}
+}
+
+TEST(AppOptionAccess, GetSpecifiedValuePtr)
+{
+	SResult sr;
+
+	static constexpr auto svzOptionName = _T("Options::AppOptionAccess::DefinedValue");
+
+	{
+		auto oAppOption = CAppOptionAccess<uint32_t>{ svzOptionName, 0 };
+
+		auto spValue = std::make_shared<CAppOptionSpecifiedValue>();
+		spValue->withName(svzOptionName)
+			.withSource(vlr::AppOptionSource::ExplicitViaCode)
+			.withValue(42)
+			;
+
+		sr = CAppOptions::GetSharedInstance().AddSpecifiedValue(spValue);
+		// Note: May be S_FALSE is previously set in another method
+		EXPECT_TRUE(sr.isSuccess());
+	}
+
+	{
+		auto pSpecifiedValue = Options::AppOptionAccess::DefinedValueNoSet{}.GetSpecifiedValuePtr();
+		EXPECT_EQ(pSpecifiedValue, nullptr);
+	}
+
+	{
+		auto pSpecifiedValue = Options::AppOptionAccess::DefinedValue{}.GetSpecifiedValuePtr();
+		EXPECT_NE(pSpecifiedValue, nullptr);
+		EXPECT_EQ(*pSpecifiedValue, 42);
 	}
 }
