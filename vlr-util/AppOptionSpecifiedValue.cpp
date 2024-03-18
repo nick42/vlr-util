@@ -72,32 +72,55 @@ SResult CAppOptionSpecifiedValue::PopulateOptionNameElements_DefaultDelimiters(
 	return S_OK;
 }
 
-SResult CAppOptionSpecifiedValue::CheckForOptionMatch(
-	const vlr::tstring& sNormalizedOptionName,
-	const std::vector<vlr::tstring_view>& vecOptionNameElements)
+SResult CAppOptionSpecifiedValue::CheckOptionNameMatch(
+	const std::vector<vlr::tstring_view>& vecOptionNameElements_1,
+	const std::vector<vlr::tstring_view>& vecOptionNameElements_2)
 {
 	auto oStringCompare_OptionNameTree = StringCompare::CI();
 
-	std::vector<vlr::tstring_view> vecNativeOptionNameElements;
-	PopulateOptionNameElements_DefaultDelimiters(m_sNativeOptionName, vecNativeOptionNameElements);
-
-	if (vecNativeOptionNameElements.size() != vecOptionNameElements.size())
+	if (vecOptionNameElements_1.size() != vecOptionNameElements_2.size())
 	{
 		return S_FALSE;
 	}
-	for (size_t i = 0; i < vecNativeOptionNameElements.size(); ++i)
+	for (size_t i = 0; i < vecOptionNameElements_1.size(); ++i)
 	{
-		if (!oStringCompare_OptionNameTree.AreEqual(vecNativeOptionNameElements[i], vecOptionNameElements[i]))
+		if (!oStringCompare_OptionNameTree.AreEqual(vecOptionNameElements_1[i], vecOptionNameElements_2[i]))
 		{
 			return S_FALSE;
 		}
 	}
+
+	return S_OK;
+}
+
+SResult CAppOptionSpecifiedValue::CheckForOptionMatch(
+	const vlr::tstring& sNormalizedOptionName,
+	const std::vector<vlr::tstring_view>& vecNormalizedOptionNameElements)
+{
+	std::vector<vlr::tstring_view> vecNativeOptionNameElements;
+	PopulateOptionNameElements_DefaultDelimiters(m_sNativeOptionName, vecNativeOptionNameElements);
+
+	auto sr = CheckOptionNameMatch(vecNativeOptionNameElements, vecNormalizedOptionNameElements);
+	VLR_ON_HR_NON_S_OK__RETURN_HRESULT(sr);
 
 	// Match to option
 
 	m_sNormalizedOptionName = sNormalizedOptionName;
 
 	return S_OK;
+}
+
+SResult CAppOptionSpecifiedValue::CheckOptionNameMatch(
+	const vlr::tstring& sSpecifiedOptionName,
+	const vlr::tstring& sNormalizedOptionName)
+{
+	std::vector<vlr::tstring_view> vecSpecifiedOptionNameElements;
+	PopulateOptionNameElements_DefaultDelimiters(sSpecifiedOptionName, vecSpecifiedOptionNameElements);
+
+	std::vector<vlr::tstring_view> vecNormalizedOptionNameElements;
+	PopulateOptionNameElements_DefaultDelimiters(sNormalizedOptionName, vecNormalizedOptionNameElements);
+
+	return CheckOptionNameMatch(vecNormalizedOptionNameElements, vecNormalizedOptionNameElements);
 }
 
 SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(std::string& saValue) const

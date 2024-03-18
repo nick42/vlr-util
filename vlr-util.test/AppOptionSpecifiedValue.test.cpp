@@ -312,6 +312,13 @@ TEST(AppOptionSpecifiedValue, CacheOptionValueAs)
 		EXPECT_NE(std::get_if<std::string>(&oValue.GetCachedOptionValue()), nullptr);
 	}
 
+	{
+		std::string sValue;
+		auto sr = oValue.PopulateFromCachedValue(sValue);
+		EXPECT_EQ(sr, S_OK);
+		EXPECT_EQ(sValue, "42");
+	}
+
 	EXPECT_NO_THROW(
 		auto sValue = oValue.GetCachedValueInline_OrThrow<std::string>();
 	);

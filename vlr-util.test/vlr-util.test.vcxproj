@@ -157,6 +157,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ActionOnDestruction.cpp" />
+    <ClCompile Include="AppOptionAccess.test.cpp" />
+    <ClCompile Include="AppOptions.test.cpp" />
     <ClCompile Include="AppOptionSpecifiedValue.test.cpp" />
     <ClCompile Include="Assertions.test.cpp" />
     <ClCompile Include="as_span.cpp" />

@@ -279,7 +279,7 @@ std::wstring GetAsWString(const TString& tValue)
 		VLR_TYPE_DEPENDENT_STATIC_FAIL(TString, "Unhandled conversion case");
 	}
 
-	return {};
+	//return {};
 }
 
 template<typename TStringView>

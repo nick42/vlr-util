@@ -9,7 +9,7 @@
 
 namespace vlr {
 
-// Note: Adopted from: https://stackoverflow.com/questions/53738890/static-assert-that-a-type-is-among-a-stdvariants-accepted-types
+// Note: isTypeInList adopted from: https://stackoverflow.com/questions/53738890/static-assert-that-a-type-is-among-a-stdvariants-accepted-types
 
 template <typename T, template <typename...> class C, typename ... Ts>
 constexpr auto isTypeInList(C<Ts...> const&)
@@ -109,13 +109,19 @@ public:
 	static SResult PopulateOptionNameElements_DefaultDelimiters(
 		const vlr::tstring& sOptionName,
 		std::vector<vlr::tstring_view>& vecOptionNameElements);
+	static SResult CheckOptionNameMatch(
+		const std::vector<vlr::tstring_view>& vecOptionNameElements_1,
+		const std::vector<vlr::tstring_view>& vecOptionNameElements_2);
+	static SResult CheckOptionNameMatch(
+		const vlr::tstring& sSpecifiedOptionName,
+		const vlr::tstring& sNormalizedOptionName);
 
 	// Returns:
 	// - S_OK: option match (and populates normalized name)
 	// - S_FALSE: not match
 	SResult CheckForOptionMatch(
 		const vlr::tstring& sNormalizedOptionName,
-		const std::vector<vlr::tstring_view>& vecOptionNameElements);
+		const std::vector<vlr::tstring_view>& vecNormalizedOptionNameElements);
 	inline SResult CheckForOptionMatch(
 		const vlr::tstring& sNormalizedOptionName)
 	{
@@ -180,6 +186,20 @@ public:
 		}
 
 		m_vCachedOptionValue = tValue;
+
+		return S_OK;
+	}
+
+	template <typename TValue>
+	SResult PopulateFromCachedValue(TValue& tValue)
+	{
+		auto pDirectValue = std::get_if<TValue>(&m_vCachedOptionValue);
+		if (!pDirectValue)
+		{
+			return S_FALSE;
+		}
+
+		tValue = *pDirectValue;
 
 		return S_OK;
 	}
