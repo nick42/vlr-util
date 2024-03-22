@@ -20,24 +20,56 @@ template <typename TChar = TCHAR>
 struct DelimitersSpec
 {
 public:
+	static constexpr vlr::basic_zstring_view<TChar> GetChars_PathSeparators()
+	{
+		if constexpr (std::is_same_v<TChar, char>)
+		{
+			return "/\\";
+		}
+		else if constexpr (std::is_same_v<TChar, wchar_t>)
+		{
+			return L"/\\";
+		}
+		else
+		{
+			VLR_TYPE_DEPENDENT_STATIC_FAIL(TChar, "Unhanded char type");
+		}
+	}
+	static constexpr vlr::basic_zstring_view<TChar> GetChars_Whitespace()
+	{
+		if constexpr (std::is_same_v<TChar, char>)
+		{
+			return " \t\r\n";
+		}
+		else if constexpr (std::is_same_v<TChar, wchar_t>)
+		{
+			return L" \t\r\n";
+		}
+		else
+		{
+			VLR_TYPE_DEPENDENT_STATIC_FAIL(TChar, "Unhanded char type");
+		}
+	}
+
+protected:
+	template <typename TChar>
+	static std::vector<TChar> ToStdVector(vlr::basic_zstring_view<TChar> svzChars)
+	{
+		std::vector<TChar> vecChars;
+		for (auto cChar : svzChars)
+		{
+			vecChars.push_back(cChar);
+		}
+		return vecChars;
+	}
+
+public:
 	std::vector<TChar> m_arrDelimiters;
 
-	//inline static const auto arrDelimiters_PathSeparators = std::vector<TChar>{ _T('/'), _T('\\') };
 	static const std::vector<TChar>& GetDelimiters_PathSeparators()
 	{
 		static const auto arrDelimiters = [] {
-			if constexpr (std::is_same_v<TChar, char>)
-			{
-				return std::vector<TChar>{ '/', '\\' };
-			}
-			else if constexpr (std::is_same_v<TChar, wchar_t>)
-			{
-				return std::vector<TChar>{ L'/', L'\\' };
-			}
-			else
-			{
-				std::vector<TChar>{ _T('/'), _T('\\') };
-			}
+			return ToStdVector(GetChars_PathSeparators());
 		}();
 		return arrDelimiters;
 	}
@@ -190,6 +222,29 @@ std::basic_string_view<TChar> StringWithoutPossiblePostfix(
 		return svzValue;
 	}
 	return svzValue.substr(0, svzValue.length() - svPostfix.length());
+}
+
+template <typename TChar>
+std::basic_string_view<TChar> GetTrimmedStringView(std::basic_string_view<TChar> svValue, std::basic_string_view<TChar> svCharsToTrim)
+{
+	while (svValue.size() > 0)
+	{
+		auto nIndexMatch_Prefix = svCharsToTrim.find(svValue[0]);
+		if (nIndexMatch_Prefix != svCharsToTrim.npos)
+		{
+			svValue.remove_prefix(1);
+			continue;
+		}
+		auto nIndexMatch_Postfix = svCharsToTrim.find(svValue[svValue.size() - 1]);
+		if (nIndexMatch_Postfix != svCharsToTrim.npos)
+		{
+			svValue.remove_suffix(1);
+			continue;
+		}
+		break;
+	}
+
+	return svValue;
 }
 
 } // namespace strings

@@ -115,3 +115,42 @@ TEST(strings_split, StringWithoutPossiblePostfix)
 		ASSERT_TRUE(oStringCompareCS.AreEqual(svValueWithoutPrefix, _T("/etc/something")));
 	}
 }
+
+TEST(strings_split, GetTrimmedStringView)
+{
+	static constexpr vlr::tzstring_view svzTestValue_NoTrim = _T("blah");
+	static constexpr vlr::tzstring_view svzTestValue_WithPrefix = _T("\tblah");
+	static constexpr vlr::tzstring_view svzTestValue_WithPostfix = _T("blah \r\n");
+	static constexpr vlr::tzstring_view svzTestValue_WithBoth = _T("  blah\t \r\n");
+	static constexpr vlr::tzstring_view svzTestValue_NoMatch = _T(" bl ah");
+	static constexpr vlr::tzstring_view svzTestResult_Expected = _T("blah");
+	static constexpr vlr::tzstring_view svzTestDelimiters = strings::DelimitersSpec<TCHAR>::GetChars_Whitespace();
+
+	static const auto oStringCompareCS = StringCompare::CS();
+
+	{
+		auto svValue = strings::GetTrimmedStringView(svzTestValue_NoTrim, svzTestDelimiters);
+		EXPECT_TRUE(oStringCompareCS.AreEqual(svValue, svzTestResult_Expected))
+			<< _T("Test value which failed: ") << svzTestValue_NoTrim;
+	}
+	{
+		auto svValue = strings::GetTrimmedStringView(svzTestValue_WithPrefix, svzTestDelimiters);
+		EXPECT_TRUE(oStringCompareCS.AreEqual(svValue, svzTestResult_Expected))
+			<< _T("Test value which failed: ") << svzTestValue_WithPrefix;
+	}
+	{
+		auto svValue = strings::GetTrimmedStringView(svzTestValue_WithPostfix, svzTestDelimiters);
+		EXPECT_TRUE(oStringCompareCS.AreEqual(svValue, svzTestResult_Expected))
+			<< _T("Test value which failed: ") << svzTestValue_WithPostfix;
+	}
+	{
+		auto svValue = strings::GetTrimmedStringView(svzTestValue_WithBoth, svzTestDelimiters);
+		EXPECT_TRUE(oStringCompareCS.AreEqual(svValue, svzTestResult_Expected))
+			<< _T("Test value which failed: ") << svzTestValue_WithBoth;
+	}
+	{
+		auto svValue = strings::GetTrimmedStringView(svzTestValue_NoMatch, svzTestDelimiters);
+		EXPECT_FALSE(oStringCompareCS.AreEqual(svValue, svzTestResult_Expected))
+			<< _T("Test value which failed: ") << svzTestValue_NoMatch;
+	}
+}

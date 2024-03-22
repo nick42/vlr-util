@@ -18,6 +18,11 @@ public:
 	const TValue* GetSpecifiedValuePtr() const;
 	const TValue& GetValueOrDefault() const;
 
+	inline bool HasSpecifiedValue() const
+	{
+		return (GetSpecifiedValuePtr() != nullptr);
+	}
+
 public:
 	CAppOptionAccess(
 		vlr::tzstring_view svzNormalizedOptionName,
