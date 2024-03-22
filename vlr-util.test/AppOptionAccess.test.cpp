@@ -16,6 +16,8 @@ TEST(AppOptionAccess, GetValueOrDefault)
 	{
 		auto nValue = oAppOption.GetValueOrDefault();
 		EXPECT_EQ(nValue, 0);
+		// Should also be able to directly compare, based on implicit operator
+		EXPECT_EQ(oAppOption, 0);
 	}
 
 	{
@@ -33,6 +35,8 @@ TEST(AppOptionAccess, GetValueOrDefault)
 	{
 		auto nValue = oAppOption.GetValueOrDefault();
 		EXPECT_EQ(nValue, 42);
+		// Should also be able to directly compare, based on implicit operator
+		EXPECT_EQ(oAppOption, 42);
 	}
 }
 

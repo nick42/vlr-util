@@ -23,6 +23,11 @@ public:
 		return (GetSpecifiedValuePtr() != nullptr);
 	}
 
+	inline operator const TValue& () const
+	{
+		return GetValueOrDefault();
+	}
+
 public:
 	CAppOptionAccess(
 		vlr::tzstring_view svzNormalizedOptionName,
