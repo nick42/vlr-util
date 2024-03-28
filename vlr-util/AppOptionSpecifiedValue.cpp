@@ -51,9 +51,9 @@ SResult ConvertStringToNumber_StdLib(const TBoundConverstionFunction& fConversti
 
 }
 
-SResult CAppOptionSpecifiedValue::SetAppOptionName(vlr::tzstring_view svzNativeOptionName)
+SResult CAppOptionSpecifiedValue::SetAppOptionName(vlr::tstring_view svNativeOptionName)
 {
-	m_sNativeOptionName = svzNativeOptionName;
+	m_sNativeOptionName = vlr::tstring{ svNativeOptionName.begin(), svNativeOptionName.end() };
 
 	return S_OK;
 }

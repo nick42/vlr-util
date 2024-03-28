@@ -23,6 +23,8 @@
     <ClInclude Include="AppOptionAccess.h" />
     <ClInclude Include="AppOptions.h" />
     <ClInclude Include="AppOptionSource.h" />
+    <ClInclude Include="AppOptionSourceInfo.h" />
+    <ClInclude Include="AppOptionSource_File_Basic.h" />
     <ClInclude Include="AppOptionSpecifiedValue.h" />
     <ClInclude Include="AssertionHandling_Config.h" />
     <ClInclude Include="as_span.h" />
@@ -100,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppOptions.cpp" />
+    <ClCompile Include="AppOptionSource_File_Basic.cpp" />
     <ClCompile Include="AppOptionSpecifiedValue.cpp" />
     <ClCompile Include="CaptureConsoleOut.cpp" />
     <ClCompile Include="CloseEnough.cpp" />

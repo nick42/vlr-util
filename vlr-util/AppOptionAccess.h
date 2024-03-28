@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AppOptions.h"
+#include "AppOptionSourceInfo.h"
 
 namespace vlr {
 
@@ -27,6 +28,10 @@ public:
 	{
 		return GetValueOrDefault();
 	}
+
+	SResult SetSpecifiedValue(
+		const TValue& tValue,
+		const CAppOptionSourceInfo& oAppOptionSourceInfo = CAppOptionSourceInfo::ExplicitViaCode()) const;
 
 public:
 	CAppOptionAccess(
@@ -87,6 +92,23 @@ const TValue& CAppOptionAccess<TValue>::GetValueOrDefault() const
 	}
 
 	return spAppOptionSpecifiedValue->GetCachedValueInline_OrThrow<TValue>();
+}
+
+template <typename TValue>
+SResult CAppOptionAccess<TValue>::SetSpecifiedValue(
+	const TValue& tValue,
+	const CAppOptionSourceInfo& oAppOptionSourceInfo /*= CAppOptionSourceInfo::ExplicitViaCode()*/) const
+{
+	SResult sr;
+
+	auto& oAppOptions = CAppOptions::GetSharedInstance();
+
+	auto spAppOptionSpecifiedValue = std::make_shared<CAppOptionSpecifiedValue>(
+		oAppOptionSourceInfo,
+		m_sNormalizedOptionName,
+		tValue);
+
+	return oAppOptions.AddSpecifiedValue(spAppOptionSpecifiedValue);
 }
 
 // Note: This should compile IFF DefaultValue is convertable to ValueType

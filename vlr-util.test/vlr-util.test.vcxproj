@@ -159,6 +159,7 @@
     <ClCompile Include="ActionOnDestruction.cpp" />
     <ClCompile Include="AppOptionAccess.test.cpp" />
     <ClCompile Include="AppOptions.test.cpp" />
+    <ClCompile Include="AppOptionSource_File_Basic.test.cpp" />
     <ClCompile Include="AppOptionSpecifiedValue.test.cpp" />
     <ClCompile Include="Assertions.test.cpp" />
     <ClCompile Include="as_span.cpp" />
@@ -232,6 +233,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\vlr-util\vcpkg.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="AppOptionSource_basic.txt">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </Text>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

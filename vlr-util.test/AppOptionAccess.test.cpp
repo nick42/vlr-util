@@ -47,6 +47,7 @@ static constexpr auto GetNamespacePath() { return vlr::tzstring_view{ _T("Option
 VLR_DEFINE_APP_OPTION(DefinedAnswer, uint32_t, 42);
 VLR_DEFINE_APP_OPTION(DefinedValue, uint32_t, 0);
 VLR_DEFINE_APP_OPTION(DefinedValueNoSet, uint32_t, 0);
+VLR_DEFINE_APP_OPTION(ValueSetViaCode, uint32_t, 0);
 
 }
 
@@ -131,5 +132,25 @@ TEST(AppOptionAccess, GetSpecifiedValuePtr)
 		auto pSpecifiedValue = Options::AppOptionAccess::DefinedValue{}.GetSpecifiedValuePtr();
 		EXPECT_NE(pSpecifiedValue, nullptr);
 		EXPECT_EQ(*pSpecifiedValue, 42);
+	}
+}
+
+TEST(AppOptionAccess, SetSpecifiedValue)
+{
+	SResult sr;
+
+	{
+		auto nValue = Options::AppOptionAccess::ValueSetViaCode{}.GetValueOrDefault();
+		EXPECT_EQ(nValue, 0);
+	}
+
+	{
+		sr = Options::AppOptionAccess::ValueSetViaCode{}.SetSpecifiedValue(42);
+		EXPECT_TRUE(sr.isSuccess());
+	}
+
+	{
+		auto nValue = Options::AppOptionAccess::ValueSetViaCode{}.GetValueOrDefault();
+		EXPECT_EQ(nValue, 42);
 	}
 }

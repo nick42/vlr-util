@@ -3,7 +3,7 @@
 #include <variant>
 
 #include "config.h"
-#include "AppOptionSource.h"
+#include "AppOptionSourceInfo.h"
 #include "util.Result.h"
 #include "UtilMacros.Assertions.h"
 
@@ -48,7 +48,7 @@ public:
 	>;
 
 protected:
-	SEAppOptionSource m_eAppOptionSource;
+	CAppOptionSourceInfo m_oAppOptionSourceInfo;
 	vlr::tstring m_sNativeOptionName;
 	VNativeOptionValue m_vNativeOptionValue;
 
@@ -56,16 +56,21 @@ protected:
 	VCachedOptionValue m_vCachedOptionValue;
 
 public:
-	SResult SetAppOptionName(vlr::tzstring_view svzNativeOptionName);
+	SResult SetAppOptionName(vlr::tstring_view svNativeOptionName);
 
 	inline decltype(auto) withSource(SEAppOptionSource eAppOptionSource)
 	{
-		m_eAppOptionSource = eAppOptionSource;
+		m_oAppOptionSourceInfo = CAppOptionSourceInfo{ eAppOptionSource };
 		return *this;
 	}
-	inline decltype(auto) withName(vlr::tzstring_view svzNativeOptionName)
+	inline decltype(auto) withSourceInfo(const CAppOptionSourceInfo& oAppOptionSourceInfo)
 	{
-		SetAppOptionName(svzNativeOptionName);
+		m_oAppOptionSourceInfo = oAppOptionSourceInfo;
+		return *this;
+	}
+	inline decltype(auto) withName(vlr::tstring_view svNativeOptionName)
+	{
+		SetAppOptionName(svNativeOptionName);
 		return *this;
 	}
 	inline decltype(auto) withValue(const std::string_view& svValue)
@@ -85,9 +90,9 @@ public:
 		return *this;
 	}
 
-	const auto& GetAppOptionSource() const
+	const auto& GetAppOptionSourceInfo() const
 	{
-		return m_eAppOptionSource;
+		return m_oAppOptionSourceInfo;
 	}
 	const auto& GetNativeOptionName() const
 	{
@@ -219,10 +224,10 @@ public:
 	CAppOptionSpecifiedValue() = default;
 	template <typename TValue>
 	CAppOptionSpecifiedValue(
-		SEAppOptionSource eAppOptionSource,
+		const CAppOptionSourceInfo& oAppOptionSourceInfo,
 		vlr::tstring_view svNativeOptionName,
 		const TValue& tValue)
-		: m_eAppOptionSource{ eAppOptionSource }
+		: m_oAppOptionSourceInfo{ oAppOptionSourceInfo }
 		, m_sNativeOptionName{ svNativeOptionName }
 	{
 		withValue(tValue);

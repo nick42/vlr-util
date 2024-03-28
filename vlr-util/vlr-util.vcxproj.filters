@@ -249,6 +249,12 @@
     <ClInclude Include="AppOptionAccess.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AppOptionSource_File_Basic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AppOptionSourceInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleContext.Runtime.CommandLine.cpp">
@@ -294,6 +300,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AppOptions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AppOptionSource_File_Basic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

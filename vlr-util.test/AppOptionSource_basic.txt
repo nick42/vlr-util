@@ -1,0 +1,10 @@
+# Some app options:
+
+Name1 = Value1
+Name2 = Value2 # With comment
+Name3 = # Blank value
+Name4 = "Value with ## inside it" # And a comment
+Name5 = "Some value" ... and other stuff
+Qualified::Name = "value"
+
+# etc.

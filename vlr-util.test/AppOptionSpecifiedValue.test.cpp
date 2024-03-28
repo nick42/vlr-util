@@ -48,7 +48,7 @@ TEST(AppOptionSpecifiedValue, CheckForOptionMatch)
 		;
 
 	EXPECT_EQ(oValue.GetNativeOptionName(), _T("Options::Path::Name"));
-	EXPECT_EQ(oValue.GetAppOptionSource(), vlr::AppOptionSource::ExplicitViaCode);
+	EXPECT_EQ(oValue.GetAppOptionSourceInfo().m_eAppOptionSource, vlr::AppOptionSource::ExplicitViaCode);
 	const auto vNativeValue = oValue.GetNativeOptionValue();
 	ASSERT_TRUE(std::holds_alternative<std::string>(vNativeValue));
 	EXPECT_STREQ(std::get<std::string>(vNativeValue).c_str(), "test");
