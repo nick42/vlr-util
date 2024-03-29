@@ -5,11 +5,16 @@
 
 using namespace vlr;
 
-TEST(AppOptions, AddSpecifiedValue)
+class AppOptions
+	: public testing::Test
+{
+protected:
+	CAppOptions m_oAppOptions;
+};
+
+TEST_F(AppOptions, AddSpecifiedValue)
 {
 	SResult sr;
-
-	auto oAppOptions = CAppOptions{};
 
 	auto spValue = std::make_shared<CAppOptionSpecifiedValue>();
 	spValue->withName(_T("Options::Path::Name"))
@@ -17,24 +22,22 @@ TEST(AppOptions, AddSpecifiedValue)
 		.withValue(42)
 		;
 
-	sr = oAppOptions.AddSpecifiedValue(spValue);
+	sr = m_oAppOptions.AddSpecifiedValue(spValue);
 	EXPECT_EQ(sr, S_OK);
 
-	sr = oAppOptions.AddSpecifiedValue(spValue);
+	sr = m_oAppOptions.AddSpecifiedValue(spValue);
 	EXPECT_EQ(sr, SResult::Success_WithNuance);
 
 	SPCAppOptionSpecifiedValue spValueInAppOptions;
-	sr = oAppOptions.FindSpecifiedValueByName(spValue->GetNativeOptionName(), spValueInAppOptions);
+	sr = m_oAppOptions.FindSpecifiedValueByName(spValue->GetNativeOptionName(), spValueInAppOptions);
 	EXPECT_EQ(sr, S_OK);
 	EXPECT_NE(spValueInAppOptions, nullptr);
 	EXPECT_EQ(spValueInAppOptions.get(), spValue.get());
 }
 
-TEST(AppOptions, FindSpecifiedValuesMatchingNormalizedName)
+TEST_F(AppOptions, FindSpecifiedValuesMatchingNormalizedName)
 {
 	SResult sr;
-
-	auto oAppOptions = CAppOptions{};
 
 	{
 		auto spValue = std::make_shared<CAppOptionSpecifiedValue>();
@@ -43,7 +46,7 @@ TEST(AppOptions, FindSpecifiedValuesMatchingNormalizedName)
 			.withValue(42)
 			;
 
-		sr = oAppOptions.AddSpecifiedValue(spValue);
+		sr = m_oAppOptions.AddSpecifiedValue(spValue);
 		EXPECT_EQ(sr, S_OK);
 	}
 
@@ -54,7 +57,7 @@ TEST(AppOptions, FindSpecifiedValuesMatchingNormalizedName)
 			.withValue(42)
 			;
 
-		sr = oAppOptions.AddSpecifiedValue(spValue);
+		sr = m_oAppOptions.AddSpecifiedValue(spValue);
 		EXPECT_EQ(sr, S_OK);
 	}
 
@@ -65,46 +68,47 @@ TEST(AppOptions, FindSpecifiedValuesMatchingNormalizedName)
 			.withValue("SomethingElse")
 			;
 
-		sr = oAppOptions.AddSpecifiedValue(spValue);
+		sr = m_oAppOptions.AddSpecifiedValue(spValue);
 		EXPECT_EQ(sr, S_OK);
 	}
 
 	std::vector<SPCAppOptionSpecifiedValue> vecSpecifiedValues;
-	sr = oAppOptions.FindSpecifiedValuesMatchingNormalizedName(_T("Options::Path::Name"), vecSpecifiedValues);
+	sr = m_oAppOptions.FindSpecifiedValuesMatchingNormalizedName(_T("Options::Path::Name"), vecSpecifiedValues);
 	EXPECT_EQ(sr, S_OK);
 	EXPECT_EQ(vecSpecifiedValues.size(), 3);
 }
 
-TEST(AppOptions, PopulateSpecifiedValueForOption)
+TEST_F(AppOptions, PopulateSpecifiedValueForOption)
 {
 	SResult sr;
 
-	auto oAppOptions = CAppOptions{};
+	static const vlr::tstring sAppOptionName = _T("Options::Path::Name");
+	static const vlr::tstring sAppOptionName_Alternative = _T("options.path.name");
 
 	{
 		auto spValue = std::make_shared<CAppOptionSpecifiedValue>();
-		spValue->withName(_T("Options::Path::Name"))
+		spValue->withName(sAppOptionName)
 			.withSource(vlr::AppOptionSource::ExplicitViaCode)
 			.withValue(42)
 			;
 
-		sr = oAppOptions.AddSpecifiedValue(spValue);
+		sr = m_oAppOptions.AddSpecifiedValue(spValue);
 		EXPECT_EQ(sr, S_OK);
 	}
 
 	{
 		auto spValue = std::make_shared<CAppOptionSpecifiedValue>();
-		spValue->withName(_T("options.path.name"))
+		spValue->withName(sAppOptionName_Alternative)
 			.withSource(vlr::AppOptionSource::ExplicitViaCode)
 			.withValue("SomethingElse")
 			;
 
-		sr = oAppOptions.AddSpecifiedValue(spValue);
+		sr = m_oAppOptions.AddSpecifiedValue(spValue);
 		EXPECT_EQ(sr, S_OK);
 	}
 
 	SPCAppOptionSpecifiedValue spSpecifiedValue;
-	sr = oAppOptions.PopulateSpecifiedValueForOption<uint32_t>(_T("Options::Path::Name"), spSpecifiedValue);
+	sr = m_oAppOptions.PopulateSpecifiedValueForOption<uint32_t>(sAppOptionName, spSpecifiedValue);
 	EXPECT_EQ(sr, S_OK);
 	EXPECT_NE(spSpecifiedValue, nullptr);
 
@@ -114,33 +118,33 @@ TEST(AppOptions, PopulateSpecifiedValueForOption)
 	);
 }
 
-TEST(AppOptions, PopulatePrePreparedSpecifiedValueForOption)
+TEST_F(AppOptions, PopulatePrePreparedSpecifiedValueForOption)
 {
 	SResult sr;
 
-	auto oAppOptions = CAppOptions{};
+	static const vlr::tstring sAppOptionName = _T("Options::Path::Name");
 
 	{
 		auto spValue = std::make_shared<CAppOptionSpecifiedValue>();
-		spValue->withName(_T("Options::Path::Name"))
+		spValue->withName(sAppOptionName)
 			.withSource(vlr::AppOptionSource::ExplicitViaCode)
 			.withValue(42)
 			;
 
-		sr = oAppOptions.AddSpecifiedValue(spValue);
+		sr = m_oAppOptions.AddSpecifiedValue(spValue);
 		EXPECT_EQ(sr, S_OK);
 	}
 
 	{
 		SPCAppOptionSpecifiedValue spSpecifiedValue;
-		sr = oAppOptions.PopulateSpecifiedValueForOption<uint32_t>(_T("Options::Path::Name"), spSpecifiedValue);
+		sr = m_oAppOptions.PopulateSpecifiedValueForOption<uint32_t>(sAppOptionName, spSpecifiedValue);
 		EXPECT_EQ(sr, S_OK);
 		EXPECT_NE(spSpecifiedValue, nullptr);
 	}
 
 	{
 		SPCAppOptionSpecifiedValue spSpecifiedValue;
-		sr = oAppOptions.PopulatePrePreparedSpecifiedValueForOption(_T("Options::Path::Name"), spSpecifiedValue);
+		sr = m_oAppOptions.PopulatePrePreparedSpecifiedValueForOption(sAppOptionName, spSpecifiedValue);
 		EXPECT_EQ(sr, S_OK);
 		EXPECT_NE(spSpecifiedValue, nullptr);
 
@@ -148,5 +152,75 @@ TEST(AppOptions, PopulatePrePreparedSpecifiedValueForOption)
 		EXPECT_NO_THROW(
 			nValue = spSpecifiedValue->GetCachedValueInline_OrThrow<decltype(nValue)>();
 		);
+	}
+}
+
+TEST_F(AppOptions, OptionWithQualifiers_BeforeSpecifiedValue)
+{
+	SResult sr;
+
+	static const vlr::tstring sAppOptionName = _T("Options::Path::Name");
+
+	{
+		auto spQualifiers = std::make_shared<CAppOptionQualifiers>();
+		spQualifiers->withStandardFlagSet(AppOptionQualifiers::StandardFlags::IsSensitive);
+
+		m_oAppOptions.SetAppOptionQualifiers(sAppOptionName, spQualifiers);
+	}
+
+	{
+		auto spValue = std::make_shared<CAppOptionSpecifiedValue>();
+		spValue->withName(sAppOptionName)
+			.withSource(vlr::AppOptionSource::ExplicitViaCode)
+			.withValue(42)
+			;
+
+		sr = m_oAppOptions.AddSpecifiedValue(spValue);
+		EXPECT_EQ(sr, S_OK);
+	}
+
+	{
+		SPCAppOptionSpecifiedValue spSpecifiedValue;
+		sr = m_oAppOptions.PopulateSpecifiedValueForOption<uint32_t>(sAppOptionName, spSpecifiedValue);
+		EXPECT_EQ(sr, S_OK);
+		ASSERT_NE(spSpecifiedValue, nullptr);
+
+		ASSERT_NE(spSpecifiedValue->GetAppOptionQualifiers(), nullptr);
+		EXPECT_EQ(spSpecifiedValue->GetAppOptionQualifiers()->m_nFlags_Standard, AppOptionQualifiers::StandardFlags::IsSensitive);
+	}
+}
+
+TEST_F(AppOptions, OptionWithQualifiers_AfterSpecifiedValue)
+{
+	SResult sr;
+
+	static const vlr::tstring sAppOptionName = _T("Options::Path::Name");
+
+	{
+		auto spValue = std::make_shared<CAppOptionSpecifiedValue>();
+		spValue->withName(sAppOptionName)
+			.withSource(vlr::AppOptionSource::ExplicitViaCode)
+			.withValue(42)
+			;
+
+		sr = m_oAppOptions.AddSpecifiedValue(spValue);
+		EXPECT_EQ(sr, S_OK);
+	}
+
+	{
+		auto spQualifiers = std::make_shared<CAppOptionQualifiers>();
+		spQualifiers->withStandardFlagSet(AppOptionQualifiers::StandardFlags::IsSensitive);
+
+		m_oAppOptions.SetAppOptionQualifiers(sAppOptionName, spQualifiers);
+	}
+
+	{
+		SPCAppOptionSpecifiedValue spSpecifiedValue;
+		sr = m_oAppOptions.PopulateSpecifiedValueForOption<uint32_t>(sAppOptionName, spSpecifiedValue);
+		EXPECT_EQ(sr, S_OK);
+		ASSERT_NE(spSpecifiedValue, nullptr);
+
+		ASSERT_NE(spSpecifiedValue->GetAppOptionQualifiers(), nullptr);
+		EXPECT_EQ(spSpecifiedValue->GetAppOptionQualifiers()->m_nFlags_Standard, AppOptionQualifiers::StandardFlags::IsSensitive);
 	}
 }

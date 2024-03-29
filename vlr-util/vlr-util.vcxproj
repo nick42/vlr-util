@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="ActionOnDestruction.h" />
     <ClInclude Include="AppOptionAccess.h" />
+    <ClInclude Include="AppOptionQualifiers.h" />
     <ClInclude Include="AppOptions.h" />
     <ClInclude Include="AppOptionSource.h" />
     <ClInclude Include="AppOptionSourceInfo.h" />

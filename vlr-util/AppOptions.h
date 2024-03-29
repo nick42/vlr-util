@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "AppOptionQualifiers.h"
 #include "AppOptionSpecifiedValue.h"
 
 // Note: Methods of this class are thread-safe, for MT calls.
@@ -22,9 +23,14 @@ public:
 protected:
 	mutable std::mutex m_mutexDataAccess;
 	std::unordered_map<vlr::tstring, SPCAppOptionSpecifiedValue> m_mapSpecifiedNameToSpecifiedValue;
+
 	// Note: We will populate nullptr values in this map for accessed values.
 	// This will eliminate needing to keep a separate set of accessed values; can be implicit in this map.
 	std::unordered_map<vlr::tstring, SPCAppOptionSpecifiedValue> m_mapNormalizedNameToSpecifiedValue;
+
+	// This is the set of specified qualifiers, based on normalized option name.
+	// This is set separately, so that qualifiers can be set before options are accessed and/or populated with specified values.
+	std::unordered_map<vlr::tstring, SPCAppOptionQualifiers> m_mapNormalizedNameToQualifiers;
 
 protected:
 	// Note: For protected methods, they assume data access mutex is already acquired
@@ -80,6 +86,10 @@ public:
 	SResult ClearPrePopulatedSpecifiedValueForOption(
 		const vlr::tstring& sNormalizedName);
 
+	SResult SetAppOptionQualifiers(
+		const vlr::tstring& sNormalizedName,
+		const SPCAppOptionQualifiers& spAppOptionQualifiers);
+
 };
 
 template <typename TValue>
@@ -100,8 +110,22 @@ SResult CAppOptions::HandleOptionInitialAccess(
 
 	// TODO: Allow configurability of preference if there are multiple set values
 	// Placeholder for now...
+	auto spSpecifiedValue = vecSpecifiedValues[0];
 
-	m_mapNormalizedNameToSpecifiedValue[sNormalizedName] = vecSpecifiedValues[0];
+	m_mapNormalizedNameToSpecifiedValue[sNormalizedName] = spSpecifiedValue;
+
+	// Add qualifiers to value, if specified
+	do
+	{
+		auto iterIndex = m_mapNormalizedNameToQualifiers.find(sNormalizedName);
+		if (iterIndex == m_mapNormalizedNameToQualifiers.end())
+		{
+			break;
+		}
+		auto& spQualifiers = iterIndex->second;
+
+		spSpecifiedValue->withAppOptionQualifiers(spQualifiers);
+	} while (false);
 
 	return S_OK;
 }

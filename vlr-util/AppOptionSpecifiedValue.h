@@ -7,6 +7,8 @@
 #include "util.Result.h"
 #include "UtilMacros.Assertions.h"
 
+#include "AppOptionQualifiers.h"
+
 namespace vlr {
 
 // Note: isTypeInList adopted from: https://stackoverflow.com/questions/53738890/static-assert-that-a-type-is-among-a-stdvariants-accepted-types
@@ -55,6 +57,8 @@ protected:
 	vlr::tstring m_sNormalizedOptionName;
 	VCachedOptionValue m_vCachedOptionValue;
 
+	SPcCAppOptionQualifiers m_spAppOptionQualifiers;
+
 public:
 	SResult SetAppOptionName(vlr::tstring_view svNativeOptionName);
 
@@ -89,6 +93,11 @@ public:
 		m_vNativeOptionValue = tValue;
 		return *this;
 	}
+	inline decltype(auto) withAppOptionQualifiers(const SPcCAppOptionQualifiers& spAppOptionQualifiers)
+	{
+		m_spAppOptionQualifiers = spAppOptionQualifiers;
+		return *this;
+	}
 
 	const auto& GetAppOptionSourceInfo() const
 	{
@@ -109,6 +118,10 @@ public:
 	const auto& GetCachedOptionValue() const
 	{
 		return m_vCachedOptionValue;
+	}
+	const auto& GetAppOptionQualifiers() const
+	{
+		return m_spAppOptionQualifiers;
 	}
 
 	static SResult PopulateOptionNameElements_DefaultDelimiters(

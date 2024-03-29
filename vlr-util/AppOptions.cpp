@@ -122,4 +122,32 @@ SResult CAppOptions::ClearPrePopulatedSpecifiedValueForOption(
 	return S_OK;
 }
 
+SResult CAppOptions::SetAppOptionQualifiers(
+	const vlr::tstring& sNormalizedName,
+	const SPCAppOptionQualifiers& spAppOptionQualifiers)
+{
+	auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+	auto& spAppOptionQualifiers_InMap = m_mapNormalizedNameToQualifiers[sNormalizedName];
+	bool bOverwriteExisting = (spAppOptionQualifiers_InMap != nullptr);
+	spAppOptionQualifiers_InMap = spAppOptionQualifiers;
+
+	// If we have accessed this app option, then set the qualifiers in that structure as well
+	do
+	{
+		auto iterIndex = m_mapNormalizedNameToSpecifiedValue.find(sNormalizedName);
+		if (iterIndex == m_mapNormalizedNameToSpecifiedValue.end())
+		{
+			break;
+		}
+		auto spSpecifiedValue = iterIndex->second;
+
+		spSpecifiedValue->withAppOptionQualifiers(spAppOptionQualifiers);
+	} while (false);
+
+	// Note: We do not set qualifiers for specified values, until/unless they are accessed
+
+	return S_OK;
+}
+
 } // namespace vlr
