@@ -12,7 +12,10 @@ namespace StandardFlags {
 
 enum EStandardFlag
 {
+	// Intent: Affect handling of the option (eg: don't log in list of options)
 	IsSensitive = 1 << 0,
+	// Intent: Can be used to conditionally block ability to change value (eg: in a Release build)
+	ReturnOnlyDefaultValue = 1 << 1,
 };
 
 } // namespace StandardFlags
@@ -21,10 +24,11 @@ enum EStandardFlag
 
 class CAppOptionQualifiers
 {
-public:
+protected:
 	uint32_t m_nFlags_Standard = 0;
 	uint32_t m_nFlags_AppSpecific = 0;
 
+public:
 	decltype(auto) withStandardFlagSet(uint32_t nFlag)
 	{
 		m_nFlags_Standard |= nFlag;
@@ -45,6 +49,16 @@ public:
 		m_nFlags_AppSpecific &= (~nFlag);
 		return *this;
 	}
+
+	inline decltype(auto) GetFlags_Standard() const
+	{
+		return m_nFlags_Standard;
+	}
+	inline decltype(auto) GetFlags_AppSpecific() const
+	{
+		return m_nFlags_AppSpecific;
+	}
+
 };
 using SPCAppOptionQualifiers = std::shared_ptr<CAppOptionQualifiers>;
 using SPcCAppOptionQualifiers = std::shared_ptr<const CAppOptionQualifiers>;

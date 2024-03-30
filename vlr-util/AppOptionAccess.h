@@ -2,6 +2,7 @@
 
 #include "AppOptions.h"
 #include "AppOptionSourceInfo.h"
+#include "util.IsBitSet.h"
 
 namespace vlr {
 
@@ -88,6 +89,12 @@ const TValue& CAppOptionAccess<TValue>::GetValueOrDefault() const
 	if (!spAppOptionSpecifiedValue)
 	{
 		// No value specified for this option
+		return m_tValue_Default;
+	}
+	if (spAppOptionSpecifiedValue->GetAppOptionQualifiers()
+		&& util::IsBitSet(spAppOptionSpecifiedValue->GetAppOptionQualifiers()->GetFlags_Standard(), AppOptionQualifiers::StandardFlags::ReturnOnlyDefaultValue))
+	{
+		// Qualifier set to ignore specified value(s)
 		return m_tValue_Default;
 	}
 

@@ -186,7 +186,7 @@ TEST_F(AppOptions, OptionWithQualifiers_BeforeSpecifiedValue)
 		ASSERT_NE(spSpecifiedValue, nullptr);
 
 		ASSERT_NE(spSpecifiedValue->GetAppOptionQualifiers(), nullptr);
-		EXPECT_EQ(spSpecifiedValue->GetAppOptionQualifiers()->m_nFlags_Standard, AppOptionQualifiers::StandardFlags::IsSensitive);
+		EXPECT_EQ(spSpecifiedValue->GetAppOptionQualifiers()->GetFlags_Standard(), AppOptionQualifiers::StandardFlags::IsSensitive);
 	}
 }
 
@@ -221,6 +221,6 @@ TEST_F(AppOptions, OptionWithQualifiers_AfterSpecifiedValue)
 		ASSERT_NE(spSpecifiedValue, nullptr);
 
 		ASSERT_NE(spSpecifiedValue->GetAppOptionQualifiers(), nullptr);
-		EXPECT_EQ(spSpecifiedValue->GetAppOptionQualifiers()->m_nFlags_Standard, AppOptionQualifiers::StandardFlags::IsSensitive);
+		EXPECT_EQ(spSpecifiedValue->GetAppOptionQualifiers()->GetFlags_Standard(), AppOptionQualifiers::StandardFlags::IsSensitive);
 	}
 }

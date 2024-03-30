@@ -154,3 +154,56 @@ TEST(AppOptionAccess, SetSpecifiedValue)
 		EXPECT_EQ(nValue, 42);
 	}
 }
+
+namespace Options::AppOptionAccess {
+
+VLR_DEFINE_APP_OPTION(ReturnOnlyDefaultValue, uint32_t, 42);
+
+}
+
+TEST(AppOptionAccess, OptionWithQualifiers_ReturnOnlyDefaultValue)
+{
+	SResult sr;
+
+	static const auto sAppOptionName = Options::AppOptionAccess::ReturnOnlyDefaultValue{}.GetOptionName();
+
+	{
+		auto spQualifiers = std::make_shared<CAppOptionQualifiers>();
+		spQualifiers->withStandardFlagSet(AppOptionQualifiers::StandardFlags::ReturnOnlyDefaultValue);
+
+		CAppOptions::GetSharedInstance().SetAppOptionQualifiers(sAppOptionName, spQualifiers);
+	}
+
+	{
+		auto spValue = std::make_shared<CAppOptionSpecifiedValue>();
+		spValue->withName(sAppOptionName)
+			.withSource(vlr::AppOptionSource::ExplicitViaCode)
+			.withValue(0)
+			;
+
+		sr = CAppOptions::GetSharedInstance().AddSpecifiedValue(spValue);
+		EXPECT_EQ(sr, S_OK);
+	}
+
+	{
+		SPCAppOptionSpecifiedValue spSpecifiedValue;
+		sr = CAppOptions::GetSharedInstance().PopulateSpecifiedValueForOption<uint32_t>(sAppOptionName, spSpecifiedValue);
+		EXPECT_EQ(sr, S_OK);
+		ASSERT_NE(spSpecifiedValue, nullptr);
+
+		ASSERT_NE(spSpecifiedValue->GetAppOptionQualifiers(), nullptr);
+		EXPECT_EQ(spSpecifiedValue->GetAppOptionQualifiers()->GetFlags_Standard(), AppOptionQualifiers::StandardFlags::ReturnOnlyDefaultValue);
+
+		// The specified value should be 0
+		uint32_t nValue{};
+		sr = spSpecifiedValue->ExtractOptionValueTo<uint32_t>(nValue);
+		EXPECT_EQ(sr, S_OK);
+		EXPECT_EQ(nValue, 0);
+	}
+
+	// Option value through accessor should be the default value, not the value we set
+	{
+		auto nOptionValue = Options::AppOptionAccess::ReturnOnlyDefaultValue{}.GetValueOrDefault();
+		EXPECT_EQ(nOptionValue, 42);
+	}
+}
