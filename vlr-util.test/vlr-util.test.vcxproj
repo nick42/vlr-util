@@ -192,6 +192,7 @@
     <ClCompile Include="util.IsNonZero.cpp" />
     <ClCompile Include="util.IsNotBlank.cpp" />
     <ClCompile Include="util.logical_zstring_view.cpp" />
+    <ClCompile Include="util.MakeResultCode.test.cpp" />
     <ClCompile Include="util.MRUCache.cpp" />
     <ClCompile Include="util.NonOwningSharedPtr.cpp" />
     <ClCompile Include="util.range_checked_cast.cpp" />

@@ -80,6 +80,7 @@
     <ClInclude Include="util.IsNotBlank.h" />
     <ClInclude Include="util.LevenshteinDistance.h" />
     <ClInclude Include="util.logical_zstring_view.h" />
+    <ClInclude Include="util.MakeResultCode.h" />
     <ClInclude Include="util.MathOps.h" />
     <ClInclude Include="util.MRUCache.h" />
     <ClInclude Include="util.NonOwningSharedPtr.h" />
