@@ -17,7 +17,16 @@ namespace Compilation {
 
 constexpr auto IsBuildPlatform_Win32()
 {
-#ifdef WIN32
+#ifdef _WIN32
+	return true;
+#else
+	return false;
+#endif
+}
+
+constexpr auto IsBuildPlatform_Win64()
+{
+#ifdef _WIN64
 	return true;
 #else
 	return false;

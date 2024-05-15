@@ -261,6 +261,12 @@
     <ClInclude Include="util.MakeResultCode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="util.crc32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceStringLookupValue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleContext.Runtime.CommandLine.cpp">

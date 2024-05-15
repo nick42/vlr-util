@@ -125,7 +125,7 @@ public:
 public:
     const std::vector<std::string_view>& GetAsTextLines();
 
-    int FindMatchingLineIndex_Contains(std::string_view svLine, int nStartIndex = 0);
+    int FindMatchingLineIndex_Contains(std::string_view svLine, size_t nStartIndex = 0);
 
     inline bool DoesOutputContainContent(std::string_view svLine)
     {

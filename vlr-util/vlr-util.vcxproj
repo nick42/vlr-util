@@ -57,6 +57,7 @@
     <ClInclude Include="ops.NetworkTargetInfo.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="RegexCache.h" />
+    <ClInclude Include="ResourceStringLookupValue.h" />
     <ClInclude Include="SharedInstance.h" />
     <ClInclude Include="StringCompare.h" />
     <ClInclude Include="strings.split.h" />
@@ -71,6 +72,7 @@
     <ClInclude Include="util.convert.DateTime.h" />
     <ClInclude Include="util.convert.StringConversion.h" />
     <ClInclude Include="util.convert.ToDisplay.h" />
+    <ClInclude Include="util.crc32.h" />
     <ClInclude Include="util.CStringBufferAccess.h" />
     <ClInclude Include="util.data_adaptor.MultiSZ.h" />
     <ClInclude Include="util.includes.h" />

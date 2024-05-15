@@ -176,7 +176,7 @@ const std::vector<std::string_view>& CCaptureConsoleDataAnalysisHelper::GetAsTex
 	return m_arrTextLines;
 }
 
-int CCaptureConsoleDataAnalysisHelper::FindMatchingLineIndex_Contains(std::string_view svFindData, int nStartIndex /*= 0*/)
+int CCaptureConsoleDataAnalysisHelper::FindMatchingLineIndex_Contains(std::string_view svFindData, size_t nStartIndex /*= 0*/)
 {
 	auto& arrTextLines = GetAsTextLines();
 	auto nCurrentIndex = nStartIndex;
