@@ -58,6 +58,10 @@
 #define VLR_CONFIG_LOG_CONTEXT_INCLUDE_FUNCTION 1
 #endif
 
+// Use this option to have the logging functions allow exceptions within callbacks to be propagated.
+// Normally these will be suppressed and swallowed, to allow logging in non-exception contexts.
+// #define VLR_CONFIG_LOGGING_ALLOW_EXCEPTIONS
+
 #ifndef _STD
 #define _STD std::
 #endif

@@ -67,72 +67,103 @@ struct TFormatResult
 
 #endif
 
+#ifdef VLR_CONFIG_LOGGING_ALLOW_EXCEPTIONS
+#define VLR_LogMossage_ExceptionSpec
+#define VLR_LogMessage_Rethrow throw;
+#else
+#define VLR_LogMossageExceptionSpec noexcept
+#define VLR_LogMessage_Rethrow
+#endif
+
 template< typename TString >
-inline auto LogMessage(const CMessageContext& oMessageContext, const TString& sMessage)
+inline auto LogMessage(const CMessageContext& oMessageContext, const TString& sMessage) VLR_LogMossageExceptionSpec
 -> typename TFormatResult<TString>::type
 {
-	BootstrapCallbacksOnce();
-
-	SResult sr;
-	const auto& oCallbacks = Callbacks::getSharedInstance();
-
-	sr = oCallbacks.m_fCheckCouldMessageBeLogged(oMessageContext);
-	if (sr != SResult::Success)
+	try
 	{
-		return VLR_LOGGING_FORMATTED_MESSAGE_RESULT_EMPTY;
+		BootstrapCallbacksOnce();
+
+		SResult sr;
+		const auto& oCallbacks = Callbacks::getSharedInstance();
+
+		sr = oCallbacks.m_fCheckCouldMessageBeLogged(oMessageContext);
+		if (sr != SResult::Success)
+		{
+			return VLR_LOGGING_FORMATTED_MESSAGE_RESULT_EMPTY;
+		}
+
+		/*sr =*/ oCallbacks.m_fLogMessage(oMessageContext, util::Convert::ToStdString(sMessage));
+
+		return VLR_LOGGING_FORMATTED_MESSAGE_RESULT;
 	}
-
-	/*sr =*/ oCallbacks.m_fLogMessage(oMessageContext, util::Convert::ToStdString(sMessage));
-
-	return VLR_LOGGING_FORMATTED_MESSAGE_RESULT;
+	catch (...)
+	{
+		VLR_LogMessage_Rethrow
+	}
 }
 
 template< typename TFormatString, typename... Arg >
-inline auto LogMessagePF(const CMessageContext& oMessageContext, TFormatString svFormatString, Arg&&... args)
+inline auto LogMessagePF(const CMessageContext& oMessageContext, TFormatString svFormatString, Arg&&... args) VLR_LogMossageExceptionSpec
 -> typename TFormatResult<TFormatString>::type
 {
-	BootstrapCallbacksOnce();
-
-	SResult sr;
-	const auto& oCallbacks = Callbacks::getSharedInstance();
-
-	sr = oCallbacks.m_fCheckCouldMessageBeLogged(oMessageContext);
-	if (sr != SResult::Success)
+	try
 	{
-		return VLR_LOGGING_FORMATTED_MESSAGE_RESULT_EMPTY;
+		BootstrapCallbacksOnce();
+
+		SResult sr;
+		const auto& oCallbacks = Callbacks::getSharedInstance();
+
+		sr = oCallbacks.m_fCheckCouldMessageBeLogged(oMessageContext);
+		if (sr != SResult::Success)
+		{
+			return VLR_LOGGING_FORMATTED_MESSAGE_RESULT_EMPTY;
+		}
+
+		auto sMessage = formatpf(svFormatString, std::forward<Arg>(args)...);
+
+		/*sr =*/ oCallbacks.m_fLogMessage(oMessageContext, util::Convert::ToStdString(sMessage));
+
+		return VLR_LOGGING_FORMATTED_MESSAGE_RESULT;
 	}
-
-	auto sMessage = formatpf(svFormatString, std::forward<Arg>(args)...);
-
-	/*sr =*/ oCallbacks.m_fLogMessage(oMessageContext, util::Convert::ToStdString(sMessage));
-
-	return VLR_LOGGING_FORMATTED_MESSAGE_RESULT;
+	catch (...)
+	{
+		VLR_LogMessage_Rethrow
+	}
 }
 
 template< typename TFormatString, typename... Arg >
-inline auto LogMessageFmt(const CMessageContext& oMessageContext, TFormatString svFormatString, Arg&&... args)
+inline auto LogMessageFmt(const CMessageContext& oMessageContext, TFormatString svFormatString, Arg&&... args) VLR_LogMossageExceptionSpec
 -> typename TFormatResult<TFormatString>::type
 {
-	BootstrapCallbacksOnce();
-
-	SResult sr;
-	const auto& oCallbacks = Callbacks::getSharedInstance();
-
-	sr = oCallbacks.m_fCheckCouldMessageBeLogged(oMessageContext);
-	if (sr != SResult::Success)
+	try
 	{
-		return VLR_LOGGING_FORMATTED_MESSAGE_RESULT_EMPTY;
+		BootstrapCallbacksOnce();
+
+		SResult sr;
+		const auto& oCallbacks = Callbacks::getSharedInstance();
+
+		sr = oCallbacks.m_fCheckCouldMessageBeLogged(oMessageContext);
+		if (sr != SResult::Success)
+		{
+			return VLR_LOGGING_FORMATTED_MESSAGE_RESULT_EMPTY;
+		}
+
+		auto sMessage = fmt::format(svFormatString, std::forward<Arg>(args)...);
+
+		/*sr =*/ oCallbacks.m_fLogMessage(oMessageContext, util::Convert::ToStdString(sMessage));
+
+		return VLR_LOGGING_FORMATTED_MESSAGE_RESULT;
 	}
-
-	auto sMessage = fmt::format(svFormatString, std::forward<Arg>(args)...);
-
-	/*sr =*/ oCallbacks.m_fLogMessage(oMessageContext, util::Convert::ToStdString(sMessage));
-
-	return VLR_LOGGING_FORMATTED_MESSAGE_RESULT;
+	catch (...)
+	{
+		VLR_LogMessage_Rethrow
+	}
 }
 
 #undef VLR_LOGGING_FORMATTED_MESSAGE_RESULT_EMPTY
 #undef VLR_LOGGING_FORMATTED_MESSAGE_RESULT
+#undef VLR_LogMossage_ExceptionSpec
+#undef VLR_LogMessage_Rethrow
 
 } // namespace logging
 
