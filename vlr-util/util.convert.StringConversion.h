@@ -157,12 +157,12 @@ inline decltype(auto) ToStdStringW_choice(const TString& tString, const StringCo
 // Special case for "width matching" zstring_view, since conversion may require explicit call to work with subclass
 
 template< typename TString, typename std::enable_if_t<std::is_same_v<TString, vlr::zstring_view>>* = nullptr >
-inline decltype(auto) ToStdStringA_choice(const TString& tString, const StringConversionOptions& oConversionOptions, vlr::util::choice<3>&&)
+inline decltype(auto) ToStdStringA_choice(const TString& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<3>&&)
 {
 	return tString.toStdString();
 }
 template< typename TString, typename std::enable_if_t<std::is_same_v<TString, vlr::wzstring_view>>* = nullptr >
-inline decltype(auto) ToStdStringW_choice(const TString& tString, const StringConversionOptions& oConversionOptions, vlr::util::choice<3>&&)
+inline decltype(auto) ToStdStringW_choice(const TString& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<3>&&)
 {
 	return tString.toStdString();
 }
