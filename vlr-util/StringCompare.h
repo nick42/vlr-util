@@ -462,15 +462,18 @@ inline decltype(auto) AreEqualDifferentCharSize(const CompareSettings& oCompareS
 	std::wstring_view svlhs;
 	std::wstring_view svrhs;
 
+	// Note: Cannot do constexpr compare of result for conversion to elide copy, because it requires overload to be found,
+	// and it may not be. Might be a way to fix in the future, not sure.
+
 	if constexpr (!isCompatTypeForWString<Tlhs>())
 	{
 		swConvertedWString_lhs = GetAsWString(tlhs);
 		svlhs = swConvertedWString_lhs;
 	}
-	else if constexpr (std::is_base_of_v<std::wstring_view, decltype(asWStringViewCompatType(tlhs))>)
-	{
-		svlhs = asWStringViewCompatType(tlhs);
-	}
+	//else if constexpr (std::is_base_of_v<std::wstring_view, decltype(asWStringViewCompatType(tlhs))>)
+	//{
+	//	svlhs = asWStringViewCompatType(tlhs);
+	//}
 	else
 	{
 		swConvertedWString_lhs = asWStringViewCompatType(tlhs);
@@ -482,10 +485,10 @@ inline decltype(auto) AreEqualDifferentCharSize(const CompareSettings& oCompareS
 		swConvertedWString_rhs = GetAsWString(trhs);
 		svrhs = swConvertedWString_rhs;
 	}
-	else if constexpr (std::is_base_of_v<std::wstring_view, decltype(asWStringViewCompatType(trhs))>)
-	{
-		svrhs = asWStringViewCompatType(trhs);
-	}
+	//else if constexpr (std::is_base_of_v<std::wstring_view, decltype(asWStringViewCompatType(trhs))>)
+	//{
+	//	svrhs = asWStringViewCompatType(trhs);
+	//}
 	else
 	{
 		swConvertedWString_rhs = asWStringViewCompatType(trhs);
