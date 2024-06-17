@@ -183,6 +183,7 @@
     <ClCompile Include="strings.split.test.cpp" />
     <ClCompile Include="StringCompare.cpp" />
     <ClCompile Include="TestAssignment.cpp" />
+    <ClCompile Include="ThreadOperationContext.test.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="util.api_adaptor.OutString.cpp" />
     <ClCompile Include="util.choice.cpp" />

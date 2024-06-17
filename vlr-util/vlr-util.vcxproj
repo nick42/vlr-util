@@ -61,6 +61,7 @@
     <ClInclude Include="SharedInstance.h" />
     <ClInclude Include="StringCompare.h" />
     <ClInclude Include="strings.split.h" />
+    <ClInclude Include="ThreadOperationContext.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="typeshim.win32.ASSERT.h" />
     <ClInclude Include="typeshim.win32.h" />
@@ -121,6 +122,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="RegexCache.cpp" />
+    <ClCompile Include="ThreadOperationContext.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="util.AutoCleanupBase.cpp" />
     <ClCompile Include="util.AutoCleanup_SC_HANDLE.cpp" />
