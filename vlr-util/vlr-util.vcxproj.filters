@@ -270,6 +270,12 @@
     <ClInclude Include="ThreadOperationContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RetrySettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="platform.FileSystemOps.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleContext.Runtime.CommandLine.cpp">
@@ -321,6 +327,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ThreadOperationContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="platform.FileSystemOps.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

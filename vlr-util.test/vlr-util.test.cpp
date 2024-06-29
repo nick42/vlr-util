@@ -7,6 +7,9 @@
 
 int main(int argc, char** argv)
 {
+	// Some tests use random numbers (using std::rand); this ensures that they are not duplicative
+	std::srand(time(0));
+
 	testing::InitGoogleTest(&argc, argv);
 	auto nResult_GoogleTest = RUN_ALL_TESTS();
 

@@ -28,7 +28,6 @@ namespace CodePageWin32 {
 //#define CP_UTF7                   65000       // UTF-7 translation
 //#define CP_UTF8                   65001       // UTF-8 translation
 
-
 enum ECodePageWin32
 {
 	ANSI = 0,
@@ -123,7 +122,7 @@ public:
 	static constexpr auto ForSystemDefaultASCIIIngress()
 	{
 		StringConversionOptions theInstance;
-		theInstance.m_nCodePage = CP_ACP;
+		theInstance.m_nCodePage = CodePageWin32::ANSI;
 		return theInstance;
 	}
 

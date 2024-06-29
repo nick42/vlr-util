@@ -18,3 +18,15 @@ TEST( CAutoRevertingAssignment, general )
 	}
 	EXPECT_STREQ( strValue.c_str(), "" );
 }
+
+// Test if we can set a type with a different typed value (as long as assignment operator works)
+
+TEST(CAutoRevertingAssignment, std_atomic_bool)
+{
+	auto atomValue = std::atomic_bool{ false };
+	{
+		auto oAutoRevert = vlr::MakeAutoRevertingAssignment(atomValue, true);
+		EXPECT_EQ(atomValue.load(), true);
+	}
+	EXPECT_EQ(atomValue.load(), false);
+}

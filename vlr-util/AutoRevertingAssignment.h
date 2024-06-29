@@ -9,13 +9,13 @@
 
 namespace vlr {
 
-template< typename TAssignedVariable >
+template< typename TAssignedVariable, typename TAssignment = TAssignedVariable >
 class CAutoRevertingAssignment
 	: public CBaseWithVirtualDestructor
 {
 public:
 	TAssignedVariable& m_tAssignedVariable;
-	std::optional<TAssignedVariable> m_otRevertToValue;
+	std::optional<TAssignment> m_otRevertToValue;
 
 public:
 	HRESULT ClearRevertToValue()
@@ -34,13 +34,6 @@ public:
 	}
 
 public:
-	CAutoRevertingAssignment( TAssignedVariable& tAssignedVariable, const TAssignedVariable& tAssignment )
-		: m_tAssignedVariable{ tAssignedVariable }
-		, m_otRevertToValue{ tAssignedVariable }
-	{
-		m_tAssignedVariable = tAssignment;
-	}
-	template< typename TAssignment, std::enable_if_t<std::is_convertible_v<TAssignment, TAssignedVariable>> >
 	CAutoRevertingAssignment( TAssignedVariable& tAssignedVariable, const TAssignment& tAssignment )
 		: m_tAssignedVariable{ tAssignedVariable }
 		, m_otRevertToValue{ tAssignedVariable }
@@ -56,7 +49,22 @@ public:
 template< typename TAssignedVariable, typename TAssignment >
 inline auto MakeAutoRevertingAssignment( TAssignedVariable& tAssignedVariable, const TAssignment& tAssignment )
 {
-	return CAutoRevertingAssignment<TAssignedVariable>{ tAssignedVariable, tAssignment };
+	// Note: Some assignment types cannot be stored in std::optional<> (eg: string literal as char array)
+	// We will attempt to default to the assigned type if the assignment type cannot be stored
+	constexpr bool bIsAssignmentTypeCompatible = true
+		&& std::is_object_v<TAssignment>
+		&& std::is_destructible_v<TAssignment>
+		&& !std::is_array_v<TAssignment>;
+
+	if constexpr (bIsAssignmentTypeCompatible)
+	{
+		return CAutoRevertingAssignment<TAssignedVariable, TAssignment>{ tAssignedVariable, tAssignment };
+	}
+	else
+	{
+		// Try to use the assigned variable as the storage type
+		return CAutoRevertingAssignment<TAssignedVariable>{ tAssignedVariable, tAssignment };
+	}
 }
 
 } // namespace vlr

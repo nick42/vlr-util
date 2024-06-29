@@ -56,8 +56,10 @@
     <ClInclude Include="ModuleContext.Runtime.h" />
     <ClInclude Include="ops.NetworkTargetInfo.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="platform.FileSystemOps.h" />
     <ClInclude Include="RegexCache.h" />
     <ClInclude Include="ResourceStringLookupValue.h" />
+    <ClInclude Include="RetrySettings.h" />
     <ClInclude Include="SharedInstance.h" />
     <ClInclude Include="StringCompare.h" />
     <ClInclude Include="strings.split.h" />
@@ -121,6 +123,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="platform.FileSystemOps.cpp" />
     <ClCompile Include="RegexCache.cpp" />
     <ClCompile Include="ThreadOperationContext.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
