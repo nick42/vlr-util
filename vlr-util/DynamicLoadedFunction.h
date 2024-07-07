@@ -11,6 +11,14 @@ class CDynamicLoadedFunctionBase
 public:
 	SResult m_srLoadResult;
 	void* m_pvRawFunctionPointer = {};
+
+public:
+	virtual inline SResult SetFromRawPtr(void* pvRawFunctionPointer)
+	{
+		m_pvRawFunctionPointer = pvRawFunctionPointer;
+
+		return SResult::Success;
+	}
 };
 using SPCDynamicLoadedFunctionBase = std::shared_ptr<CDynamicLoadedFunctionBase>;
 
@@ -30,7 +38,7 @@ public:
 	}
 
 public:
-	SResult SetFromRawPtr(void* pvRawFunctionPointer)
+	virtual inline SResult SetFromRawPtr(void* pvRawFunctionPointer)
 	{
 		m_pvRawFunctionPointer = pvRawFunctionPointer;
 		// Note: This requires an effective C-style cast, and is generally "unsafe"

@@ -17,6 +17,7 @@ struct TestThreadOperationContext
 
 static constexpr vlr::tzstring_view svzContextValue_Module_Name = _T("Module");
 static constexpr vlr::tzstring_view svzContextValue_Module_Value = _T("UnitTest");
+static constexpr vlr::tzstring_view svzContextValue_Module_Value2 = _T("DifferentUnitTest");
 static constexpr vlr::tzstring_view svzContextValue_SubModule_Name = _T("SomeTest");
 static constexpr vlr::tzstring_view svzContextValue_SubModule_Value = _T("TestName");
 
@@ -104,6 +105,74 @@ TEST_F(TestThreadOperationContext, MultiLevelContext)
 	}
 
 	spContextLifetime_SubModule = {};
+
+	{
+		std::vector<ThreadOperationContext::SPCGenericContext> vecContextStack;
+		sr = CThreadOperationContext::GetSharedInstance().PopulateThreadOperationContext(vecContextStack);
+		EXPECT_EQ(sr, S_OK);
+		ASSERT_EQ(vecContextStack.size(), 1);
+
+		const auto& spContext = vecContextStack.back();
+		EXPECT_TRUE(StringCompare::CS().AreEqual(spContext->m_sName, svzContextValue_Module_Name));
+		EXPECT_TRUE(StringCompare::CS().AreEqual(spContext->m_sValue, svzContextValue_Module_Value));
+	}
+
+	spContextLifetime_Module = {};
+
+	{
+		std::vector<ThreadOperationContext::SPCGenericContext> vecContextStack;
+		sr = CThreadOperationContext::GetSharedInstance().PopulateThreadOperationContext(vecContextStack);
+		EXPECT_TRUE(sr.isSuccess());
+		EXPECT_EQ(vecContextStack.size(), 0);
+	}
+}
+
+TEST_F(TestThreadOperationContext, SameContextKeyMultipleValues)
+{
+	SResult sr;
+
+	{
+		std::vector<ThreadOperationContext::SPCGenericContext> vecContextStack;
+		sr = CThreadOperationContext::GetSharedInstance().PopulateThreadOperationContext(vecContextStack);
+		EXPECT_TRUE(sr.isSuccess());
+		EXPECT_EQ(vecContextStack.size(), 0);
+	}
+
+	auto spContextLifetime_Module = ThreadOperationContext::AddOperationContext(svzContextValue_Module_Name, svzContextValue_Module_Value);
+	ASSERT_NE(spContextLifetime_Module, nullptr);
+	ASSERT_NE(spContextLifetime_Module->m_spContext, nullptr);
+	EXPECT_TRUE(StringCompare::CS().AreEqual(spContextLifetime_Module->m_spContext->m_sName, svzContextValue_Module_Name));
+	EXPECT_TRUE(StringCompare::CS().AreEqual(spContextLifetime_Module->m_spContext->m_sValue, svzContextValue_Module_Value));
+
+	{
+		std::vector<ThreadOperationContext::SPCGenericContext> vecContextStack;
+		sr = CThreadOperationContext::GetSharedInstance().PopulateThreadOperationContext(vecContextStack);
+		EXPECT_EQ(sr, S_OK);
+		ASSERT_EQ(vecContextStack.size(), 1);
+
+		const auto& spContext = vecContextStack.front();
+		EXPECT_TRUE(StringCompare::CS().AreEqual(spContext->m_sName, svzContextValue_Module_Name));
+		EXPECT_TRUE(StringCompare::CS().AreEqual(spContext->m_sValue, svzContextValue_Module_Value));
+	}
+
+	auto spContextLifetime_Module2 = ThreadOperationContext::AddOperationContext(svzContextValue_Module_Name, svzContextValue_Module_Value2);
+	ASSERT_NE(spContextLifetime_Module2, nullptr);
+	ASSERT_NE(spContextLifetime_Module2->m_spContext, nullptr);
+	EXPECT_TRUE(StringCompare::CS().AreEqual(spContextLifetime_Module2->m_spContext->m_sName, svzContextValue_Module_Name));
+	EXPECT_TRUE(StringCompare::CS().AreEqual(spContextLifetime_Module2->m_spContext->m_sValue, svzContextValue_Module_Value2));
+
+	{
+		std::vector<ThreadOperationContext::SPCGenericContext> vecContextStack;
+		sr = CThreadOperationContext::GetSharedInstance().PopulateThreadOperationContext(vecContextStack);
+		EXPECT_EQ(sr, S_OK);
+		ASSERT_EQ(vecContextStack.size(), 1);
+
+		const auto& spContext = vecContextStack.back();
+		EXPECT_TRUE(StringCompare::CS().AreEqual(spContext->m_sName, svzContextValue_Module_Name));
+		EXPECT_TRUE(StringCompare::CS().AreEqual(spContext->m_sValue, svzContextValue_Module_Value2));
+	}
+
+	spContextLifetime_Module2 = {};
 
 	{
 		std::vector<ThreadOperationContext::SPCGenericContext> vecContextStack;

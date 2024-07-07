@@ -1,6 +1,8 @@
 #pragma once
 
+#include <chrono>
 #include <list>
+#include <map>
 #include <memory>
 #include <mutex>
 #include <thread>
@@ -24,6 +26,15 @@ public:
 	vlr::tstring m_sName;
 	vlr::tstring m_sValue;
 
+	virtual const vlr::tstring& GetName() const
+	{
+		return m_sName;
+	}
+	virtual const vlr::tstring& GetValue() const
+	{
+		return m_sValue;
+	}
+
 public:
 	CGenericContext() = default;
 	CGenericContext(vlr::tzstring_view svzName, vlr::tzstring_view svzValue)
@@ -34,10 +45,32 @@ public:
 using SPCGenericContext = std::shared_ptr<CGenericContext>;
 using WPCGenericContext = std::weak_ptr<CGenericContext>;
 
+class CActiveContext
+{
+public:
+	vlr::tstring m_sKey;
+	std::vector<WPCGenericContext> m_vecContextStack;
+
+};
+
 class CPerThreadContext
 {
 public:
-	std::list<WPCGenericContext> m_listContextStack;
+	std::vector<CActiveContext> m_vecActiveContext;
+
+protected:
+	SResult FindActiveContext(
+		vlr::tzstring_view svzName,
+		CActiveContext*& pContextStack,
+		bool bEnsureExists = false);
+
+public:
+	SResult PushContext(const SPCGenericContext& spContext);
+	SResult PopContext(const SPCGenericContext& spContext);
+	SResult PopContext(vlr::tzstring_view svzName, const SPCGenericContext& spContextToPop = {});
+
+	SResult PopulateThreadOperationContext(std::vector<ThreadOperationContext::SPCGenericContext>& vecContextStack);
+
 };
 using SPCPerThreadContext = std::shared_ptr<CPerThreadContext>;
 
@@ -85,12 +118,12 @@ protected:
 	SResult ClearCurrentThreadContext();
 
 public:
-	// Returns S_FALSE if there is no context for the current thread
-	SResult PopulateThreadOperationContext(std::vector<ThreadOperationContext::SPCGenericContext>& vecContextStack);
-
 	SResult PushContext(vlr::tzstring_view svzName, vlr::tzstring_view svzValue, ThreadOperationContext::SPCGenericContext& spContext_Result);
 	SResult PopContext(const ThreadOperationContext::SPCGenericContext& spContext);
-	SResult PopContext(vlr::tzstring_view svzName);
+	SResult PopContext(vlr::tzstring_view svzName, const ThreadOperationContext::SPCGenericContext& spContextToPop = {});
+
+	// Returns S_FALSE if there is no context for the current thread
+	SResult PopulateThreadOperationContext(std::vector<ThreadOperationContext::SPCGenericContext>& vecContextStack);
 
 };
 
