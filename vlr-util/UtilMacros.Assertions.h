@@ -8,6 +8,29 @@
 #include "zstring_view.h"
 #include "util.IsNonZero.h"
 #include "util.IsNotBlank.h"
+#include "util.Result.h"
+
+namespace vlr {
+
+namespace detail {
+
+template <typename TResult>
+constexpr bool ResultIsSuccess(const TResult& tResult)
+{
+	if constexpr (std::is_same_v<std::decay_t<TResult>, SResult>)
+	{
+		return tResult.isSuccess();
+	}
+	else
+	{
+		// Note: This replicates SUCCEEDED in Windows
+		return (((HRESULT)(tResult)) >= 0);
+	}
+}
+
+} // namespace detail
+
+} // namespace vlr
 
 #ifdef VLR_CONFIG_ASSERTIONS_INCLUDE_FUNCTION
 #define VLR_ASSERTION_FUNCTION_NAME _T("[") _T(__FUNCTION__) _T("] ")
@@ -145,19 +168,28 @@
 #define VLR_ASSERT_NOTBLANK_OR_RETURN_HRESULT_LAST_ERROR( value ) VLR_ASSERT_NOTBLANK_OR_RETURN_EXPRESSION( value, HRESULT_FROM_WIN32( ::GetLastError() ) )
 #define VLR_ASSERT_COMPARE_OR_RETURN_HRESULT_LAST_ERROR( lhs, op, rhs ) VLR_ASSERT_COMPARE_OR_RETURN_EXPRESSION( lhs, op, rhs, HRESULT_FROM_WIN32( ::GetLastError() ) )
 
-#define VLR_ASSERT_HR_SUCCEEDED_OR_RETURN_HRESULT( hr ) { auto&& _hr = (hr); VLR_ASSERT_NONZERO_OR_RETURN_EXPRESSION( SUCCEEDED(_hr), _hr ) }
-#define VLR_ASSERT_HR_SUCCEEDED_OR_RETURN_FAILURE_VALUE( hr ) { auto&& _hr = (hr); VLR_ASSERT_NONZERO_OR_RETURN_EXPRESSION( SUCCEEDED(_hr), _tFailureValue ) }
-#define VLR_ASSERT_HR_SUCCEEDED_OR_CONTINUE( hr ) { auto&& _hr = (hr); VLR_ASSERT_NONZERO_OR_CONTINUE( SUCCEEDED(_hr) ) }
+#define VLR_ASSERT_SUCCEEDED_OR_RETURN_RESULT( result ) { auto&& _result = (result); VLR_ASSERT_NONZERO_OR_RETURN_EXPRESSION( vlr::detail::ResultIsSuccess(_result), _result ) }
+#define VLR_ASSERT_SUCCEEDED_OR_RETURN_FAILURE_VALUE( result ) { auto&& _result = (result); VLR_ASSERT_NONZERO_OR_RETURN_EXPRESSION( vlr::detail::ResultIsSuccess(_result), _tFailureValue ) }
+#define VLR_ASSERT_SUCCEEDED_OR_CONTINUE( result ) { auto&& _result = (result); VLR_ASSERT_NONZERO_OR_CONTINUE( vlr::detail::ResultIsSuccess(_result) ) }
 
-#define VLR_ASSERT_SR_SUCCEEDED_OR_RETURN_SRESULT( sr ) { auto&& _sr = (sr); VLR_ASSERT_NONZERO_OR_RETURN_EXPRESSION( _sr.isSuccess(), _sr ) }
-#define VLR_ASSERT_SR_SUCCEEDED_OR_RETURN_FAILURE_VALUE( sr ) { auto&& _sr = (sr); VLR_ASSERT_NONZERO_OR_RETURN_EXPRESSION( _sr.isSuccess(), _tFailureValue ) }
-#define VLR_ASSERT_SR_SUCCEEDED_OR_CONTINUE( sr ) { auto&& _sr = (sr); VLR_ASSERT_NONZERO_OR_CONTINUE( _sr.isSuccess() ) }
+#define VLR_ON_SUCCESS_RETURN_VALUE( result ) { auto&& _result = (result); if (!vlr::detail::ResultIsSuccess(_result)) {} else { return _result; } }
+#define VLR_ON_ERROR_RETURN_VALUE( result ) { auto&& _result = (result); if (vlr::detail::ResultIsSuccess(_result)) {} else { return _result; } }
 
-#define VLR_ON_SR_SUCCESS_RETURN_VALUE( sr ) { auto&& _sr = (sr); if (!_sr.isSuccess()) {} else { return _sr; } }
-#define VLR_ON_SR_ERROR_RETURN_VALUE( sr ) { auto&& _sr = (sr); if (_sr.isSuccess()) {} else { return _sr; } }
+// Per result type macros; to be deprecated at some point
 
-#define VLR_ON_HR_S_OK__RETURN_HRESULT( hr ) { auto&& _hr = (hr); if (_hr != S_OK) {} else { return _hr; } }
-#define VLR_ON_HR_NON_S_OK__RETURN_HRESULT( hr ) { auto&& _hr = (hr); if (_hr == S_OK) {} else { return _hr; } }
+#define VLR_ASSERT_HR_SUCCEEDED_OR_RETURN_HRESULT( hr ) VLR_ASSERT_SUCCEEDED_OR_RETURN_RESULT( hr )
+#define VLR_ASSERT_HR_SUCCEEDED_OR_RETURN_FAILURE_VALUE( hr ) VLR_ASSERT_SUCCEEDED_OR_RETURN_FAILURE_VALUE( hr )
+#define VLR_ASSERT_HR_SUCCEEDED_OR_CONTINUE( hr ) VLR_ASSERT_SUCCEEDED_OR_CONTINUE( hr )
+
+#define VLR_ASSERT_SR_SUCCEEDED_OR_RETURN_SRESULT( sr ) VLR_ASSERT_SUCCEEDED_OR_RETURN_RESULT( sr )
+#define VLR_ASSERT_SR_SUCCEEDED_OR_RETURN_FAILURE_VALUE( sr ) VLR_ASSERT_SUCCEEDED_OR_RETURN_FAILURE_VALUE( sr )
+#define VLR_ASSERT_SR_SUCCEEDED_OR_CONTINUE( sr ) VLR_ASSERT_SUCCEEDED_OR_CONTINUE( sr )
+
+#define VLR_ON_SR_SUCCESS_RETURN_VALUE( sr ) VLR_ON_SUCCESS_RETURN_VALUE( sr )
+#define VLR_ON_SR_ERROR_RETURN_VALUE( sr ) VLR_ON_ERROR_RETURN_VALUE( sr )
+
+#define VLR_ON_HR_S_OK__RETURN_HRESULT( hr ) VLR_ON_SUCCESS_RETURN_VALUE( hr )
+#define VLR_ON_HR_NON_S_OK__RETURN_HRESULT( hr ) VLR_ON_ERROR_RETURN_VALUE( hr )
 
 #define VLR_ASSERT_ALLOCATED_OR_RETURN_STANDARD_ERROR( value ) VLR_ASSERT_NONZERO_OR_RETURN_EXPRESSION( value, E_OUTOFMEMORY )
 #define VLR_ASSERT_ALLOCATED_OR_RETURN_FAILURE_VALUE( value ) VLR_ASSERT_NONZERO_OR_RETURN_EXPRESSION( value, _tFailureValue )
