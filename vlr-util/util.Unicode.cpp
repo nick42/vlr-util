@@ -22,6 +22,15 @@ HRESULT CStringConversion::MultiByte_to_UTF16(
 		return S_FALSE;
 	}
 
+#if defined(VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString)
+	// This should never be called if the fallback conversion method define is set
+	VLR_ASSERTIONS_HANDLE_CHECK_FAILURE(_T("Unexpected call to CStringConversion::MultiByte_to_UTF16"));
+	return E_FAIL;
+#elif !defined(WIN32)
+	// The above macro should be defined for conversion for non-Windows compilation, for now
+	static_assert(false);
+#else
+
 	bool bInputBufferShouldIncludeNullTerminator = true
 		&& oStringConversionOptions.m_bInputStringIsNullTerminated
 		&& (!oStringConversionOptions.m_bGenerateResultNotNullTerminated)
@@ -63,6 +72,7 @@ HRESULT CStringConversion::MultiByte_to_UTF16(
 	}
 
 	return S_OK;
+#endif
 }
 
 HRESULT CStringConversion::UTF16_to_MultiByte(
@@ -76,6 +86,15 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 	{
 		return S_FALSE;
 	}
+
+#if defined(VLR_FALLBACK_Inline_UTF16_to_MultiByte_StdString)
+	// This should never be called if the fallback conversion method define is set
+	VLR_ASSERTIONS_HANDLE_CHECK_FAILURE(_T("Unexpected call to CStringConversion::UTF16_to_MultiByte"));
+	return E_FAIL;
+#elif !defined(WIN32)
+	// The above macro should be defined for conversion for non-Windows compilation, for now
+	static_assert(false);
+#else
 
 	bool bInputBufferShouldIncludeNullTerminator = true
 		&& oStringConversionOptions.m_bInputStringIsNullTerminated
@@ -120,6 +139,7 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 	}
 
 	return S_OK;
+#endif
 }
 
 HRESULT CStringConversion::MultiByte_to_UTF16(

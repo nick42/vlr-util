@@ -1,8 +1,9 @@
 #pragma once
 
+// Note: Exclude this header entirely if not including CString references
 #if VLR_CONFIG_INCLUDE_ATL_CSTRING
+
 #include <atlstr.h>
-#endif
 
 #include "UtilMacros.Namespace.h"
 #include "config.h"
@@ -65,3 +66,5 @@ auto GetCStringBufferAccess( CStringT<BaseType, StringTraits>& sValue, int nMinB
 } // namespace util
 
 } // namespace vlr
+
+#endif // VLR_CONFIG_INCLUDE_ATL_CSTRING

@@ -52,7 +52,6 @@ public:
 	}
 
 protected:
-	template <typename TChar>
 	static std::vector<TChar> ToStdVector(vlr::basic_zstring_view<TChar> svzChars)
 	{
 		std::vector<TChar> vecChars;

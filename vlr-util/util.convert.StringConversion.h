@@ -382,7 +382,81 @@ inline decltype(auto) To_bstr_t(const TString& tString, const StringConversionOp
 	return detail::To_bstr_t_choice(tString, oConversionOptions, vlr::util::choice<0>{});
 }
 
+#endif // #if VLR_CONFIG_INCLUDE_WIN32_BSTR
+
+namespace detail {
+
+// Convert from "width matching" string type (should include views of matching char width)
+
+template< typename TString, typename std::enable_if_t<std::is_convertible_v<const TString&, std::string_view>>* = nullptr >
+inline decltype(auto) ToFmtArg_StringA_choice(const TString& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<0>&&)
+{
+	return static_cast<std::string_view>(tString);
+}
+template< typename TString, typename std::enable_if_t<std::is_convertible_v<const TString&, std::wstring_view>>* = nullptr  >
+inline decltype(auto) ToFmtArg_StringW_choice(const TString& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<0>&&)
+{
+	return static_cast<std::wstring_view>(tString);
+}
+
+#if VLR_CONFIG_INCLUDE_WIN32_BSTR
+
+template< typename TString, typename std::enable_if_t<std::is_same_v<TString, _bstr_t>>* = nullptr >
+inline decltype(auto) ToFmtArg_StringA_choice(const TString& tString, const StringConversionOptions& oConversionOptions, vlr::util::choice<4>&&)
+{
+	return ToFmtArg_StringA(std::wstring{ static_cast<const wchar_t*>(tString), static_cast<std::wstring::size_type>(tString.length()) }, oConversionOptions);
+}
+template< typename TString, typename std::enable_if_t<std::is_same_v<TString, _bstr_t>>* = nullptr >
+inline decltype(auto) ToFmtArg_StringW_choice(const TString& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<4>&&)
+{
+	return std::wstring{ static_cast<const wchar_t*>(tString), static_cast<std::wstring::size_type>(tString.length()) };
+}
+
 #endif
+
+// Fallback option is to call string conversion
+
+template< typename TString >
+inline decltype(auto) ToFmtArg_StringA_choice(const TString& tString, const StringConversionOptions& oConversionOptions, vlr::util::choice<9>&&)
+{
+	return ToStdStringA(tString, oConversionOptions);
+}
+template< typename TString >
+inline decltype(auto) ToFmtArg_StringW_choice(const TString& tString, const StringConversionOptions& oConversionOptions, vlr::util::choice<9>&&)
+{
+	return ToStdStringW(tString, oConversionOptions);
+}
+
+} // namespace detail
+
+template <typename TString>
+inline decltype(auto) ToFmtArg_StringA(const TString& tString, const StringConversionOptions& oConversionOptions = {})
+{
+	return detail::ToFmtArg_StringA_choice(tString, oConversionOptions, vlr::util::choice<0>{});
+}
+
+template <typename TString>
+inline decltype(auto) ToFmtArg_StringW(const TString& tString, const StringConversionOptions& oConversionOptions = {})
+{
+	return detail::ToFmtArg_StringW_choice(tString, oConversionOptions, vlr::util::choice<0>{});
+}
+
+template <typename TString, typename... Arg>
+inline decltype(auto) ToFmtArg_String(const TString& tString, Arg&&... args)
+{
+	if constexpr (vlr::ModuleContext::Compilation::DefaultCharTypeIs_char())
+	{
+		return ToFmtArg_StringA(tString, std::forward<Arg>(args)...);
+	}
+	else if constexpr (vlr::ModuleContext::Compilation::DefaultCharTypeIs_wchar_t())
+	{
+		return ToFmtArg_StringW(tString, std::forward<Arg>(args)...);
+	}
+	else
+	{
+		VLR_TYPE_DEPENDENT_STATIC_FAIL(TString, "Unhandled character size");
+	}
+}
 
 } // namespace Convert
 
