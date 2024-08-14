@@ -57,7 +57,7 @@ inline auto ToStdStringW(std::wstring_view svValue, const StringConversionOption
 
 // std::string <- std::string
 
-inline decltype(auto) ToStdStringA(const std::string& sValue, const StringConversionOptions& /*oConversionOptions*/ = {})
+constexpr decltype(auto) ToStdStringA(const std::string& sValue, const StringConversionOptions& /*oConversionOptions*/ = {})
 {
 	return sValue;
 }
@@ -74,7 +74,7 @@ inline auto ToStdStringW(const std::string& sValue, const StringConversionOption
 	return ToStdStringW(svValue, oConversionOptions);
 }
 
-inline decltype(auto) ToStdStringW(const std::wstring& sValue, const StringConversionOptions& /*oConversionOptions*/ = {})
+constexpr decltype(auto) ToStdStringW(const std::wstring& sValue, const StringConversionOptions& /*oConversionOptions*/ = {})
 {
 	return sValue;
 }
@@ -185,12 +185,12 @@ inline decltype(auto) ToStdStringW_choice(const TString& tString, const StringCo
 // Do not know how to convert any other types; static assert if we fall through
 
 template< typename TString >
-inline decltype(auto) ToStdStringA_choice(const TString& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<5>&&)
+constexpr decltype(auto) ToStdStringA_choice(const TString& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<5>&&)
 {
 	VLR_TYPE_DEPENDENT_STATIC_FAIL(TString, "Unhandled conversion type");
 }
 template< typename TString >
-inline decltype(auto) ToStdStringW_choice(const TString& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<5>&&)
+constexpr decltype(auto) ToStdStringW_choice(const TString& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<5>&&)
 {
 	VLR_TYPE_DEPENDENT_STATIC_FAIL(TString, "Unhandled conversion type");
 }
@@ -198,12 +198,12 @@ inline decltype(auto) ToStdStringW_choice(const TString& tString, const StringCo
 } // namespace detail
 
 template< typename TString >
-inline decltype(auto) ToStdStringA(const TString& tString, const StringConversionOptions& oConversionOptions = {})
+constexpr decltype(auto) ToStdStringA(const TString& tString, const StringConversionOptions& oConversionOptions = {})
 {
 	return detail::ToStdStringA_choice(tString, oConversionOptions, vlr::util::choice<0>{});
 }
 template< typename TString >
-inline decltype(auto) ToStdStringW(const TString& tString, const StringConversionOptions& oConversionOptions = {})
+constexpr decltype(auto) ToStdStringW(const TString& tString, const StringConversionOptions& oConversionOptions = {})
 {
 	return detail::ToStdStringW_choice(tString, oConversionOptions, vlr::util::choice<0>{});
 }
@@ -212,7 +212,7 @@ inline decltype(auto) ToStdStringW(const TString& tString, const StringConversio
 // (passes any additional arguments through)
 
 template< typename TString, typename... Arg >
-inline decltype(auto) ToStdString(const TString& tString, Arg&&... args)
+constexpr decltype(auto) ToStdString(const TString& tString, Arg&&... args)
 {
 	if constexpr (vlr::ModuleContext::Compilation::DefaultCharTypeIs_char())
 	{
@@ -263,7 +263,7 @@ inline decltype(auto) ToCStringW(std::wstring_view svValue, const StringConversi
 
 // CString[A/W] <- CString[A/W]
 
-inline decltype(auto) ToCStringA(const CStringA& sValue, const StringConversionOptions& /*oConversionOptions*/ = {})
+constexpr decltype(auto) ToCStringA(const CStringA& sValue, const StringConversionOptions& /*oConversionOptions*/ = {})
 {
 	return sValue;
 }
@@ -280,7 +280,7 @@ inline decltype(auto) ToCStringW(const CStringA& sValue, const StringConversionO
 	return ToCStringW(svValue, oConversionOptions);
 }
 
-inline decltype(auto) ToCStringW(const CStringW& sValue, const StringConversionOptions& /*oConversionOptions*/ = {})
+constexpr decltype(auto) ToCStringW(const CStringW& sValue, const StringConversionOptions& /*oConversionOptions*/ = {})
 {
 	return sValue;
 }
@@ -351,7 +351,7 @@ inline decltype(auto) ToCString( const TString& tString, Arg&&... args )
 
 namespace detail {
 
-inline decltype(auto) To_bstr_t_choice(const _bstr_t& bsString, const StringConversionOptions & /*oConversionOptions*/, vlr::util::choice<0>&&)
+constexpr decltype(auto) To_bstr_t_choice(const _bstr_t& bsString, const StringConversionOptions & /*oConversionOptions*/, vlr::util::choice<0>&&)
 {
 	return bsString;
 }
@@ -389,25 +389,36 @@ namespace detail {
 // Convert from "width matching" string type (should include views of matching char width)
 
 template< typename TString, typename std::enable_if_t<std::is_convertible_v<const TString&, std::string_view>>* = nullptr >
-inline decltype(auto) ToFmtArg_StringA_choice(const TString& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<0>&&)
+constexpr decltype(auto) ToFmtArg_StringA_choice(TString&& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<1>&&)
 {
-	return static_cast<std::string_view>(tString);
+	return static_cast<const std::string_view>(tString);
 }
 template< typename TString, typename std::enable_if_t<std::is_convertible_v<const TString&, std::wstring_view>>* = nullptr  >
-inline decltype(auto) ToFmtArg_StringW_choice(const TString& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<0>&&)
+constexpr decltype(auto) ToFmtArg_StringW_choice(TString&& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<1>&&)
 {
-	return static_cast<std::wstring_view>(tString);
+	return static_cast<const std::wstring_view>(tString);
+}
+
+template< typename TString, typename std::enable_if_t<std::is_convertible_v<const TString&, const char*>>* = nullptr >
+constexpr decltype(auto) ToFmtArg_StringA_choice(TString&& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<2>&&)
+{
+	return static_cast<const char*>(tString);
+}
+template< typename TString, typename std::enable_if_t<std::is_convertible_v<const TString&, const wchar_t*>>* = nullptr  >
+constexpr decltype(auto) ToFmtArg_StringW_choice(TString&& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<2>&&)
+{
+	return static_cast<const wchar_t*>(tString);
 }
 
 #if VLR_CONFIG_INCLUDE_WIN32_BSTR
 
 template< typename TString, typename std::enable_if_t<std::is_same_v<TString, _bstr_t>>* = nullptr >
-inline decltype(auto) ToFmtArg_StringA_choice(const TString& tString, const StringConversionOptions& oConversionOptions, vlr::util::choice<4>&&)
+inline decltype(auto) ToFmtArg_StringA_choice(TString&& tString, const StringConversionOptions& oConversionOptions, vlr::util::choice<4>&&)
 {
-	return ToFmtArg_StringA(std::wstring{ static_cast<const wchar_t*>(tString), static_cast<std::wstring::size_type>(tString.length()) }, oConversionOptions);
+	return ToFmtArg_StringA_choice(std::wstring{ static_cast<const wchar_t*>(tString), static_cast<std::wstring::size_type>(tString.length()) }, oConversionOptions);
 }
 template< typename TString, typename std::enable_if_t<std::is_same_v<TString, _bstr_t>>* = nullptr >
-inline decltype(auto) ToFmtArg_StringW_choice(const TString& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<4>&&)
+inline decltype(auto) ToFmtArg_StringW_choice(TString&& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<4>&&)
 {
 	return std::wstring{ static_cast<const wchar_t*>(tString), static_cast<std::wstring::size_type>(tString.length()) };
 }
@@ -417,40 +428,40 @@ inline decltype(auto) ToFmtArg_StringW_choice(const TString& tString, const Stri
 // Fallback option is to call string conversion
 
 template< typename TString >
-inline decltype(auto) ToFmtArg_StringA_choice(const TString& tString, const StringConversionOptions& oConversionOptions, vlr::util::choice<9>&&)
+constexpr decltype(auto) ToFmtArg_StringA_choice(TString&& tString, const StringConversionOptions& oConversionOptions, vlr::util::choice<9>&&)
 {
-	return ToStdStringA(tString, oConversionOptions);
+	return ToStdStringA(std::forward<TString>(tString), oConversionOptions);
 }
 template< typename TString >
-inline decltype(auto) ToFmtArg_StringW_choice(const TString& tString, const StringConversionOptions& oConversionOptions, vlr::util::choice<9>&&)
+constexpr decltype(auto) ToFmtArg_StringW_choice(TString&& tString, const StringConversionOptions& oConversionOptions, vlr::util::choice<9>&&)
 {
-	return ToStdStringW(tString, oConversionOptions);
+	return ToStdStringW(std::forward<TString>(tString), oConversionOptions);
 }
 
 } // namespace detail
 
 template <typename TString>
-inline decltype(auto) ToFmtArg_StringA(const TString& tString, const StringConversionOptions& oConversionOptions = {})
+constexpr decltype(auto) ToFmtArg_StringA(TString&& tString, const StringConversionOptions& oConversionOptions = {})
 {
-	return detail::ToFmtArg_StringA_choice(tString, oConversionOptions, vlr::util::choice<0>{});
+	return detail::ToFmtArg_StringA_choice(std::forward<TString>(tString), oConversionOptions, vlr::util::choice<0>{});
 }
 
 template <typename TString>
-inline decltype(auto) ToFmtArg_StringW(const TString& tString, const StringConversionOptions& oConversionOptions = {})
+constexpr decltype(auto) ToFmtArg_StringW(TString&& tString, const StringConversionOptions& oConversionOptions = {})
 {
-	return detail::ToFmtArg_StringW_choice(tString, oConversionOptions, vlr::util::choice<0>{});
+	return detail::ToFmtArg_StringW_choice(std::forward<TString>(tString), oConversionOptions, vlr::util::choice<0>{});
 }
 
 template <typename TString, typename... Arg>
-inline decltype(auto) ToFmtArg_String(const TString& tString, Arg&&... args)
+constexpr decltype(auto) ToFmtArg_String(TString&& tString, Arg&&... args)
 {
 	if constexpr (vlr::ModuleContext::Compilation::DefaultCharTypeIs_char())
 	{
-		return ToFmtArg_StringA(tString, std::forward<Arg>(args)...);
+		return ToFmtArg_StringA(std::forward<TString>(tString), std::forward<Arg>(args)...);
 	}
 	else if constexpr (vlr::ModuleContext::Compilation::DefaultCharTypeIs_wchar_t())
 	{
-		return ToFmtArg_StringW(tString, std::forward<Arg>(args)...);
+		return ToFmtArg_StringW(std::forward<TString>(tString), std::forward<Arg>(args)...);
 	}
 	else
 	{

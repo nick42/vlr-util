@@ -2,6 +2,7 @@
 
 #include "vlr-util/util.convert.StringConversion.h"
 #include "vlr-util/zstring_view.h"
+#include "vlr-util/StringCompare.h"
 
 TEST( util_convert_StringConversion, general )
 {
@@ -84,4 +85,86 @@ TEST(StringConversion, NonASCII)
 			EXPECT_EQ(cChar, vecExpectedValue[nExpectedValueIndex++]);
 		}
 	}
+}
+
+TEST(StringConversion, ToFmtArg_String)
+{
+	using namespace vlr::util;
+
+	constexpr auto pcaszTestString = "TestString";
+	constexpr auto pcwszTestString = L"TestString";
+	constexpr auto pcszTestString = _T("TestString");
+
+	const auto straTest = std::string{ pcaszTestString };
+	const auto strwTest = std::wstring{ pcwszTestString };
+	const auto svaTest = std::string_view{ straTest };
+	const auto svwTest = std::wstring_view{ strwTest };
+	const auto svzaTest = vlr::zstring_view{ straTest };
+	const auto svzwTest = vlr::wzstring_view{ strwTest };
+	const auto saTest = CStringA{ pcaszTestString };
+	const auto swTest = CStringW{ pcwszTestString };
+	const auto bsTest = _bstr_t{ pcwszTestString };
+
+
+	auto oStringCompare = vlr::StringCompare::CS();
+
+	auto fTestConvertToAllTargetTypes = [&](const auto& tString)
+	{
+		// to std::string
+
+		auto tFmtArg_asStdStringA = Convert::ToFmtArg_StringA(tString);
+		EXPECT_TRUE(oStringCompare.AreEqual(tFmtArg_asStdStringA, pcaszTestString));
+		auto tFmtArg_asStdStringW = Convert::ToFmtArg_StringW(tString);
+		EXPECT_TRUE(oStringCompare.AreEqual(tFmtArg_asStdStringW, pcwszTestString));
+		auto tFmtArg_asStdStringT = Convert::ToFmtArg_String(tString);
+		EXPECT_TRUE(oStringCompare.AreEqual(tFmtArg_asStdStringT, pcszTestString));
+	};
+
+	fTestConvertToAllTargetTypes(straTest);
+	fTestConvertToAllTargetTypes(strwTest);
+	fTestConvertToAllTargetTypes(svaTest);
+	fTestConvertToAllTargetTypes(svwTest);
+	fTestConvertToAllTargetTypes(svzaTest);
+	fTestConvertToAllTargetTypes(svzwTest);
+	fTestConvertToAllTargetTypes(saTest);
+	fTestConvertToAllTargetTypes(swTest);
+	fTestConvertToAllTargetTypes(bsTest);
+
+	// Check that constexpr conversions work as/where expected
+
+	{
+		constexpr auto svFmtArg_StringA = Convert::ToFmtArg_StringA(pcaszTestString);
+	}
+	{
+		constexpr auto svFmtArg_StringW = Convert::ToFmtArg_StringW(pcwszTestString);
+	}
+	{
+		constexpr auto svFmtArg_String = Convert::ToFmtArg_String(pcszTestString);
+	}
+	// This will not work: the std::string variables are not constexpr, and cannot be so before C++20
+	//{
+	//	constexpr auto svFmtArg_StringA = Convert::ToFmtArg_StringA(straTest);
+	//}
+	//{
+	//	constexpr auto svFmtArg_StringW = Convert::ToFmtArg_StringW(strwTest);
+	//}
+	// These need to convert constexpr variables...
+	{
+		static constexpr auto svaTestVar = std::string_view{ "TestString" };
+		constexpr auto svFmtArg_StringA = Convert::ToFmtArg_StringA(svaTestVar);
+	}
+	{
+		static constexpr auto svwTestVar = std::wstring_view{ L"TestString" };
+		constexpr auto svFmtArg_StringW = Convert::ToFmtArg_StringW(svwTestVar);
+	}
+	// These need to convert constexpr variables...
+	{
+		static constexpr auto svaTestVar = vlr::zstring_view{ "TestString" };
+		constexpr auto svFmtArg_StringA = Convert::ToFmtArg_StringA(svaTestVar);
+	}
+	{
+		static constexpr auto svwTestVar = vlr::wzstring_view{ L"TestString" };
+		constexpr auto svFmtArg_StringW = Convert::ToFmtArg_StringW(svwTestVar);
+	}
+	// CString and _bstr_t are not constexpr compatible
 }
