@@ -391,12 +391,12 @@ namespace detail {
 template< typename TString, typename std::enable_if_t<std::is_convertible_v<const TString&, std::string_view>>* = nullptr >
 constexpr decltype(auto) ToFmtArg_StringA_choice(TString&& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<1>&&)
 {
-	return static_cast<const std::string_view>(tString);
+	return static_cast<std::string_view>(tString);
 }
 template< typename TString, typename std::enable_if_t<std::is_convertible_v<const TString&, std::wstring_view>>* = nullptr  >
 constexpr decltype(auto) ToFmtArg_StringW_choice(TString&& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<1>&&)
 {
-	return static_cast<const std::wstring_view>(tString);
+	return static_cast<std::wstring_view>(tString);
 }
 
 template< typename TString, typename std::enable_if_t<std::is_convertible_v<const TString&, const char*>>* = nullptr >
