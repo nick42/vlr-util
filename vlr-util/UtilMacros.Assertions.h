@@ -175,6 +175,9 @@ constexpr bool ResultIsSuccess(const TResult& tResult)
 #define VLR_ON_SUCCESS_RETURN_VALUE( result ) { auto&& _result = (result); if (!vlr::detail::ResultIsSuccess(_result)) {} else { return _result; } }
 #define VLR_ON_ERROR_RETURN_VALUE( result ) { auto&& _result = (result); if (vlr::detail::ResultIsSuccess(_result)) {} else { return _result; } }
 
+#define VLR_ON_SPECIFIC_RESULT_RETURN_VALUE( result, target_result ) { auto&& _result = (result); if (_result != target_result) {} else { return _result; } }
+#define VLR_ON_NOT_SPECIFIC_RESULT_RETURN_VALUE( result, target_result ) { auto&& _result = (result); if (_result == target_result) {} else { return _result; } }
+
 // Per result type macros; to be deprecated at some point
 
 #define VLR_ASSERT_HR_SUCCEEDED_OR_RETURN_HRESULT( hr ) VLR_ASSERT_SUCCEEDED_OR_RETURN_RESULT( hr )
@@ -188,8 +191,8 @@ constexpr bool ResultIsSuccess(const TResult& tResult)
 #define VLR_ON_SR_SUCCESS_RETURN_VALUE( sr ) VLR_ON_SUCCESS_RETURN_VALUE( sr )
 #define VLR_ON_SR_ERROR_RETURN_VALUE( sr ) VLR_ON_ERROR_RETURN_VALUE( sr )
 
-#define VLR_ON_HR_S_OK__RETURN_HRESULT( hr ) VLR_ON_SUCCESS_RETURN_VALUE( hr )
-#define VLR_ON_HR_NON_S_OK__RETURN_HRESULT( hr ) VLR_ON_ERROR_RETURN_VALUE( hr )
+#define VLR_ON_HR_S_OK__RETURN_HRESULT( hr ) VLR_ON_SPECIFIC_RESULT_RETURN_VALUE( hr, S_OK )
+#define VLR_ON_HR_NON_S_OK__RETURN_HRESULT( hr ) VLR_ON_NOT_SPECIFIC_RESULT_RETURN_VALUE( hr, S_OK )
 
 #define VLR_ASSERT_ALLOCATED_OR_RETURN_STANDARD_ERROR( value ) VLR_ASSERT_NONZERO_OR_RETURN_EXPRESSION( value, E_OUTOFMEMORY )
 #define VLR_ASSERT_ALLOCATED_OR_RETURN_FAILURE_VALUE( value ) VLR_ASSERT_NONZERO_OR_RETURN_EXPRESSION( value, _tFailureValue )
