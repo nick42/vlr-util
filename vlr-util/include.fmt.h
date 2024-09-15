@@ -19,7 +19,7 @@ using FormatStringT = std::basic_string_view<TCHAR>;
 
 } // namespace lib_fmt
 
-#if VLR_CONFIG_INCLUDE_ATL_CSTRING
+#if VLR_CONFIG_INCLUDE_ATL_CString
 
 // Note: If you have "custom" types which you want to pass as format parameters, you need to 
 // create template specializations which tell the library how to parse and format them.

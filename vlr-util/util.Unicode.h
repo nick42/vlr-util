@@ -225,7 +225,7 @@ public:
 		return strOutput;
 	}
 
-#if VLR_CONFIG_INCLUDE_ATL_CSTRING
+#if VLR_CONFIG_INCLUDE_ATL_CString
 	HRESULT MultiByte_to_UTF16(
 		std::string_view svValue,
 		CStringW& sOutput,
@@ -255,7 +255,7 @@ public:
 		UTF16_to_MultiByte( svValue, sOutput, oStringConversionOptions, pStringConversionResults );
 		return sOutput;
 	}
-#endif // VLR_CONFIG_INCLUDE_ATL_CSTRING
+#endif // VLR_CONFIG_INCLUDE_ATL_CString
 
 };
 

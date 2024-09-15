@@ -1,7 +1,7 @@
 #pragma once
 
 // Note: Exclude this header entirely if not including CString references
-#if VLR_CONFIG_INCLUDE_ATL_CSTRING
+#if VLR_CONFIG_INCLUDE_ATL_CString
 
 #include <atlstr.h>
 
@@ -67,4 +67,4 @@ auto GetCStringBufferAccess( CStringT<BaseType, StringTraits>& sValue, int nMinB
 
 } // namespace vlr
 
-#endif // VLR_CONFIG_INCLUDE_ATL_CSTRING
+#endif // VLR_CONFIG_INCLUDE_ATL_CString

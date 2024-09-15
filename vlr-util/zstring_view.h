@@ -5,7 +5,7 @@
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
-#if VLR_CONFIG_INCLUDE_ATL_CSTRING
+#if VLR_CONFIG_INCLUDE_ATL_CString
 #include <atlstr.h>
 using ATL::CStringA;
 using ATL::CStringW;
@@ -17,7 +17,7 @@ using ATL::CStringW;
 
 namespace vlr {
 
-//#if VLR_CONFIG_INCLUDE_ATL_CSTRING
+//#if VLR_CONFIG_INCLUDE_ATL_CString
 //template<class _Elem>
 //#if defined(_AFXDLL)
 //using TStrTraitMFC = ATL::StrTraitMFC_DLL<_Elem>;
@@ -52,7 +52,7 @@ public:
     using typename base_type::size_type;
     using typename base_type::difference_type;
 
-#if VLR_CONFIG_INCLUDE_ATL_CSTRING
+#if VLR_CONFIG_INCLUDE_ATL_CString
     using TCStringT = CStringT< _Elem, StrTraitATL< _Elem, ChTraitsCRT< _Elem > > >;
     using TCStringT_length = decltype(std::declval<TCStringT>().GetLength());
 #endif
@@ -83,7 +83,7 @@ public:
         : base_type{ reinterpret_cast<const_pointer>(strValue.c_str()), strValue.length() }
     {}
 
-#if VLR_CONFIG_INCLUDE_ATL_CSTRING
+#if VLR_CONFIG_INCLUDE_ATL_CString
     constexpr basic_zstring_view( const TCStringT& sValue ) noexcept
         : base_type{ static_cast<const const_pointer>(sValue.GetString()), static_cast<const size_type>(sValue.GetLength()) }
     {}
@@ -115,7 +115,7 @@ public:
         return base_type::data();
     }
 
-#if VLR_CONFIG_INCLUDE_ATL_CSTRING
+#if VLR_CONFIG_INCLUDE_ATL_CString
     // Allow explicit casting to CString only
     [[nodiscard]] explicit inline operator TCStringT() const
     {

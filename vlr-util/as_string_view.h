@@ -25,7 +25,7 @@ public:
 	constexpr as_string_view( const std::string& value )
 		: base_type{ vlr::zstring_view{ value }  }
 	{}
-#if VLR_CONFIG_INCLUDE_ATL_CSTRING
+#if VLR_CONFIG_INCLUDE_ATL_CString
 	constexpr as_string_view( const CStringA& sValue ) noexcept
 		: base_type{ static_cast<const_pointer>(sValue), sValue.GetLength() }
 	{}
@@ -52,12 +52,12 @@ public:
 	constexpr as_wstring_view( const std::u16string& value )
 		: base_type{ cpp::wzstring_view{ value } }
 	{}
-#if VLR_CONFIG_INCLUDE_ATL_CSTRING
+#if VLR_CONFIG_INCLUDE_ATL_CString
 	constexpr as_wstring_view( const CStringW& sValue ) noexcept
 		: base_type{ static_cast<const_pointer>(sValue), sValue.GetLength() }
 	{}
 #endif
-#if VLR_CONFIG_INCLUDE_WIN32_BSTR
+#if VLR_CONFIG_INCLUDE_WIN32_bstr_t
 	constexpr as_wstring_view( const _bstr_t& bsValue ) noexcept
 		: base_type{ static_cast<const_pointer>(bsValue), bsValue.length() }
 	{}

@@ -42,7 +42,7 @@ inline decltype(auto) ConvertTo_choice( const TSource& tSource, vlr::util::choic
 	return util::Convert::ToStdStringW( tSource );
 }
 
-#if VLR_CONFIG_INCLUDE_ATL_CSTRING
+#if VLR_CONFIG_INCLUDE_ATL_CString
 
 // The ToCString case(s)
 

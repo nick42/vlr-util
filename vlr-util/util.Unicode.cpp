@@ -293,7 +293,7 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 		pStringConversionResults );
 }
 
-#if VLR_CONFIG_INCLUDE_ATL_CSTRING
+#if VLR_CONFIG_INCLUDE_ATL_CString
 
 HRESULT CStringConversion::MultiByte_to_UTF16(
 	std::string_view svValue,
@@ -381,7 +381,7 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 	return S_OK;
 }
 
-#endif // VLR_CONFIG_INCLUDE_ATL_CSTRING
+#endif // VLR_CONFIG_INCLUDE_ATL_CString
 
 } // namespace util
 

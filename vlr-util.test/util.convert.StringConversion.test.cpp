@@ -3,60 +3,122 @@
 #include "vlr-util/util.convert.StringConversion.h"
 #include "vlr-util/zstring_view.h"
 #include "vlr-util/StringCompare.h"
+#include "vlr-util/ActionOnDestruction.h"
 
-TEST( util_convert_StringConversion, general )
+using namespace vlr::util;
+
+struct Test_util_convert_StringConversion
+	: public testing::Test
 {
-	using namespace vlr::util;
+	vlr::StringCompare::CComparator m_oStringCompare = vlr::StringCompare::CS();
 
-	constexpr auto pcaszTestString = "TestString";
-	constexpr auto pcwszTestString = L"TestString";
-	constexpr auto pcszTestString = _T("TestString");
+	static constexpr decltype(auto) GetTestStringA()
+	{
+		return "TestString";
+	}
+	static constexpr decltype(auto) GetTestStringW()
+	{
+		return L"TestString";
+	}
+	static constexpr decltype(auto) GetTestStringT()
+	{
+		return _T("TestString");
+	}
 
-	const auto straTest = std::string{ pcaszTestString };
-	const auto strwTest = std::wstring{ pcwszTestString };
-	const auto svaTest = std::string_view{ straTest };
-	const auto svwTest = std::wstring_view{ strwTest };
-	const auto svzaTest = vlr::zstring_view{ straTest };
-	const auto svzwTest = vlr::wzstring_view{ strwTest };
-	const auto saTest = CStringA{ pcaszTestString };
-	const auto swTest = CStringW{ pcwszTestString };
-	const auto bsTest = _bstr_t{ pcwszTestString };
+	static auto GetTestString_std_string()
+	{
+		return std::string{ GetTestStringA() };
+	}
+	static auto GetTestString_std_wstring()
+	{
+		return std::wstring{ GetTestStringW() };
+	}
+	static constexpr auto GetTestString_std_string_view()
+	{
+		return std::string_view{ GetTestStringA() };
+	}
+	static constexpr auto GetTestString_std_wstring_view()
+	{
+		return std::wstring_view{ GetTestStringW() };
+	}
+	static constexpr auto GetTestString_vlr_zstring_view()
+	{
+		return vlr::zstring_view{ GetTestStringA() };
+	}
+	static constexpr auto GetTestString_vlr_wzstring_view()
+	{
+		return vlr::wzstring_view{ GetTestStringW() };
+	}
+	static auto GetTestString_ATL_CStringA()
+	{
+		return ATL::CStringA{ GetTestStringA() };
+	}
+	static auto GetTestString_ATL_CStringW()
+	{
+		return ATL::CStringW{ GetTestStringW() };
+	}
+	static auto GetTestString_bstr_t()
+	{
+		return _bstr_t{ GetTestStringW() };
+	}
+	static auto GetTestString_ATL_CComBSTR()
+	{
+		return ATL::CComBSTR{ GetTestStringW() };
+	}
 
-	auto fTestConvertToAllTargetTypes = [&]( const auto& tString )
+	template <typename TString>
+	void ValidateAllToStringConversions(const TString& sValue)
 	{
 		// to std::string
 
-		auto tString_asStdStringA = Convert::ToStdStringA( tString );
-		EXPECT_STREQ( tString_asStdStringA.c_str(), pcaszTestString );
-		auto tString_asStdStringW = Convert::ToStdStringW( tString );
-		EXPECT_STREQ( tString_asStdStringW.c_str(), pcwszTestString );
-		auto tString_asStdStringT = Convert::ToStdString( tString );
-		EXPECT_STREQ( tString_asStdStringT.c_str(), pcszTestString );
+		auto tString_asStdStringA = Convert::ToStdStringA(sValue);
+		EXPECT_STREQ(tString_asStdStringA.c_str(), GetTestStringA());
+		auto tString_asStdStringW = Convert::ToStdStringW(sValue);
+		EXPECT_STREQ(tString_asStdStringW.c_str(), GetTestStringW());
+		auto tString_asStdStringT = Convert::ToStdString(sValue);
+		EXPECT_STREQ(tString_asStdStringT.c_str(), GetTestStringT());
 
 		// to CString
 
-		auto tString_asCStringA = Convert::ToCStringA( tString );
-		EXPECT_STREQ( tString_asCStringA, pcaszTestString );
-		auto tString_asCStringW = Convert::ToCStringW( tString );
-		EXPECT_STREQ( tString_asCStringW, pcwszTestString );
-		auto tString_asCStringT = Convert::ToCString( tString );
-		EXPECT_STREQ( tString_asCStringT, pcszTestString );
+		auto tString_asCStringA = Convert::ToCStringA(sValue);
+		EXPECT_STREQ(tString_asCStringA, GetTestStringA());
+		auto tString_asCStringW = Convert::ToCStringW(sValue);
+		EXPECT_STREQ(tString_asCStringW, GetTestStringW());
+		auto tString_asCStringT = Convert::ToCString(sValue);
+		EXPECT_STREQ(tString_asCStringT, GetTestStringT());
 
 		// to _bstr_t
 
-		auto tString_as_bstr_t = Convert::To_bstr_t(tString);
-		EXPECT_STREQ(static_cast<LPCWSTR>(tString_as_bstr_t), pcwszTestString);
-	};
+		auto tString_as_bstr_t = Convert::To_bstr_t(sValue);
+		EXPECT_STREQ(static_cast<LPCWSTR>(tString_as_bstr_t), GetTestStringW());
+	}
 
-	fTestConvertToAllTargetTypes(straTest);
-	fTestConvertToAllTargetTypes(strwTest);
-	fTestConvertToAllTargetTypes(svaTest);
-	fTestConvertToAllTargetTypes(svwTest);
-	fTestConvertToAllTargetTypes(svzaTest);
-	fTestConvertToAllTargetTypes(svzwTest);
-	fTestConvertToAllTargetTypes(saTest);
-	fTestConvertToAllTargetTypes(swTest);
-	fTestConvertToAllTargetTypes(bsTest);
+	template <typename TString>
+	void ValidateAllToFmtArgConversions(const TString& sValue)
+	{
+		// to String
+
+		auto tFmtArg_asStdStringA = Convert::ToFmtArg_StringA(sValue);
+		EXPECT_TRUE(m_oStringCompare.AreEqual(tFmtArg_asStdStringA, GetTestStringA()));
+		auto tFmtArg_asStdStringW = Convert::ToFmtArg_StringW(sValue);
+		EXPECT_TRUE(m_oStringCompare.AreEqual(tFmtArg_asStdStringW, GetTestStringW()));
+		auto tFmtArg_asStdStringT = Convert::ToFmtArg_String(sValue);
+		EXPECT_TRUE(m_oStringCompare.AreEqual(tFmtArg_asStdStringT, GetTestStringT()));
+	};
+};
+
+TEST_F(Test_util_convert_StringConversion, ToString)
+{
+	ValidateAllToStringConversions(GetTestString_std_string());
+	ValidateAllToStringConversions(GetTestString_std_wstring());
+	ValidateAllToStringConversions(GetTestString_std_string_view());
+	ValidateAllToStringConversions(GetTestString_std_wstring_view());
+	ValidateAllToStringConversions(GetTestString_vlr_zstring_view());
+	ValidateAllToStringConversions(GetTestString_vlr_wzstring_view());
+	ValidateAllToStringConversions(GetTestString_ATL_CStringA());
+	ValidateAllToStringConversions(GetTestString_ATL_CStringW());
+	ValidateAllToStringConversions(GetTestString_bstr_t());
+	ValidateAllToStringConversions(GetTestString_ATL_CComBSTR());
 }
 
 TEST(StringConversion, NonASCII)
@@ -87,59 +149,29 @@ TEST(StringConversion, NonASCII)
 	}
 }
 
-TEST(StringConversion, ToFmtArg_String)
+TEST_F(Test_util_convert_StringConversion, ToFmtArg_String)
 {
-	using namespace vlr::util;
-
-	constexpr auto pcaszTestString = "TestString";
-	constexpr auto pcwszTestString = L"TestString";
-	constexpr auto pcszTestString = _T("TestString");
-
-	const auto straTest = std::string{ pcaszTestString };
-	const auto strwTest = std::wstring{ pcwszTestString };
-	const auto svaTest = std::string_view{ straTest };
-	const auto svwTest = std::wstring_view{ strwTest };
-	const auto svzaTest = vlr::zstring_view{ straTest };
-	const auto svzwTest = vlr::wzstring_view{ strwTest };
-	const auto saTest = CStringA{ pcaszTestString };
-	const auto swTest = CStringW{ pcwszTestString };
-	const auto bsTest = _bstr_t{ pcwszTestString };
-
-
-	auto oStringCompare = vlr::StringCompare::CS();
-
-	auto fTestConvertToAllTargetTypes = [&](const auto& tString)
-	{
-		// to std::string
-
-		auto tFmtArg_asStdStringA = Convert::ToFmtArg_StringA(tString);
-		EXPECT_TRUE(oStringCompare.AreEqual(tFmtArg_asStdStringA, pcaszTestString));
-		auto tFmtArg_asStdStringW = Convert::ToFmtArg_StringW(tString);
-		EXPECT_TRUE(oStringCompare.AreEqual(tFmtArg_asStdStringW, pcwszTestString));
-		auto tFmtArg_asStdStringT = Convert::ToFmtArg_String(tString);
-		EXPECT_TRUE(oStringCompare.AreEqual(tFmtArg_asStdStringT, pcszTestString));
-	};
-
-	fTestConvertToAllTargetTypes(straTest);
-	fTestConvertToAllTargetTypes(strwTest);
-	fTestConvertToAllTargetTypes(svaTest);
-	fTestConvertToAllTargetTypes(svwTest);
-	fTestConvertToAllTargetTypes(svzaTest);
-	fTestConvertToAllTargetTypes(svzwTest);
-	fTestConvertToAllTargetTypes(saTest);
-	fTestConvertToAllTargetTypes(swTest);
-	fTestConvertToAllTargetTypes(bsTest);
+	ValidateAllToFmtArgConversions(GetTestString_std_string());
+	ValidateAllToFmtArgConversions(GetTestString_std_wstring());
+	ValidateAllToFmtArgConversions(GetTestString_std_string_view());
+	ValidateAllToFmtArgConversions(GetTestString_std_wstring_view());
+	ValidateAllToFmtArgConversions(GetTestString_vlr_zstring_view());
+	ValidateAllToFmtArgConversions(GetTestString_vlr_wzstring_view());
+	ValidateAllToFmtArgConversions(GetTestString_ATL_CStringA());
+	ValidateAllToFmtArgConversions(GetTestString_ATL_CStringW());
+	ValidateAllToFmtArgConversions(GetTestString_bstr_t());
+	ValidateAllToFmtArgConversions(GetTestString_ATL_CComBSTR());
 
 	// Check that constexpr conversions work as/where expected
 
 	{
-		constexpr auto svFmtArg_StringA = Convert::ToFmtArg_StringA(pcaszTestString);
+		constexpr auto svFmtArg_StringA = Convert::ToFmtArg_StringA(GetTestStringA());
 	}
 	{
-		constexpr auto svFmtArg_StringW = Convert::ToFmtArg_StringW(pcwszTestString);
+		constexpr auto svFmtArg_StringW = Convert::ToFmtArg_StringW(GetTestStringW());
 	}
 	{
-		constexpr auto svFmtArg_String = Convert::ToFmtArg_String(pcszTestString);
+		constexpr auto svFmtArg_String = Convert::ToFmtArg_String(GetTestStringT());
 	}
 	// This will not work: the std::string variables are not constexpr, and cannot be so before C++20
 	//{
@@ -150,21 +182,60 @@ TEST(StringConversion, ToFmtArg_String)
 	//}
 	// These need to convert constexpr variables...
 	{
-		static constexpr auto svaTestVar = std::string_view{ "TestString" };
+		static constexpr auto svaTestVar = std::string_view{ GetTestStringA() };
 		constexpr auto svFmtArg_StringA = Convert::ToFmtArg_StringA(svaTestVar);
 	}
 	{
-		static constexpr auto svwTestVar = std::wstring_view{ L"TestString" };
+		static constexpr auto svwTestVar = std::wstring_view{ GetTestStringW() };
 		constexpr auto svFmtArg_StringW = Convert::ToFmtArg_StringW(svwTestVar);
 	}
 	// These need to convert constexpr variables...
 	{
-		static constexpr auto svaTestVar = vlr::zstring_view{ "TestString" };
+		static constexpr auto svaTestVar = vlr::zstring_view{ GetTestStringA() };
 		constexpr auto svFmtArg_StringA = Convert::ToFmtArg_StringA(svaTestVar);
 	}
 	{
-		static constexpr auto svwTestVar = vlr::wzstring_view{ L"TestString" };
+		static constexpr auto svwTestVar = vlr::wzstring_view{ GetTestStringW() };
 		constexpr auto svFmtArg_StringW = Convert::ToFmtArg_StringW(svwTestVar);
 	}
-	// CString and _bstr_t are not constexpr compatible
+	// Not constexpr compatible: CString, _bstr_t, CComBSTR
+}
+
+// Note: This test helps ensure that we correctly handle the case of a BSTR (with a prefixed length) which is not otherwise NULL-terminated.
+
+TEST(util_convert_StringConversion, LengthPrefixedBSTR)
+{
+	std::vector<BYTE> vecFakeBstrBuffer;
+	// Size is 4-byte length prefix, plus string data
+	// Adding a BYTE of "bad" data, which is non-NULL, to ensure we don't read it
+	constexpr auto pcwszTestValue = L"Test";
+	constexpr size_t nTestValueLengthBytes = sizeof(pcwszTestValue) * sizeof(pcwszTestValue[0]);
+	constexpr auto pcwszInvalidSuffix = L"FF";
+	constexpr size_t nInvalidSuffixLengthBytes = sizeof(pcwszInvalidSuffix) * sizeof(pcwszInvalidSuffix[0]);
+	vecFakeBstrBuffer.resize(4 + nTestValueLengthBytes + nInvalidSuffixLengthBytes);
+
+	auto pFakeBstrBuffer = vecFakeBstrBuffer.data();
+	*(reinterpret_cast<DWORD*>(pFakeBstrBuffer)) = nTestValueLengthBytes;
+	memcpy_s(pFakeBstrBuffer + 4, vecFakeBstrBuffer.size() - 4, pcwszTestValue, nTestValueLengthBytes);
+	memcpy_s(pFakeBstrBuffer + 4 + nTestValueLengthBytes, vecFakeBstrBuffer.size() - 4 - nTestValueLengthBytes, pcwszInvalidSuffix, nInvalidSuffixLengthBytes);
+	BSTR bsFakeBstrPtr = reinterpret_cast<BSTR>(pFakeBstrBuffer + 4);
+
+	CComBSTR bsFakeBstr;
+	bsFakeBstr.AssignBSTR(bsFakeBstrPtr);
+	auto oOnDestroy_Detach = vlr::MakeActionOnDestruction([&]() {
+		bsFakeBstr.Detach();
+	});
+
+	auto tString_asStdStringW = Convert::ToStdStringW(bsFakeBstr);
+	EXPECT_EQ(tString_asStdStringW.length(), sizeof(pcwszTestValue));
+	EXPECT_STREQ(tString_asStdStringW.c_str(), pcwszTestValue);
+}
+
+TEST(util_convert_StringConversion, empty_CComBSTR)
+{
+	auto bsValue = CComBSTR{};
+
+	auto tString_asStdStringW = Convert::ToStdStringW(bsValue);
+	EXPECT_EQ(tString_asStdStringW.length(), 0);
+	EXPECT_STREQ(tString_asStdStringW.c_str(), L"");
 }
