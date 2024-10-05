@@ -99,7 +99,7 @@
     <ClCompile Include="ActionOnDestruction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StringCompare.cpp">
+    <ClCompile Include="StringCompare.test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="util.NonOwningSharedPtr.cpp">

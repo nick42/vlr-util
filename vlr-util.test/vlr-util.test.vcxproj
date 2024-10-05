@@ -182,7 +182,7 @@
     <ClCompile Include="RegexCache.cpp" />
     <ClCompile Include="ResourceStringLookupValue.test.cpp" />
     <ClCompile Include="strings.split.test.cpp" />
-    <ClCompile Include="StringCompare.cpp" />
+    <ClCompile Include="StringCompare.test.cpp" />
     <ClCompile Include="TestAssignment.cpp" />
     <ClCompile Include="ThreadOperationContext.test.cpp" />
     <ClCompile Include="ThreadPool.cpp" />

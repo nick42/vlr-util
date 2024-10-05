@@ -70,6 +70,7 @@
     <ClInclude Include="util.api_adaptor.OutString.h" />
     <ClInclude Include="util.AutoCleanupBase.h" />
     <ClInclude Include="util.AutoCleanup_SC_HANDLE.h" />
+    <ClInclude Include="util.CallWithAutoRetry.h" />
     <ClInclude Include="util.choice.h" />
     <ClInclude Include="util.convert.Arithmetic.h" />
     <ClInclude Include="util.convert.DateTime.h" />

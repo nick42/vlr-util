@@ -24,6 +24,9 @@ namespace Convert {
 // std::string <- std::string_view
 
 inline auto ToStdStringA(std::string_view svValue, const StringConversionOptions& /*oConversionOptions*/ = {})
+// Note: noexcept IFF the std::string constructor is noexcept.
+// Note that this is not currently the specification, as of C++20, but may be so in the future.
+noexcept(noexcept(std::string{svValue}))
 {
 	return std::string{ svValue };
 }
@@ -51,13 +54,16 @@ inline auto ToStdStringW(std::string_view svValue, const StringConversionOptions
 }
 
 inline auto ToStdStringW(std::wstring_view svValue, const StringConversionOptions& /*oConversionOptions*/ = {})
+// Note: noexcept IFF the std::wstring constructor is noexcept.
+// Note that this is not currently the specification, as of C++20, but may be so in the future.
+noexcept(noexcept(std::wstring{ svValue }))
 {
 	return std::wstring{ svValue };
 }
 
 // std::string <- std::string
 
-constexpr decltype(auto) ToStdStringA(const std::string& sValue, const StringConversionOptions& /*oConversionOptions*/ = {})
+constexpr decltype(auto) ToStdStringA(const std::string& sValue, const StringConversionOptions& /*oConversionOptions*/ = {}) noexcept
 {
 	return sValue;
 }
@@ -74,7 +80,7 @@ inline auto ToStdStringW(const std::string& sValue, const StringConversionOption
 	return ToStdStringW(svValue, oConversionOptions);
 }
 
-constexpr decltype(auto) ToStdStringW(const std::wstring& sValue, const StringConversionOptions& /*oConversionOptions*/ = {})
+constexpr decltype(auto) ToStdStringW(const std::wstring& sValue, const StringConversionOptions& /*oConversionOptions*/ = {}) noexcept
 {
 	return sValue;
 }
@@ -278,7 +284,7 @@ inline decltype(auto) ToCStringW(std::wstring_view svValue, const StringConversi
 
 // CString[A/W] <- CString[A/W]
 
-constexpr decltype(auto) ToCStringA(const CStringA& sValue, const StringConversionOptions& /*oConversionOptions*/ = {})
+constexpr decltype(auto) ToCStringA(const CStringA& sValue, const StringConversionOptions& /*oConversionOptions*/ = {}) noexcept
 {
 	return sValue;
 }
@@ -295,7 +301,7 @@ inline decltype(auto) ToCStringW(const CStringA& sValue, const StringConversionO
 	return ToCStringW(svValue, oConversionOptions);
 }
 
-constexpr decltype(auto) ToCStringW(const CStringW& sValue, const StringConversionOptions& /*oConversionOptions*/ = {})
+constexpr decltype(auto) ToCStringW(const CStringW& sValue, const StringConversionOptions& /*oConversionOptions*/ = {}) noexcept
 {
 	return sValue;
 }
@@ -380,7 +386,7 @@ inline decltype(auto) ToCString( const TString& tString, Arg&&... args )
 
 namespace detail {
 
-constexpr decltype(auto) To_bstr_t_choice(const _bstr_t& bsString, const StringConversionOptions & /*oConversionOptions*/, vlr::util::choice<0>&&)
+constexpr decltype(auto) To_bstr_t_choice(const _bstr_t& bsString, const StringConversionOptions & /*oConversionOptions*/, vlr::util::choice<0>&&) noexcept
 {
 	return bsString;
 }

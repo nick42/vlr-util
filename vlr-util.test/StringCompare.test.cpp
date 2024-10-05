@@ -31,6 +31,22 @@ static constexpr auto svwzLonger = vlr::wzstring_view{ L"values" };
 static constexpr auto svazDifferent = vlr::zstring_view{ "other" };
 static constexpr auto svwzDifferent = vlr::wzstring_view{ L"other" };
 
+#if VLR_CONFIG_INCLUDE_WIN32_bstr_t
+
+static const auto bsEmpty = _bstr_t{};
+static const auto bsBlank = _bstr_t{ L"" };
+static const auto bsNotBlank = _bstr_t{ L"value" };
+
+#endif
+
+#if VLR_CONFIG_INCLUDE_ATL_CComBSTR
+
+static const auto bs2Empty = ATL::CComBSTR{};
+static const auto bs2Blank = ATL::CComBSTR{ L"" };
+static const auto bs2NotBlank = ATL::CComBSTR{ L"value" };
+
+#endif
+
 #define AVALUE_LOWER "value"
 #define AVALUE_UPPER "VALUE"
 #define AVALUE_MIXED "VaLuE"
@@ -70,15 +86,15 @@ static constexpr auto oStringCompareCI = vlr::StringCompare::CI();
 
 TEST(StringCompare, asAStringViewCompatType)
 {
-	static_assert(vlr::StringCompare::detail::isCompatTypeForAString<const char*>());
-	static_assert(vlr::StringCompare::detail::isCompatTypeForAString<std::string_view>());
-	static_assert(vlr::StringCompare::detail::isCompatTypeForAString<std::string>());
-	static_assert(vlr::StringCompare::detail::isCompatTypeForAString<vlr::zstring_view>());
+	static_assert(vlr::StringCompare::detail::isCompatTypeFor_astring_view<const char*>());
+	static_assert(vlr::StringCompare::detail::isCompatTypeFor_astring_view<std::string_view>());
+	static_assert(vlr::StringCompare::detail::isCompatTypeFor_astring_view<std::string>());
+	static_assert(vlr::StringCompare::detail::isCompatTypeFor_astring_view<vlr::zstring_view>());
 
-	static_assert(vlr::StringCompare::detail::isCompatTypeForWString<const wchar_t*>());
-	static_assert(vlr::StringCompare::detail::isCompatTypeForWString<std::wstring_view>());
-	static_assert(vlr::StringCompare::detail::isCompatTypeForWString<std::wstring>());
-	static_assert(vlr::StringCompare::detail::isCompatTypeForWString<vlr::wzstring_view>());
+	static_assert(vlr::StringCompare::detail::isCompatTypeFor_wstring_view<const wchar_t*>());
+	static_assert(vlr::StringCompare::detail::isCompatTypeFor_wstring_view<std::wstring_view>());
+	static_assert(vlr::StringCompare::detail::isCompatTypeFor_wstring_view<std::wstring>());
+	static_assert(vlr::StringCompare::detail::isCompatTypeFor_wstring_view<vlr::wzstring_view>());
 
 	auto fTestForStringViewCompat = [](const auto& tValue, bool bIsBlank)
 	{
@@ -113,6 +129,18 @@ TEST(StringCompare, asAStringViewCompatType)
 	fTestForWStringViewCompat(svwzEmpty, true);
 	fTestForWStringViewCompat(svwzBlank, true);
 	fTestForWStringViewCompat(svwzNotBlank, false);
+
+#if VLR_CONFIG_INCLUDE_WIN32_bstr_t
+	fTestForWStringViewCompat(bsEmpty, true);
+	fTestForWStringViewCompat(bsBlank, true);
+	fTestForWStringViewCompat(bsNotBlank, false);
+#endif
+
+#if VLR_CONFIG_INCLUDE_ATL_CComBSTR
+	fTestForWStringViewCompat(bs2Empty, true);
+	fTestForWStringViewCompat(bs2Blank, true);
+	fTestForWStringViewCompat(bs2NotBlank, false);
+#endif
 }
 
 TEST(StringCompare, IsBlank)
@@ -139,6 +167,18 @@ TEST(StringCompare, IsBlank)
 		EXPECT_EQ(oStringCompare.IsBlank(svwzEmpty), true);
 		EXPECT_EQ(oStringCompare.IsBlank(svwzBlank), true);
 		EXPECT_EQ(oStringCompare.IsBlank(svwzNotBlank), false);
+
+#if VLR_CONFIG_INCLUDE_WIN32_bstr_t
+		EXPECT_EQ(oStringCompare.IsBlank(bsEmpty), true);
+		EXPECT_EQ(oStringCompare.IsBlank(bsBlank), true);
+		EXPECT_EQ(oStringCompare.IsBlank(bsNotBlank), false);
+#endif
+
+#if VLR_CONFIG_INCLUDE_ATL_CComBSTR
+		EXPECT_EQ(oStringCompare.IsBlank(bs2Empty), true);
+		EXPECT_EQ(oStringCompare.IsBlank(bs2Blank), true);
+		EXPECT_EQ(oStringCompare.IsBlank(bs2NotBlank), false);
+#endif
 	};
 
 	fTestForStringCompare(oStringCompareCS);
@@ -200,6 +240,18 @@ TEST(StringCompare, AreEqual)
 			fTestAreEqual(oStringCompare, tValue, svwzEmpty, true);
 			fTestAreEqual(oStringCompare, tValue, svwzBlank, true);
 			fTestAreEqual(oStringCompare, tValue, svwzNotBlank, false);
+
+#if VLR_CONFIG_INCLUDE_WIN32_bstr_t
+			fTestAreEqual(oStringCompare, tValue, bsEmpty, true);
+			fTestAreEqual(oStringCompare, tValue, bsBlank, true);
+			fTestAreEqual(oStringCompare, tValue, bsNotBlank, false);
+#endif
+
+#if VLR_CONFIG_INCLUDE_ATL_CComBSTR
+			fTestAreEqual(oStringCompare, tValue, bs2Empty, true);
+			fTestAreEqual(oStringCompare, tValue, bs2Blank, true);
+			fTestAreEqual(oStringCompare, tValue, bs2NotBlank, false);
+#endif
 		};
 		fTestAreEqual_w_Blank(pcwszNULL);
 		fTestAreEqual_w_Blank(pcwszBlank);
@@ -219,6 +271,18 @@ TEST(StringCompare, AreEqual)
 			fTestAreEqual(oStringCompare, tValue, svwzEmpty, false);
 			fTestAreEqual(oStringCompare, tValue, svwzBlank, false);
 			fTestAreEqual(oStringCompare, tValue, svwzNotBlank, true);
+
+#if VLR_CONFIG_INCLUDE_WIN32_bstr_t
+			fTestAreEqual(oStringCompare, tValue, bsEmpty, false);
+			fTestAreEqual(oStringCompare, tValue, bsBlank, false);
+			fTestAreEqual(oStringCompare, tValue, bsNotBlank, true);
+#endif
+
+#if VLR_CONFIG_INCLUDE_ATL_CComBSTR
+			fTestAreEqual(oStringCompare, tValue, bs2Empty, false);
+			fTestAreEqual(oStringCompare, tValue, bs2Blank, false);
+			fTestAreEqual(oStringCompare, tValue, bs2NotBlank, true);
+#endif
 		};
 		fTestAreEqual_w_NotBlank(pcwszNotBlank);
 		fTestAreEqual_w_NotBlank(swNotBlank);
@@ -522,6 +586,66 @@ TEST(StringCompare, Compare)
 	EXPECT_EQ(oStringCompareCI.Compare("Hello", "hello"), 0);
 
 	// TODO: Much more...
+}
+
+TEST(StringCompare, Compare_AllTypeCombinations)
+{
+#define GEN_COMPARE_TO_LAMBDA(targetStringVar) \
+	auto fTestCompareTo_##targetStringVar = [](const vlr::StringCompare::CComparator& oStringCompare, const auto& tString) \
+	{ \
+		if constexpr (!std::is_same_v<decltype(tString), decltype(targetStringVar)>) \
+		{ \
+			EXPECT_TRUE(oStringCompare.AreEqual(tString, targetStringVar)); \
+		} \
+	}
+	GEN_COMPARE_TO_LAMBDA(pcaszNotBlank);
+	GEN_COMPARE_TO_LAMBDA(pcwszNotBlank);
+	GEN_COMPARE_TO_LAMBDA(saNotBlank);
+	GEN_COMPARE_TO_LAMBDA(swNotBlank);
+	GEN_COMPARE_TO_LAMBDA(svazNotBlank);
+	GEN_COMPARE_TO_LAMBDA(svwzNotBlank);
+#if VLR_CONFIG_INCLUDE_WIN32_bstr_t
+	GEN_COMPARE_TO_LAMBDA(bsNotBlank);
+#endif
+#if VLR_CONFIG_INCLUDE_ATL_CComBSTR
+	GEN_COMPARE_TO_LAMBDA(bs2NotBlank);
+#endif
+#undef GEN_COMPARE_TO_LAMBDA
+
+	auto fTestCompareTo_AllTypes = [&](const vlr::StringCompare::CComparator& oStringCompare, const auto& tString)
+	{
+		fTestCompareTo_pcaszNotBlank(oStringCompare, tString);
+		fTestCompareTo_pcwszNotBlank(oStringCompare, tString);
+		fTestCompareTo_saNotBlank(oStringCompare, tString);
+		fTestCompareTo_swNotBlank(oStringCompare, tString);
+		fTestCompareTo_svazNotBlank(oStringCompare, tString);
+		fTestCompareTo_svwzNotBlank(oStringCompare, tString);
+#if VLR_CONFIG_INCLUDE_WIN32_bstr_t
+		fTestCompareTo_bsNotBlank(oStringCompare, tString);
+#endif
+#if VLR_CONFIG_INCLUDE_ATL_CComBSTR
+		fTestCompareTo_bs2NotBlank(oStringCompare, tString);
+#endif
+	};
+
+	auto fTestCompareWith_AllTypes = [&](const vlr::StringCompare::CComparator& oStringCompare)
+	{
+		fTestCompareTo_AllTypes(oStringCompare, pcaszNotBlank);
+		fTestCompareTo_AllTypes(oStringCompare, pcwszNotBlank);
+		fTestCompareTo_AllTypes(oStringCompare, saNotBlank);
+		fTestCompareTo_AllTypes(oStringCompare, swNotBlank);
+		fTestCompareTo_AllTypes(oStringCompare, svazNotBlank);
+		fTestCompareTo_AllTypes(oStringCompare, svwzNotBlank);
+#if VLR_CONFIG_INCLUDE_WIN32_bstr_t
+		fTestCompareTo_AllTypes(oStringCompare, bsNotBlank);
+#endif
+#if VLR_CONFIG_INCLUDE_ATL_CComBSTR
+		fTestCompareTo_AllTypes(oStringCompare, bs2NotBlank);
+#endif
+	};
+
+	fTestCompareWith_AllTypes(oStringCompareCS);
+	fTestCompareWith_AllTypes(oStringCompareCI);
 }
 
 TEST(StringCompare, StringHasPrefix)

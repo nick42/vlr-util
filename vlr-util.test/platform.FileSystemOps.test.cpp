@@ -109,7 +109,7 @@ TEST_F(TestFileSystemOps, DeleteFile)
 	EXPECT_STRNE(sPath_TempFile.c_str(), _T(""));
 
 	EXPECT_NO_THROW(
-		std::ofstream streamTempFile{ m_sPath_ValidTempFile };
+		std::ofstream streamTempFile{ sPath_TempFile };
 	);
 
 	sr = m_oFileSystmOps.CheckFileExists(sPath_TempFile);
@@ -127,25 +127,27 @@ TEST_F(TestFileSystemOps, CheckFileExists)
 	SResult sr;
 
 	sr = m_oFileSystmOps.CheckFileExists(m_sPath_TempDir);
-	EXPECT_EQ(sr, S_FALSE);
+	EXPECT_EQ(sr, E_FAIL);
 
 	sr = m_oFileSystmOps.CheckFileExists(m_sPath_ValidTempFile);
 	EXPECT_EQ(sr, S_OK);
 
 	sr = m_oFileSystmOps.CheckFileExists(m_sPath_InvalidTempFile);
-	EXPECT_EQ(sr, S_OK);
+	// Note: On missing, we cannot check type, so we just return S_FALSE
+	EXPECT_EQ(sr, S_FALSE);
 }
 
 TEST_F(TestFileSystemOps, CheckDirectoryExists)
 {
 	SResult sr;
 
-	sr = m_oFileSystmOps.CheckFileExists(m_sPath_TempDir);
+	sr = m_oFileSystmOps.CheckDirectoryExists(m_sPath_TempDir);
 	EXPECT_EQ(sr, S_OK);
 
-	sr = m_oFileSystmOps.CheckFileExists(m_sPath_ValidTempFile);
-	EXPECT_EQ(sr, S_FALSE);
+	sr = m_oFileSystmOps.CheckDirectoryExists(m_sPath_ValidTempFile);
+	EXPECT_EQ(sr, E_FAIL);
 
-	sr = m_oFileSystmOps.CheckFileExists(m_sPath_InvalidTempFile);
+	sr = m_oFileSystmOps.CheckDirectoryExists(m_sPath_InvalidTempFile);
+	// Note: On missing, we cannot check type, so we just return S_FALSE
 	EXPECT_EQ(sr, S_FALSE);
 }

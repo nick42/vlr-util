@@ -276,6 +276,9 @@
     <ClInclude Include="platform.FileSystemOps.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="util.CallWithAutoRetry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleContext.Runtime.CommandLine.cpp">
