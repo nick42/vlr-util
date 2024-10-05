@@ -73,21 +73,21 @@ constexpr bool isCompatTypeFor_wstring_view()
 // to be the string_view directly, just something which can be trivially converted to it.
 
 template<typename TString, typename = std::enable_if_t<std::is_null_pointer_v<TString>>>
-constexpr decltype(auto) choice_asAStringViewCompatType(const TString& tValue, vlr::util::choice<0>&&)
+constexpr auto choice_asAStringViewCompatType(const TString& tValue, vlr::util::choice<0>&&)
 {
 	return std::string_view{};
 }
 
 template<typename TString, typename = std::enable_if_t<std::is_base_of_v<std::string_view, TString>>>
-constexpr decltype(auto) choice_asAStringViewCompatType(const TString& tValue, vlr::util::choice<2>&&)
+constexpr auto choice_asAStringViewCompatType(const TString& tValue, vlr::util::choice<2>&&)
 {
 	return static_cast<std::string_view>(tValue);
 }
 
 template<typename TString, typename = std::enable_if_t<std::is_base_of_v<std::string, TString>>>
-constexpr decltype(auto) choice_asAStringViewCompatType(const TString& tValue, vlr::util::choice<3>&&)
+constexpr auto choice_asAStringViewCompatType(TString&& tValue, vlr::util::choice<3>&&)
 {
-	return tValue;
+	return std::forward(tValue);
 }
 
 #if VLR_CONFIG_INCLUDE_WIN32_bstr_t
@@ -103,14 +103,14 @@ constexpr decltype(auto) choice_asAStringViewCompatType(const TString& tValue, v
 #endif
 
 template<typename TString, typename = std::enable_if_t<std::is_convertible_v<TString, std::string>>>
-constexpr decltype(auto) choice_asAStringViewCompatType(const TString& tValue, vlr::util::choice<6>&&)
+constexpr auto choice_asAStringViewCompatType(const TString& tValue, vlr::util::choice<6>&&)
 {
 	return static_cast<std::string>(tValue);
 }
 
 // If we pass a pointer value which could be used to construct the string, and is nullptr, then return an empty default value
 //template<typename TString, typename = std::enable_if_t<std::is_pointer_v<TString> && std::is_convertible_v<TString, std::string>>>
-//constexpr decltype(auto) choice_asAStringViewCompatType(const TString& tValue, vlr::util::choice<1>&&)
+//constexpr auto choice_asAStringViewCompatType(const TString& tValue, vlr::util::choice<1>&&)
 //{
 //	using TConversionResult = decltype(detail::choice_asAStringViewCompatType(std::declval<TString>(), std::declval<vlr::util::choice<2>>()));
 //	if (tValue == nullptr)
@@ -121,27 +121,27 @@ constexpr decltype(auto) choice_asAStringViewCompatType(const TString& tValue, v
 //}
 
 template<typename TString, typename = std::enable_if_t<std::is_null_pointer_v<TString>>>
-constexpr decltype(auto) choice_asWStringViewCompatType(const TString& tValue, vlr::util::choice<0>&&)
+constexpr auto choice_asWStringViewCompatType(const TString& tValue, vlr::util::choice<0>&&)
 {
 	return std::wstring_view{};
 }
 
 template<typename TString, typename = std::enable_if_t<std::is_base_of_v<std::wstring_view, TString>>>
-constexpr decltype(auto) choice_asWStringViewCompatType(const TString& tValue, vlr::util::choice<2>&&)
+constexpr auto choice_asWStringViewCompatType(const TString& tValue, vlr::util::choice<2>&&)
 {
 	return static_cast<std::wstring_view>(tValue);
 }
 
 template<typename TString, typename = std::enable_if_t<std::is_base_of_v<std::wstring, TString>>>
-constexpr decltype(auto) choice_asWStringViewCompatType(const TString& tValue, vlr::util::choice<3>&&)
+constexpr decltype(auto) choice_asWStringViewCompatType(TString&& tValue, vlr::util::choice<3>&&)
 {
-	return tValue;
+	return std::forward(tValue);
 }
 
 #if VLR_CONFIG_INCLUDE_WIN32_bstr_t
 
 template<typename TString, typename = std::enable_if_t<std::is_base_of_v<_bstr_t, TString>>>
-constexpr decltype(auto) choice_asWStringViewCompatType(const TString& tValue, vlr::util::choice<4>&&)
+constexpr auto choice_asWStringViewCompatType(const TString& tValue, vlr::util::choice<4>&&)
 {
 	return std::wstring_view{ tValue.operator LPCWSTR(), tValue.length() };
 }
@@ -151,7 +151,7 @@ constexpr decltype(auto) choice_asWStringViewCompatType(const TString& tValue, v
 #if VLR_CONFIG_INCLUDE_ATL_CComBSTR
 
 template<typename TString, typename = std::enable_if_t<std::is_base_of_v<ATL::CComBSTR, TString>>>
-constexpr decltype(auto) choice_asWStringViewCompatType(const TString& tValue, vlr::util::choice<5>&&)
+constexpr auto choice_asWStringViewCompatType(const TString& tValue, vlr::util::choice<5>&&)
 {
 	return std::wstring_view{ tValue.m_str, tValue.Length() };
 }
@@ -159,14 +159,14 @@ constexpr decltype(auto) choice_asWStringViewCompatType(const TString& tValue, v
 #endif
 
 template<typename TString, typename = std::enable_if_t<std::is_convertible_v<TString, std::wstring>>>
-constexpr decltype(auto) choice_asWStringViewCompatType(const TString& tValue, vlr::util::choice<6>&&)
+constexpr auto choice_asWStringViewCompatType(const TString& tValue, vlr::util::choice<6>&&)
 {
 	return static_cast<std::wstring>(tValue);
 }
 
 // If we pass a pointer value which could be used to construct the string, and is nullptr, then return an empty default value
 //template<typename TString, typename = std::enable_if_t<std::is_pointer_v<TString> && std::is_convertible_v<TString, std::wstring>>>
-//constexpr decltype(auto) choice_asWStringViewCompatType(const TString& tValue, vlr::util::choice<1>&&)
+//constexpr auto choice_asWStringViewCompatType(const TString& tValue, vlr::util::choice<1>&&)
 //{
 //	using TConversionResult = decltype(detail::choice_asWStringViewCompatType(std::declval<TString>(), std::declval<vlr::util::choice<2>>()));
 //	if (tValue == nullptr)
@@ -179,13 +179,13 @@ constexpr decltype(auto) choice_asWStringViewCompatType(const TString& tValue, v
 } // namespace detail
 
 template<typename TValue>
-constexpr decltype(auto) asAStringViewCompatType(const TValue& tValue)
+constexpr auto asAStringViewCompatType(const TValue& tValue)
 {
 	return detail::choice_asAStringViewCompatType(tValue, vlr::util::choice<0>{});
 }
 
 template<typename TValue>
-constexpr decltype(auto) asWStringViewCompatType(const TValue& tValue)
+constexpr auto asWStringViewCompatType(const TValue& tValue)
 {
 	return detail::choice_asWStringViewCompatType(tValue, vlr::util::choice<0>{});
 }
@@ -229,7 +229,7 @@ struct CompareSettings
 {
 	CaseSensitivity::ECaseSensitivity m_eCaseSensitivity = CaseSensitivity::CaseSensitive;
 
-	decltype(auto) withCaseSensitivity(CaseSensitivity::ECaseSensitivity eCaseSensitivity)
+	inline decltype(auto) withCaseSensitivity(CaseSensitivity::ECaseSensitivity eCaseSensitivity)
 	{
 		m_eCaseSensitivity = eCaseSensitivity;
 		return *this;
@@ -349,7 +349,7 @@ std::wstring GetAsWString(const TString& tValue)
 }
 
 template<typename TStringView>
-decltype(auto) StringViewCompareCS_ToShorterLength(TStringView svlhs, TStringView svrhs)
+auto StringViewCompareCS_ToShorterLength(TStringView svlhs, TStringView svrhs)
 {
 	auto nSmallerLength = std::min(svlhs.size(), svrhs.size());
 	if constexpr (std::is_same_v<TStringView, std::string_view>)
@@ -367,7 +367,7 @@ decltype(auto) StringViewCompareCS_ToShorterLength(TStringView svlhs, TStringVie
 }
 
 template<typename TStringView>
-decltype(auto) StringViewCompareCS(TStringView svlhs, TStringView svrhs)
+auto StringViewCompareCS(TStringView svlhs, TStringView svrhs)
 {
 	auto nSmallerLength = std::min(svlhs.size(), svrhs.size());
 	auto nResultToSmallerLength = StringViewCompareCS_ToShorterLength(svlhs, svrhs);
@@ -394,7 +394,7 @@ decltype(auto) StringViewCompareCS(TStringView svlhs, TStringView svrhs)
 // See: https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/strnicmp-wcsnicmp-mbsnicmp-strnicmp-l-wcsnicmp-l-mbsnicmp-l?view=msvc-170
 
 template<typename TStringView>
-decltype(auto) StringViewCompareCI_ToShorterLength_Compat(TStringView svlhs, TStringView svrhs)
+auto StringViewCompareCI_ToShorterLength_Compat(TStringView svlhs, TStringView svrhs)
 {
 	auto nSmallerLength = std::min(svlhs.size(), svrhs.size());
 	for (decltype(nSmallerLength) i = 0; i < nSmallerLength; ++i)
@@ -415,7 +415,7 @@ decltype(auto) StringViewCompareCI_ToShorterLength_Compat(TStringView svlhs, TSt
 }
 
 template<typename TStringView>
-decltype(auto) StringViewCompareCI_ToShorterLength(TStringView svlhs, TStringView svrhs)
+auto StringViewCompareCI_ToShorterLength(TStringView svlhs, TStringView svrhs)
 {
 	if constexpr (ModuleContext::Compilation::IsBuildPlatform_Win32())
 	{
@@ -440,7 +440,7 @@ decltype(auto) StringViewCompareCI_ToShorterLength(TStringView svlhs, TStringVie
 }
 
 template<typename TStringView>
-decltype(auto) StringViewCompareCI(TStringView svlhs, TStringView svrhs)
+auto StringViewCompareCI(TStringView svlhs, TStringView svrhs)
 {
 	auto nSmallerLength = std::min(svlhs.size(), svrhs.size());
 	auto nResultToSmallerLength = StringViewCompareCI_ToShorterLength(svlhs, svrhs);
@@ -463,7 +463,7 @@ decltype(auto) StringViewCompareCI(TStringView svlhs, TStringView svrhs)
 }
 
 template<typename TStringView>
-constexpr decltype(auto) AreEqualStringViews(const CompareSettings& oCompareSettings, const TStringView& svlhs, const TStringView& svrhs)
+constexpr auto AreEqualStringViews(const CompareSettings& oCompareSettings, const TStringView& svlhs, const TStringView& svrhs)
 {
 	// Short-circuit for same buffer
 	if (svlhs.data() == svrhs.data())
@@ -498,7 +498,7 @@ constexpr decltype(auto) AreEqualStringViews(const CompareSettings& oCompareSett
 }
 
 template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(isCompatTypeFor_astring_view<Tlhs>() && isCompatTypeFor_astring_view<Trhs>())>>
-constexpr decltype(auto) AreEqualAsAStringCompat(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
+constexpr auto AreEqualAsAStringCompat(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
 {
 	const auto& slhs = asAStringViewCompatType(tlhs);
 	const auto svlhs = static_cast<const string_view_compat_t<Tlhs>>(slhs);
@@ -509,7 +509,7 @@ constexpr decltype(auto) AreEqualAsAStringCompat(const CompareSettings& oCompare
 }
 
 template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(isCompatTypeFor_wstring_view<Tlhs>() && isCompatTypeFor_wstring_view<Trhs>())>>
-constexpr decltype(auto) AreEqualAsWStringCompat(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
+constexpr auto AreEqualAsWStringCompat(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
 {
 	const auto& slhs = asWStringViewCompatType(tlhs);
 	const auto svlhs = static_cast<const string_view_compat_t<Tlhs>>(slhs);
@@ -520,7 +520,7 @@ constexpr decltype(auto) AreEqualAsWStringCompat(const CompareSettings& oCompare
 }
 
 template<typename Tlhs, typename Trhs>
-inline decltype(auto) AreEqualDifferentCharSize(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
+inline auto AreEqualDifferentCharSize(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
 {
 	// Going to widen for comparison
 	std::wstring swConvertedWString_lhs;
@@ -565,7 +565,7 @@ inline decltype(auto) AreEqualDifferentCharSize(const CompareSettings& oCompareS
 }
 
 template<typename TStringView>
-constexpr decltype(auto) CompareStringViews(const CompareSettings& oCompareSettings, const TStringView& svlhs, const TStringView& svrhs)
+constexpr auto CompareStringViews(const CompareSettings& oCompareSettings, const TStringView& svlhs, const TStringView& svrhs)
 {
 	// Short-circuit for same buffer
 	if (svlhs.data() == svrhs.data())
@@ -602,7 +602,7 @@ constexpr decltype(auto) CompareStringViews(const CompareSettings& oCompareSetti
 }
 
 template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(isCompatTypeFor_astring_view<Tlhs>() && isCompatTypeFor_astring_view<Trhs>())>>
-constexpr decltype(auto) CompareAsAStringCompat(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
+constexpr auto CompareAsAStringCompat(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
 {
 	const auto& slhs = asAStringViewCompatType(tlhs);
 	const auto svlhs = static_cast<const string_view_compat_t<Tlhs>>(slhs);
@@ -613,7 +613,7 @@ constexpr decltype(auto) CompareAsAStringCompat(const CompareSettings& oCompareS
 }
 
 template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(isCompatTypeFor_wstring_view<Tlhs>() && isCompatTypeFor_wstring_view<Trhs>())>>
-constexpr decltype(auto) CompareAsWStringCompat(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
+constexpr auto CompareAsWStringCompat(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
 {
 	const auto& slhs = asWStringViewCompatType(tlhs);
 	const auto svlhs = static_cast<const string_view_compat_t<Tlhs>>(slhs);
@@ -624,7 +624,7 @@ constexpr decltype(auto) CompareAsWStringCompat(const CompareSettings& oCompareS
 }
 
 template<typename Tlhs, typename Trhs>
-inline decltype(auto) CompareDifferentCharSize(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
+inline auto CompareDifferentCharSize(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
 {
 	// Going to widen for comparison
 	std::wstring swConvertedWString_lhs;
@@ -669,7 +669,7 @@ inline decltype(auto) CompareDifferentCharSize(const CompareSettings& oCompareSe
 // do this in the future as desired.
 
 //template<typename Tlhs, typename Trhs>
-//constexpr decltype(auto) AreEqualDifferentCharSize(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
+//constexpr auto AreEqualDifferentCharSize(const CompareSettings& oCompareSettings, const Tlhs& tlhs, const Trhs& trhs)
 //{
 //	size_t nCurrentIndex_lhs = 0;
 //	size_t nCurrentIndex_rhs = 0;
@@ -702,57 +702,57 @@ protected:
 	}
 
 	template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(detail::isCompatTypeFor_astring_view<Tlhs>() && detail::isCompatTypeFor_astring_view<Trhs>())>>
-	constexpr decltype(auto) choice_AreEqual(const Tlhs& tlhs, const Trhs& trhs, vlr::util::choice<0>&&) const
+	constexpr auto choice_AreEqual(const Tlhs& tlhs, const Trhs& trhs, vlr::util::choice<0>&&) const
 	{
 		return detail::AreEqualAsAStringCompat(m_oCompareSettings, tlhs, trhs);
 	}
 	template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(detail::isCompatTypeFor_wstring_view<Tlhs>() && detail::isCompatTypeFor_wstring_view<Trhs>())>>
-	constexpr decltype(auto) choice_AreEqual(const Tlhs& tlhs, const Trhs& trhs, vlr::util::choice<1>&&) const
+	constexpr auto choice_AreEqual(const Tlhs& tlhs, const Trhs& trhs, vlr::util::choice<1>&&) const
 	{
 		return detail::AreEqualAsWStringCompat(m_oCompareSettings, tlhs, trhs);
 	}
 	// No direct compare possible as this point; some conversion will be necessary
 	template<typename Tlhs, typename Trhs>
-	constexpr decltype(auto) choice_AreEqual(const Tlhs& tlhs, const Trhs& trhs, vlr::util::choice<2>&&) const
+	constexpr auto choice_AreEqual(const Tlhs& tlhs, const Trhs& trhs, vlr::util::choice<2>&&) const
 	{
 		return detail::AreEqualDifferentCharSize(m_oCompareSettings, tlhs, trhs);
 	}
 
 	template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(detail::isCompatTypeFor_astring_view<Tlhs>() && detail::isCompatTypeFor_astring_view<Trhs>())>>
-	constexpr decltype(auto) choice_Compare(const Tlhs& tlhs, const Trhs& trhs, vlr::util::choice<0>&&) const
+	constexpr auto choice_Compare(const Tlhs& tlhs, const Trhs& trhs, vlr::util::choice<0>&&) const
 	{
 		return detail::CompareAsAStringCompat(m_oCompareSettings, tlhs, trhs);
 	}
 	template<typename Tlhs, typename Trhs, typename = std::enable_if_t<(detail::isCompatTypeFor_wstring_view<Tlhs>() && detail::isCompatTypeFor_wstring_view<Trhs>())>>
-	constexpr decltype(auto) choice_Compare(const Tlhs& tlhs, const Trhs& trhs, vlr::util::choice<1>&&) const
+	constexpr auto choice_Compare(const Tlhs& tlhs, const Trhs& trhs, vlr::util::choice<1>&&) const
 	{
 		return detail::CompareAsWStringCompat(m_oCompareSettings, tlhs, trhs);
 	}
 	// No direct compare possible as this point; some conversion will be necessary
 	template<typename Tlhs, typename Trhs>
-	constexpr decltype(auto) choice_Compare(const Tlhs& tlhs, const Trhs& trhs, vlr::util::choice<2>&&) const
+	constexpr auto choice_Compare(const Tlhs& tlhs, const Trhs& trhs, vlr::util::choice<2>&&) const
 	{
 		return detail::CompareDifferentCharSize(m_oCompareSettings, tlhs, trhs);
 	}
 
 public:
 	template<typename TString>
-	constexpr decltype(auto) IsBlank(const TString& tValue) const
+	constexpr auto IsBlank(const TString& tValue) const
 	{
 		return choice_IsBlank(tValue, vlr::util::choice<0>{});
 	}
 	template<typename Tlhs, typename Trhs>
-	constexpr decltype(auto) AreEqual(const Tlhs& tlhs, const Trhs& trhs) const
+	constexpr auto AreEqual(const Tlhs& tlhs, const Trhs& trhs) const
 	{
 		return choice_AreEqual(tlhs, trhs, vlr::util::choice<0>{});
 	}
 	template<typename Tlhs, typename Trhs>
-	constexpr decltype(auto) Compare(const Tlhs& tlhs, const Trhs& trhs) const
+	constexpr auto Compare(const Tlhs& tlhs, const Trhs& trhs) const
 	{
 		return choice_Compare(tlhs, trhs, vlr::util::choice<0>{});
 	}
 	template<typename TString, typename TPrefix>
-	constexpr decltype(auto) StringHasPrefix(const TString& tString, const TPrefix& tPrefix) const
+	constexpr auto StringHasPrefix(const TString& tString, const TPrefix& tPrefix) const
 	{
 		const auto& tString_ViewCompat = asStringViewCompatType(tString);
 		const auto& svzString = static_cast<string_view_compat_t<TString>>(tString_ViewCompat);
@@ -768,7 +768,7 @@ public:
 		return AreEqual(svzPrefixOfString, svzPrefix);
 	}
 	template<typename TString, typename TPostfix>
-	constexpr decltype(auto) StringHasPostfix(const TString& tString, const TPostfix& tPostfix) const
+	constexpr auto StringHasPostfix(const TString& tString, const TPostfix& tPostfix) const
 	{
 		const auto& tString_ViewCompat = asStringViewCompatType(tString);
 		const auto& svzString = static_cast<string_view_compat_t<TString>>(tString_ViewCompat);
@@ -785,7 +785,7 @@ public:
 		return AreEqual(svzPostfixOfString, svzPostfix);
 	}
 	template<typename TString, typename TSubstring>
-	constexpr decltype(auto) StringFindIndexOfSubstring(const TString& tString, const TSubstring& tSubstring) const
+	constexpr auto StringFindIndexOfSubstring(const TString& tString, const TSubstring& tSubstring) const
 	{
 		const auto& tString_ViewCompat = asStringViewCompatType(tString);
 		const auto& svzString = static_cast<string_view_compat_t<TString>>(tString_ViewCompat);
@@ -812,7 +812,7 @@ public:
 		return TResult{ svzString.npos };
 	}
 	template<typename TString, typename TSubstring>
-	constexpr decltype(auto) StringHasSubstring(const TString& tString, const TSubstring& tSubstring) const
+	constexpr auto StringHasSubstring(const TString& tString, const TSubstring& tSubstring) const
 	{
 		return StringFindIndexOfSubstring(tString, tSubstring) != std::string_view::npos;
 	}
@@ -824,7 +824,7 @@ public:
 	{}
 };
 
-constexpr decltype(auto) CS()
+constexpr auto CS()
 {
 	//static const auto oComparator = []
 	//{
@@ -835,7 +835,7 @@ constexpr decltype(auto) CS()
 	return CComparator{ CompareSettings::ForCaseSensitive() };
 }
 
-constexpr decltype(auto) CI()
+constexpr auto CI()
 {
 	//static const auto oComparator = []
 	//{

@@ -25,7 +25,7 @@ struct HelperFor_MultiSZ
 	HRESULT ToStructuredData(
 		const TChar* pMultiSZ,
 		std::vector<std_string>& oValueList );
-	inline decltype(auto) ToStructuredData(
+	inline auto ToStructuredData(
 		const TChar* pMultiSZ )
 	{
 		std::vector<std_string> oValueList;
@@ -42,7 +42,7 @@ struct HelperFor_MultiSZ
 };
 
 template< typename TChar >
-inline decltype(auto) MultiSZToStructuredData( const TChar* pMultiSZ )
+inline auto MultiSZToStructuredData( const TChar* pMultiSZ )
 {
 	return HelperFor_MultiSZ<TChar>{}.ToStructuredData( pMultiSZ );
 }

@@ -32,7 +32,7 @@ public:
 	std::function<_Fty> m_fFunction;
 
 public:
-	decltype(auto) GetFunction() const
+	auto& GetFunction() const
 	{
 		return m_fFunction;
 	}

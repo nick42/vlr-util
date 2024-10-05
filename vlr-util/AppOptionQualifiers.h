@@ -50,11 +50,11 @@ public:
 		return *this;
 	}
 
-	inline decltype(auto) GetFlags_Standard() const
+	inline auto& GetFlags_Standard() const
 	{
 		return m_nFlags_Standard;
 	}
-	inline decltype(auto) GetFlags_AppSpecific() const
+	inline auto& GetFlags_AppSpecific() const
 	{
 		return m_nFlags_AppSpecific;
 	}

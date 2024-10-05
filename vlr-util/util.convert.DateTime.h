@@ -81,12 +81,12 @@ inline auto ToStdStringW( const vlr::types::DateTime& dtValue, const FormatOptio
 
 } // namespace detail
 
-inline auto ToDateTime_FILETIME( const FILETIME& oValue )
+inline auto ToDateTime_FILETIME(const FILETIME& oValue)
 -> vlr::types::DateTime
 {
 	if constexpr (ModuleContext::Compilation::IsPlatform_Windows())
 	{
-		return detail::Windows::ToDateTime_FILETIME( oValue );
+		return detail::Windows::ToDateTime_FILETIME(oValue);
 	}
 	else
 	{
@@ -94,11 +94,11 @@ inline auto ToDateTime_FILETIME( const FILETIME& oValue )
 	}
 }
 
-inline decltype(auto) ToStdStringA( const vlr::types::DateTime& dtValue, const FormatOptions_DateTime& oFormatOptions )
+inline decltype(auto) ToStdStringA(const vlr::types::DateTime& dtValue, const FormatOptions_DateTime& oFormatOptions)
 {
 	if constexpr (ModuleContext::Compilation::IsPlatform_Windows())
 	{
-		return detail::Windows::ToStdStringA( dtValue, oFormatOptions );
+		return detail::Windows::ToStdStringA(dtValue, oFormatOptions);
 	}
 	else
 	{
@@ -106,11 +106,11 @@ inline decltype(auto) ToStdStringA( const vlr::types::DateTime& dtValue, const F
 	}
 }
 
-inline decltype(auto) ToStdStringW( const vlr::types::DateTime& dtValue, const FormatOptions_DateTime& oFormatOptions )
+inline decltype(auto) ToStdStringW(const vlr::types::DateTime& dtValue, const FormatOptions_DateTime& oFormatOptions)
 {
 	if constexpr (ModuleContext::Compilation::IsPlatform_Windows())
 	{
-		return detail::Windows::ToStdStringW( dtValue, oFormatOptions );
+		return detail::Windows::ToStdStringW(dtValue, oFormatOptions);
 	}
 	else
 	{
@@ -119,15 +119,15 @@ inline decltype(auto) ToStdStringW( const vlr::types::DateTime& dtValue, const F
 }
 
 template<>
-inline decltype(auto) ToStdStringA( const vlr::types::DateTime& dtValue )
+inline decltype(auto) ToStdStringA(const vlr::types::DateTime& dtValue)
 {
-	return ToStdStringA( dtValue, FormatOptions_DateTime{} );
+	return ToStdStringA(dtValue, FormatOptions_DateTime{});
 }
 
 template<>
-inline decltype(auto) ToStdStringW( const vlr::types::DateTime& dtValue )
+inline decltype(auto) ToStdStringW(const vlr::types::DateTime& dtValue)
 {
-	return ToStdStringW( dtValue, FormatOptions_DateTime{} );
+	return ToStdStringW(dtValue, FormatOptions_DateTime{});
 }
 
 } // namespace Convert

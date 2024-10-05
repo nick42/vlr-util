@@ -21,12 +21,12 @@ protected:
 	std::optional<size_t> m_onFixedPoolSize;
 
 public:
-	decltype(auto) With_DefaultPoolSize()
+	decltype(auto) withDefaultPoolSize()
 	{
 		m_onFixedPoolSize = {};
 		return *this;
 	}
-	decltype(auto) With_FixedPoolSize( size_t nSize )
+	decltype(auto) withFixedPoolSize( size_t nSize )
 	{
 		m_onFixedPoolSize = nSize;
 		return *this;
@@ -37,14 +37,14 @@ protected:
 
 public:
 	template< typename F >
-	HRESULT AddTaskToPool_ResultIgnored( F&& fTask );
+	HRESULT AddTaskToPool_ResultIgnored(F&& fTask);
 	template< typename F >
-	HRESULT AddTaskToPool_ResultAsFuture( F&& fTask, std::future<decltype(fTask())>& oFuture );
+	HRESULT AddTaskToPool_ResultAsFuture(F&& fTask, std::future<decltype(fTask())>& oFuture);
 	template< typename F >
-	auto AddTaskToPool_ResultAsFuture_Inline( F&& fTask )
+	auto AddTaskToPool_ResultAsFuture_Inline(F&& fTask)
 	{
 		std::future<decltype(fTask())> oFuture;
-		AddTaskToPool_ResultAsFuture( std::forward<F>( fTask ), oFuture );
+		AddTaskToPool_ResultAsFuture(std::forward<F>(fTask), oFuture);
 		return oFuture;
 	}
 
@@ -67,33 +67,33 @@ public:
 namespace vlr {
 
 template< typename F >
-HRESULT CThreadPool::AddTaskToPool_ResultIgnored( F&& fTask )
+HRESULT CThreadPool::AddTaskToPool_ResultIgnored(F&& fTask)
 {
 	HRESULT hr;
 
 	hr = EnsurePoolInitialized();
-	VLR_ASSERT_HR_SUCCEEDED_OR_RETURN_HRESULT( hr );
+	VLR_ASSERT_HR_SUCCEEDED_OR_RETURN_HRESULT(hr);
 
-	boost::asio::post( *m_spThreadPool, std::forward<F>( fTask ) );
+	boost::asio::post(*m_spThreadPool, std::forward<F>(fTask));
 
 	return S_OK;
 }
 
 template< typename F >
-HRESULT CThreadPool::AddTaskToPool_ResultAsFuture( F&& fTask, std::future<decltype(fTask())>& oFuture )
+HRESULT CThreadPool::AddTaskToPool_ResultAsFuture(F&& fTask, std::future<decltype(fTask())>& oFuture)
 {
 	HRESULT hr;
 
 	hr = EnsurePoolInitialized();
-	VLR_ASSERT_HR_SUCCEEDED_OR_RETURN_HRESULT( hr );
+	VLR_ASSERT_HR_SUCCEEDED_OR_RETURN_HRESULT(hr);
 
 	std::promise<decltype(fTask())> oTaskExecResult;
 	oFuture = oTaskExecResult.get_future();
-	auto fExecTaskAndPopulatePromise = [oTaskExecResult = std::move( oTaskExecResult ), fTask = std::forward<F>( fTask )]() mutable
+	auto fExecTaskAndPopulatePromise = [oTaskExecResult = std::move(oTaskExecResult), fTask = std::forward<F>(fTask)]() mutable
 	{
-		oTaskExecResult.set_value( fTask() );
+		oTaskExecResult.set_value(fTask());
 	};
-	boost::asio::post( *m_spThreadPool, std::move( fExecTaskAndPopulatePromise ) );
+	boost::asio::post(*m_spThreadPool, std::move(fExecTaskAndPopulatePromise));
 
 	return S_OK;
 }

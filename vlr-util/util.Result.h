@@ -24,16 +24,16 @@ protected:
 	ResultCode m_nResultCode = Uninitialized;
 
 public:
-	decltype(auto) withHRESULT(HRESULT hrResult)
+	inline decltype(auto) withHRESULT(HRESULT hrResult)
 	{
 		m_nResultCode = hrResult;
 		return *this;
 	}
-	decltype(auto) asHRESULT() const
+	inline decltype(auto) asHRESULT() const
 	{
-		return m_nResultCode;
+		return (m_nResultCode);
 	}
-	decltype(auto) asWin32Code() const
+	inline decltype(auto) asWin32Code() const
 	{
 		return (m_nResultCode & 0xFFFF);
 	}

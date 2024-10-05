@@ -98,7 +98,7 @@ public:
         return basic_zstring_view{ base_type::data() + _Off, _Count, StringIsNullTerminated{} };
     }
 
-    [[nodiscard]] constexpr decltype(auto) asStringView() const
+    [[nodiscard]] constexpr auto asStringView() const
     {
         return static_cast<const base_type&>(*this);
     }
@@ -110,7 +110,7 @@ public:
         return base_type::data();
     }
 
-    [[nodiscard]] constexpr decltype(auto) asConstPtr() const
+    [[nodiscard]] constexpr auto asConstPtr() const
     {
         return base_type::data();
     }
