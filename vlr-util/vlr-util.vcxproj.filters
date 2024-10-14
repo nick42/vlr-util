@@ -153,7 +153,7 @@
     <ClInclude Include="util.types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="util.Unicode.h">
+    <ClInclude Include="util.StringConversion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UtilMacros.Assertions.h">
@@ -308,7 +308,7 @@
     <ClCompile Include="util.Result.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.Unicode.cpp">
+    <ClCompile Include="util.StringConversion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RegexCache.cpp">

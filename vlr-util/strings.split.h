@@ -7,7 +7,7 @@
 #include "config.h"
 #include "ModuleContext.Compilation.h"
 
-#include "util.Unicode.h"
+#include "util.StringConversion.h"
 #include "util.types.h"
 #include "util.Result.h"
 #include "StringCompare.h"

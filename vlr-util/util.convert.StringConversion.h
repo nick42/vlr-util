@@ -7,7 +7,7 @@
 #include "ModuleContext.Compilation.h"
 
 #include "util.range_checked_cast.h"
-#include "util.Unicode.h"
+#include "util.StringConversion.h"
 #include "util.types.h"
 
 // Note on StringConversionOptions:

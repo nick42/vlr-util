@@ -254,6 +254,7 @@ namespace detail {
 // Note: This is an alternative method, per cpp docs; not currently used, as may not be optimal.
 // (ie: C-runtime methods for direct comparison without conversion might be faster)
 // To be tested in the future.
+// Note: This is not at all correct; Unicode characters can have different byte-length ucase versions.
 
 template<typename TChar>
 struct char_traits_ci : public std::char_traits<TChar> {

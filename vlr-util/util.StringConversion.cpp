@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "util.Unicode.h"
+#include "util.StringConversion.h"
 
 #include "UtilMacros.Assertions.h"
 #include "UtilMacros.General.h"
@@ -9,6 +9,158 @@
 namespace vlr {
 
 namespace util {
+
+#if defined(WIN32)
+
+HRESULT CStringConversion::MultiByte_to_UTF16_Win32(
+	std::string_view svValue,
+	wchar_t* pOutputBuffer,
+	size_t nOutputBufferLengthBytes,
+	const StringConversionOptions& oStringConversionOptions,
+	StringConversionResults* pStringConversionResults)
+{
+	bool bInputBufferShouldIncludeNullTerminator = true
+		&& oStringConversionOptions.m_bInputStringIsNullTerminated
+		&& (!oStringConversionOptions.m_bGenerateResultNotNullTerminated)
+		;
+	auto nEffectiveInputBufferLengthChars = svValue.length() + (bInputBufferShouldIncludeNullTerminator ? 1 : 0);
+
+	auto nOutputBufferLengthChars = (nOutputBufferLengthBytes / sizeof(wchar_t));
+
+	bool bNeedAdditionalSpaceInOutputBufferToAddNullTerminator = true
+		&& (!bInputBufferShouldIncludeNullTerminator)
+		&& (!oStringConversionOptions.m_bGenerateResultNotNullTerminated)
+		&& (!oStringConversionOptions.m_bInputStringIsNullTerminated)
+		;
+	size_t nOutputBufferLengthAdjustmentBytes = bNeedAdditionalSpaceInOutputBufferToAddNullTerminator ? sizeof(wchar_t) : 0;
+	// Be sure we don't underflow, if we passed a zero for buffer length
+	auto nUsableOutputBufferLengthChars = (nOutputBufferLengthChars == 0) ? 0 : nOutputBufferLengthChars - nOutputBufferLengthAdjustmentBytes;
+
+	auto nResult = ::MultiByteToWideChar(
+		oStringConversionOptions.GetCodePageIdentifier(),
+		oStringConversionOptions.OnMultiByteToWideChar_GetFlags(),
+		svValue.data(),
+		range_checked_cast<int>(nEffectiveInputBufferLengthChars),
+		pOutputBuffer,
+		range_checked_cast<int>(nUsableOutputBufferLengthChars));
+	if (nResult == 0)
+	{
+		return HRESULT_FROM_WIN32(GetLastError());
+	}
+	VLR_IF_NOT_NULL(pStringConversionResults)->m_nOuputSizeBytes = (range_checked_cast<size_t>(nResult) * sizeof(wchar_t)) + nOutputBufferLengthAdjustmentBytes;
+	if (range_checked_cast<size_t>(nResult) > nUsableOutputBufferLengthChars)
+	{
+		return S_FALSE;
+	}
+
+	if (bNeedAdditionalSpaceInOutputBufferToAddNullTerminator)
+	{
+		ASSERT(range_checked_cast<size_t>(nResult) < nOutputBufferLengthChars);
+		pOutputBuffer[nResult] = L'\0';
+	}
+
+	return S_OK;
+}
+
+HRESULT CStringConversion::UTF16_to_MultiByte_Win32(
+	std::wstring_view svValue,
+	char* pOutputBuffer,
+	size_t nOutputBufferLengthBytes,
+	const StringConversionOptions& oStringConversionOptions,
+	StringConversionResults* pStringConversionResults)
+{
+	bool bInputBufferShouldIncludeNullTerminator = true
+		&& oStringConversionOptions.m_bInputStringIsNullTerminated
+		&& (!oStringConversionOptions.m_bGenerateResultNotNullTerminated)
+		;
+	auto nEffectiveInputBufferLengthChars = svValue.length() + (bInputBufferShouldIncludeNullTerminator ? 1 : 0);
+
+	auto nOutputBufferLengthChars = (nOutputBufferLengthBytes / sizeof(char));
+
+	bool bNeedAdditionalSpaceInOutputBufferToAddNullTerminator = true
+		&& (!bInputBufferShouldIncludeNullTerminator)
+		&& (!oStringConversionOptions.m_bGenerateResultNotNullTerminated)
+		&& (!oStringConversionOptions.m_bInputStringIsNullTerminated)
+		;
+	size_t nOutputBufferLengthAdjustmentBytes = bNeedAdditionalSpaceInOutputBufferToAddNullTerminator ? sizeof(char) : 0;
+	// Be sure we don't underflow, if we passed a zero for buffer length
+	auto nUsableOutputBufferLengthChars = (nOutputBufferLengthChars == 0) ? 0 : nOutputBufferLengthChars - nOutputBufferLengthAdjustmentBytes;
+
+	auto nResult = ::WideCharToMultiByte(
+		oStringConversionOptions.GetCodePageIdentifier(),
+		oStringConversionOptions.OnWideCharToMultiByte_GetFlags(),
+		svValue.data(),
+		range_checked_cast<int>(nEffectiveInputBufferLengthChars),
+		pOutputBuffer,
+		range_checked_cast<int>(nUsableOutputBufferLengthChars),
+		oStringConversionOptions.OnWideCharToMultiByte_GetDefaultChar(),
+		oStringConversionOptions.OnWideCharToMultiByte_GetUsedDefaultChar(pStringConversionResults));
+	if (nResult == 0)
+	{
+		return HRESULT_FROM_WIN32(GetLastError());
+	}
+	VLR_IF_NOT_NULL(pStringConversionResults)->m_nOuputSizeBytes = (range_checked_cast<size_t>(nResult) * sizeof(char)) + nOutputBufferLengthAdjustmentBytes;
+	if (range_checked_cast<size_t>(nResult) > nUsableOutputBufferLengthChars)
+	{
+		return S_FALSE;
+	}
+
+	if (bNeedAdditionalSpaceInOutputBufferToAddNullTerminator)
+	{
+		ASSERT(range_checked_cast<size_t>(nResult) < nOutputBufferLengthChars);
+		pOutputBuffer[nResult] = '\0';
+	}
+
+	return S_OK;
+}
+
+#endif // defined(WIN32)
+
+#if defined(VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString)
+
+HRESULT CStringConversion::MultiByte_to_UTF16_choice(
+	vlr::util::choice<0>&&,
+	std::string_view svValue,
+	wchar_t* pOutputBuffer,
+	size_t nOutputBufferLengthBytes,
+	const StringConversionOptions& oStringConversionOptions,
+	StringConversionResults* /*pStringConversionResults*/)
+{
+	std::wstring swValue = VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString(svValue, oConversionOptions);
+	if (nOutputBufferLengthBytes < swValue.length() + sizeof(wchar_t))
+	{
+		return E_FAIL;
+	}
+
+	wcscpy(pOutputBuffer, swValue.c_str());
+
+	return S_OK;
+}
+
+#endif // defined(VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString)
+
+#if defined(VLR_FALLBACK_Inline_UTF16_to_MultiByte_StdString)
+
+HRESULT CStringConversion::UTF16_to_MultiByte_choice(
+	vlr::util::choice<0>&&,
+	std::wstring_view svValue,
+	char* pOutputBuffer,
+	size_t nOutputBufferLengthBytes,
+	const StringConversionOptions& oStringConversionOptions,
+	StringConversionResults* /*pStringConversionResults*/)
+{
+	std::string saValue = VLR_FALLBACK_Inline_UTF16_to_MultiByte_StdString(svValue, oConversionOptions);
+	if (nOutputBufferLengthBytes < swValue.length() + sizeof(char))
+	{
+		return E_FAIL;
+	}
+
+	strcpy(pOutputBuffer, swValue.c_str());
+
+	return S_OK;
+}
+
+#endif // defined(VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString)
 
 HRESULT CStringConversion::MultiByte_to_UTF16(
 	std::string_view svValue,
@@ -22,57 +174,7 @@ HRESULT CStringConversion::MultiByte_to_UTF16(
 		return S_FALSE;
 	}
 
-#if defined(VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString)
-	// This should never be called if the fallback conversion method define is set
-	VLR_ASSERTIONS_HANDLE_CHECK_FAILURE(_T("Unexpected call to CStringConversion::MultiByte_to_UTF16"));
-	return E_FAIL;
-#elif !defined(WIN32)
-	// The above macro should be defined for conversion for non-Windows compilation, for now
-	static_assert(false);
-#else
-
-	bool bInputBufferShouldIncludeNullTerminator = true
-		&& oStringConversionOptions.m_bInputStringIsNullTerminated
-		&& (!oStringConversionOptions.m_bGenerateResultNotNullTerminated)
-		;
-	auto nEffectiveInputBufferLengthChars = svValue.length() + (bInputBufferShouldIncludeNullTerminator ? 1 : 0);
-
-	auto nOutputBufferLengthChars = (nOutputBufferLengthBytes / sizeof( wchar_t ));
-
-	bool bNeedAdditionalSpaceInOutputBufferToAddNullTerminator = true
-		&& (!bInputBufferShouldIncludeNullTerminator)
-		&& (!oStringConversionOptions.m_bGenerateResultNotNullTerminated)
-		&& (!oStringConversionOptions.m_bInputStringIsNullTerminated)
-		;
-	size_t nOutputBufferLengthAdjustmentBytes = bNeedAdditionalSpaceInOutputBufferToAddNullTerminator ? sizeof( wchar_t ) : 0;
-	// Be sure we don't underflow, if we passed a zero for buffer length
-	auto nUsableOutputBufferLengthChars = (nOutputBufferLengthChars == 0) ? 0 : nOutputBufferLengthChars - nOutputBufferLengthAdjustmentBytes;
-
-	auto nResult = ::MultiByteToWideChar(
-		oStringConversionOptions.GetCodePageIdentifier(),
-		oStringConversionOptions.OnMultiByteToWideChar_GetFlags(),
-		svValue.data(),
-		range_checked_cast<int>(nEffectiveInputBufferLengthChars),
-		pOutputBuffer,
-		range_checked_cast<int>(nUsableOutputBufferLengthChars) );
-	if (nResult == 0)
-	{
-		return HRESULT_FROM_WIN32( GetLastError() );
-	}
-	VLR_IF_NOT_NULL( pStringConversionResults )->m_nOuputSizeBytes = (range_checked_cast<size_t>(nResult) * sizeof( wchar_t )) + nOutputBufferLengthAdjustmentBytes;
-	if (range_checked_cast<size_t>(nResult) > nUsableOutputBufferLengthChars)
-	{
-		return S_FALSE;
-	}
-
-	if (bNeedAdditionalSpaceInOutputBufferToAddNullTerminator)
-	{
-		ASSERT( range_checked_cast<size_t>(nResult) < nOutputBufferLengthChars );
-		pOutputBuffer[nResult] = L'\0';
-	}
-
-	return S_OK;
-#endif
+	return MultiByte_to_UTF16_choice(util::choice<0>{}, svValue, pOutputBuffer, nOutputBufferLengthBytes, oStringConversionOptions, pStringConversionResults);
 }
 
 HRESULT CStringConversion::UTF16_to_MultiByte(
@@ -87,59 +189,7 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 		return S_FALSE;
 	}
 
-#if defined(VLR_FALLBACK_Inline_UTF16_to_MultiByte_StdString)
-	// This should never be called if the fallback conversion method define is set
-	VLR_ASSERTIONS_HANDLE_CHECK_FAILURE(_T("Unexpected call to CStringConversion::UTF16_to_MultiByte"));
-	return E_FAIL;
-#elif !defined(WIN32)
-	// The above macro should be defined for conversion for non-Windows compilation, for now
-	static_assert(false);
-#else
-
-	bool bInputBufferShouldIncludeNullTerminator = true
-		&& oStringConversionOptions.m_bInputStringIsNullTerminated
-		&& (!oStringConversionOptions.m_bGenerateResultNotNullTerminated)
-		;
-	auto nEffectiveInputBufferLengthChars = svValue.length() + (bInputBufferShouldIncludeNullTerminator ? 1 : 0);
-
-	auto nOutputBufferLengthChars = (nOutputBufferLengthBytes / sizeof( char ));
-
-	bool bNeedAdditionalSpaceInOutputBufferToAddNullTerminator = true
-		&& (!bInputBufferShouldIncludeNullTerminator)
-		&& (!oStringConversionOptions.m_bGenerateResultNotNullTerminated)
-		&& (!oStringConversionOptions.m_bInputStringIsNullTerminated)
-		;
-	size_t nOutputBufferLengthAdjustmentBytes = bNeedAdditionalSpaceInOutputBufferToAddNullTerminator ? sizeof( char ) : 0;
-	// Be sure we don't underflow, if we passed a zero for buffer length
-	auto nUsableOutputBufferLengthChars = (nOutputBufferLengthChars == 0) ? 0 : nOutputBufferLengthChars - nOutputBufferLengthAdjustmentBytes;
-
-	auto nResult = ::WideCharToMultiByte(
-		oStringConversionOptions.GetCodePageIdentifier(),
-		oStringConversionOptions.OnWideCharToMultiByte_GetFlags(),
-		svValue.data(),
-		range_checked_cast<int>(nEffectiveInputBufferLengthChars),
-		pOutputBuffer,
-		range_checked_cast<int>(nUsableOutputBufferLengthChars),
-		oStringConversionOptions.OnWideCharToMultiByte_GetDefaultChar(),
-		oStringConversionOptions.OnWideCharToMultiByte_GetUsedDefaultChar( pStringConversionResults ) );
-	if (nResult == 0)
-	{
-		return HRESULT_FROM_WIN32( GetLastError() );
-	}
-	VLR_IF_NOT_NULL( pStringConversionResults )->m_nOuputSizeBytes = (range_checked_cast<size_t>(nResult) * sizeof( char )) + nOutputBufferLengthAdjustmentBytes;
-	if (range_checked_cast<size_t>(nResult) > nUsableOutputBufferLengthChars)
-	{
-		return S_FALSE;
-	}
-
-	if (bNeedAdditionalSpaceInOutputBufferToAddNullTerminator)
-	{
-		ASSERT( range_checked_cast<size_t>(nResult) < nOutputBufferLengthChars );
-		pOutputBuffer[nResult] = '\0';
-	}
-
-	return S_OK;
-#endif
+	return UTF16_to_MultiByte_choice(util::choice<0>{}, svValue, pOutputBuffer, nOutputBufferLengthBytes, oStringConversionOptions, pStringConversionResults);
 }
 
 HRESULT CStringConversion::MultiByte_to_UTF16(
@@ -188,8 +238,8 @@ HRESULT CStringConversion::MultiByte_to_UTF16(
 
 	while (true)
 	{
-		strOutput.resize( nOutputBufferSizeChars );
-		auto nOutputBufferSizeBytes = nOutputBufferSizeChars * sizeof( wchar_t );
+		strOutput.resize(nOutputBufferSizeChars);
+		auto nOutputBufferSizeBytes = nOutputBufferSizeChars * sizeof(wchar_t);
 
 		auto oStringConversionOptions_Local = StringConversionOptions{ oStringConversionOptions }.withGenerateResultNotNullTerminated(true);
 		auto oStringConversionResults = StringConversionResults{};
@@ -199,10 +249,10 @@ HRESULT CStringConversion::MultiByte_to_UTF16(
 			strOutput.data(),
 			nOutputBufferSizeBytes,
 			oStringConversionOptions_Local,
-			&oStringConversionResults );
-		VLR_ON_HR_NON_S_OK__RETURN_HRESULT( hr );
+			&oStringConversionResults);
+		VLR_ON_HR_NON_S_OK__RETURN_HRESULT(hr);
 
-		auto nOutputSizeChars = oStringConversionResults.m_nOuputSizeBytes / sizeof( wchar_t );
+		auto nOutputSizeChars = oStringConversionResults.m_nOuputSizeBytes / sizeof(wchar_t);
 		if (oStringConversionResults.m_nOuputSizeBytes > nOutputBufferSizeBytes)
 		{
 			nOutputBufferSizeChars = nOutputSizeChars;
@@ -210,9 +260,9 @@ HRESULT CStringConversion::MultiByte_to_UTF16(
 		}
 
 		// resize() again to truncate as necessary
-		strOutput.resize( nOutputSizeChars );
+		strOutput.resize(nOutputSizeChars);
 
-		VLR_IF_NOT_NULL_DEREF( pStringConversionResults ) = oStringConversionResults;
+		VLR_IF_NOT_NULL_DEREF(pStringConversionResults) = oStringConversionResults;
 
 		break;
 	}
@@ -224,7 +274,7 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 	std::wstring_view svValue,
 	std::string& strOutput,
 	const StringConversionOptions& oStringConversionOptions /*= {}*/,
-	StringConversionResults* pStringConversionResults /*= nullptr*/ )
+	StringConversionResults* pStringConversionResults /*= nullptr*/)
 {
 	HRESULT hr;
 
@@ -235,8 +285,8 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 
 	while (true)
 	{
-		strOutput.resize( nOutputBufferSizeChars );
-		auto nOutputBufferSizeBytes = nOutputBufferSizeChars * sizeof( char );
+		strOutput.resize(nOutputBufferSizeChars);
+		auto nOutputBufferSizeBytes = nOutputBufferSizeChars * sizeof(char);
 
 		auto oStringConversionOptions_Local = StringConversionOptions{ oStringConversionOptions }.withGenerateResultNotNullTerminated(true);
 		auto oStringConversionResults = StringConversionResults{};
@@ -246,10 +296,10 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 			strOutput.data(),
 			nOutputBufferSizeBytes,
 			oStringConversionOptions_Local,
-			&oStringConversionResults );
-		VLR_ON_HR_NON_S_OK__RETURN_HRESULT( hr );
+			&oStringConversionResults);
+		VLR_ON_HR_NON_S_OK__RETURN_HRESULT(hr);
 
-		auto nOutputSizeChars = oStringConversionResults.m_nOuputSizeBytes / sizeof( char );
+		auto nOutputSizeChars = oStringConversionResults.m_nOuputSizeBytes / sizeof(char);
 		if (oStringConversionResults.m_nOuputSizeBytes > nOutputBufferSizeBytes)
 		{
 			nOutputBufferSizeChars = nOutputSizeChars;
@@ -257,9 +307,9 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 		}
 
 		// resize() again to truncate as necessary
-		strOutput.resize( nOutputSizeChars );
+		strOutput.resize(nOutputSizeChars);
 
-		VLR_IF_NOT_NULL_DEREF( pStringConversionResults ) = oStringConversionResults;
+		VLR_IF_NOT_NULL_DEREF(pStringConversionResults) = oStringConversionResults;
 
 		break;
 	}

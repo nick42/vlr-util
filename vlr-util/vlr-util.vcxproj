@@ -99,7 +99,7 @@
     <ClInclude Include="util.types.h" />
     <ClInclude Include="util.types.linux.h" />
     <ClInclude Include="util.types.win32.h" />
-    <ClInclude Include="util.Unicode.h" />
+    <ClInclude Include="util.StringConversion.h" />
     <ClInclude Include="UtilMacros.Assertions.h" />
     <ClInclude Include="UtilMacros.General.h" />
     <ClInclude Include="UtilMacros.Namespace.h" />
@@ -131,7 +131,7 @@
     <ClCompile Include="util.AutoCleanupBase.cpp" />
     <ClCompile Include="util.AutoCleanup_SC_HANDLE.cpp" />
     <ClCompile Include="util.Result.cpp" />
-    <ClCompile Include="util.Unicode.cpp" />
+    <ClCompile Include="util.StringConversion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />

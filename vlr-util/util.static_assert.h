@@ -10,8 +10,8 @@ namespace util {
 // Note: This good workaround suggested by MS, for conformance updates related to static_assert
 // See: https://docs.microsoft.com/en-us/cpp/overview/cpp-conformance-improvements?view=msvc-170
 
-template<bool bValue = false>
-constexpr bool dependent_false = bValue;
+template <typename...>
+struct dependent_false : std::bool_constant<false> { };
 
 // Note: A macro is necessary, because static_assert isn't compatible with parameters
 // (it's a "special" function)
