@@ -1,5 +1,7 @@
 #include "pch.h"
 
+#include <fmt/format.h>
+
 #include "vlr-util/util.convert.StringConversion.h"
 #include "vlr-util/zstring_view.h"
 #include "vlr-util/StringCompare.h"
@@ -147,6 +149,82 @@ TEST(StringConversion, NonASCII)
 			EXPECT_EQ(cChar, vecExpectedValue[nExpectedValueIndex++]);
 		}
 	}
+}
+
+struct StringConversionUnicode
+	: public testing::Test
+{
+	std::locale m_oLocale_UTF8 = std::locale{ "en_US.UTF-8" };
+
+	static constexpr vlr::wzstring_view svwzTestValue_UTF16_1 = L"wyj\u015Bcie";
+
+	std::string GetByteDisplay(const std::string& saValue)
+	{
+		std::string saByteDisplay;
+		saByteDisplay.reserve(saValue.length() * 3 + 1);
+
+		auto pBuffer = reinterpret_cast<const BYTE*>(saValue.data());
+		for (size_t nIndex = 0; nIndex < saValue.length(); ++nIndex)
+		{
+			saByteDisplay += fmt::format("{:02X} ", pBuffer[nIndex]);
+		}
+
+		return saByteDisplay;
+	}
+
+	std::string GetByteDisplay(const std::wstring& swValue)
+	{
+		std::string saByteDisplay;
+		saByteDisplay.reserve(swValue.length() * 3 + 1);
+
+		auto pBuffer = reinterpret_cast<const BYTE*>(swValue.data());
+		for (size_t nIndex = 0; nIndex < swValue.length(); ++nIndex)
+		{
+			saByteDisplay += fmt::format("{:02X} ", pBuffer[nIndex]);
+		}
+
+		return saByteDisplay;
+	}
+
+	void TestRoundTrip_FromUTF8(const std::string& saValue)
+	{
+		fmt::print("Test value (UTF-8): {}\n", saValue);
+		//std::cout << "Test value (UTF-8): " << saValue << std::endl;
+		fmt::print("Bytes: {}\n", GetByteDisplay(saValue));
+
+		auto swValue = vlr::util::Convert::ToStdStringW(saValue);
+		fmt::print(L"Test value (UTF-16): {}\n", swValue);
+		fmt::print("Bytes: {}\n", GetByteDisplay(swValue));
+
+		auto saValue_Copy = vlr::util::Convert::ToStdStringA(swValue);
+		fmt::print("Test value (UTF-8, copy): {}\n", saValue_Copy);
+		fmt::print("Bytes: {}\n", GetByteDisplay(saValue_Copy));
+
+		EXPECT_EQ(saValue, saValue_Copy);
+	}
+
+	void TestRoundTrip_FromUTF16(const std::wstring& swValue)
+	{
+		fmt::print(L"Test value (UTF-16): {}\n", swValue);
+		fmt::print("Bytes: {}\n", GetByteDisplay(swValue));
+
+		auto saValue_Copy = vlr::util::Convert::ToStdStringA(swValue);
+		fmt::print("Test value (UTF-8, copy): {}\n", saValue_Copy);
+		fmt::print("Bytes: {}\n", GetByteDisplay(saValue_Copy));
+
+		auto swValue_Copy = vlr::util::Convert::ToStdStringW(saValue_Copy);
+		fmt::print(L"Test value (UTF-16, copy): {}\n", swValue_Copy);
+		fmt::print("Bytes: {}\n", GetByteDisplay(saValue_Copy));
+
+		EXPECT_EQ(swValue, swValue_Copy);
+	}
+};
+
+TEST_F(StringConversionUnicode, TestRoundTrip)
+{
+	std::locale::global(m_oLocale_UTF8);
+
+	TestRoundTrip_FromUTF16(svwzTestValue_UTF16_1.toStdString());
 }
 
 TEST_F(Test_util_convert_StringConversion, ToFmtArg_String)

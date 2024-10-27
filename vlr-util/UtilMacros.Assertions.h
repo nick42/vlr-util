@@ -119,6 +119,17 @@ constexpr bool ResultIsSuccess(const TResult& tResult)
 	} \
 }
 
+#define VLR_ASSERT_COMPARE_OR_CONTINUE( lhs, op, rhs ) \
+{ \
+	auto&& _compareResult = VLR_ASSERTIONS_EVALUATE_COMPARISON( lhs, op, rhs ); \
+	if (vlr::util::IsNonZero( _compareResult )) \
+	{} \
+	else \
+	{ \
+		VLR_ASSERTIONS_HANDLE_FAILURE_COMPARE( lhs, op, rhs ) \
+	} \
+}
+
 #define VLR_ASSERT_NOTBLANK_OR_RETURN_EXPRESSION( value, expression ) \
 { \
 	auto&& _value = (value); \

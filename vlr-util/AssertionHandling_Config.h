@@ -3,8 +3,10 @@
 #include "UtilMacros.Namespace.h"
 #include "config.h"
 
+#include <atomic>
 #include <functional>
 
+#include "debugbreak.h"
 #include "logging.MessageContext.h"
 #include "zstring_view.h"
 
@@ -19,6 +21,8 @@ public:
 
 	FHandleCheckFailure m_fHandleCheckFailure;
 
+	std::atomic<bool> m_bOnDefaultHandler_TriggerDebugBreak{ true };
+
 public:
 	static inline auto& getSharedInstanceMutable()
 	{
@@ -28,6 +32,16 @@ public:
 	static inline const auto& getSharedInstance()
 	{
 		return getSharedInstanceMutable();
+	}
+
+public:
+	inline void DefaultHandler(const vlr::logging::CMessageContext& /*oMessageContext*/, vlr::tzstring_view /*svzFailureMessage*/) const
+	{
+		if (m_bOnDefaultHandler_TriggerDebugBreak)
+		{
+			// This uses an open source cross-platform implementation (see header)
+			debug_break();
+		}
 	}
 };
 
@@ -39,10 +53,7 @@ inline void HandleCheckFailure(const vlr::logging::CMessageContext& oMessageCont
 		return fHandleCheckFailure(oMessageContext, svzFailureMessage);
 	}
 
-	// Note: This works poorly when not compiling with MFC; figure out something better for default
-#ifdef _MFC_VER
-	ASSERT(0);
-#endif
+	Callbacks::getSharedInstance().DefaultHandler(oMessageContext, svzFailureMessage);
 }
 
 } // namespace assert

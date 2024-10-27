@@ -279,6 +279,9 @@
     <ClInclude Include="util.CallWithAutoRetry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="debugbreak.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleContext.Runtime.CommandLine.cpp">

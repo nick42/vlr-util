@@ -38,6 +38,7 @@
     <ClInclude Include="config.h" />
     <ClInclude Include="cpp_namespace.h" />
     <ClInclude Include="c_runtime.StringFunctions.h" />
+    <ClInclude Include="debugbreak.h" />
     <ClInclude Include="DynamicLoadedFunction.h" />
     <ClInclude Include="enums.FormatEnum.h" />
     <ClInclude Include="enums.RangeInfo.h" />
