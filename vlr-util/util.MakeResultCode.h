@@ -15,6 +15,7 @@ namespace detail {
 static constexpr auto Severity_Success = (unsigned char)0;
 static constexpr auto Severity_Failure = (unsigned char)1;
 
+static constexpr auto Facility_RPC = (unsigned short)1;
 static constexpr auto Facility_CallSpecific = (unsigned short)4;
 static constexpr auto Facility_Win32 = (unsigned short)7;
 

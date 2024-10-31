@@ -11,6 +11,23 @@ namespace vlr {
 
 namespace util {
 
+namespace Result {
+
+// For use when doing error code conversions
+
+namespace SourceTypeHint {
+
+enum ESourceTypeHint
+{
+	Unknown,
+	Win32_SEHException,
+	Win32_SEHException_RPC,
+};
+
+} // namespace SourceType
+
+} // namespace Result
+
 class SResult
 {
 public:
@@ -62,17 +79,35 @@ public:
 		return SResult{ hr };
 	}
 
-#ifdef WIN32
-	static inline auto For_win32_ErrorCode(DWORD dwErrorCode)
+#if defined(WIN32)
+	// This method tries to handle the general-case of conversion from Win32 DWORD result codes, which may be:
+	// - 16bit Win32 error codes
+	// - NTSTATUS value
+	// - HRESULT value
+	// - ... other
+	static SResult For_win32_GeneralResultCode(DWORD dwResultCode,
+		Result::SourceTypeHint::ESourceTypeHint eSourceTypeHint = Result::SourceTypeHint::Unknown);
+	static inline SResult For_win32_ErrorCode(DWORD dwErrorCode)
 	{
-		return SResult{}.withHRESULT(detail::MakeResultCode_Failure_Win32(dwErrorCode));
+		// Note: We assume that if this function is called, the result is an error, and treat even 0 as such.
+
+		// Note: Win32 result codes are in a 16bit range. We should check this; if the value passed in 
+		// is not in range, else we may zero out the value in the range checking code internally.
+		// Note: This means we may change the logical result value if we pass something which is not a Win32 code.
+		if (dwErrorCode <= std::numeric_limits<unsigned short>::max())
+		{
+			return SResult{ detail::MakeResultCode_Failure_Win32(dwErrorCode) };
+		}
+
+		// For this case, we could truncate, or try to interpret as appropriate.
+		return For_win32_GeneralResultCode(dwErrorCode);
 	}
-	static inline auto For_win32_LastError()
+	static inline SResult For_win32_LastError()
 	{
 		auto dwLastError = ::GetLastError();
 		return For_win32_ErrorCode(dwLastError);
 	}
-	static inline auto ForCall_win32(WIN_BOOL bSuccess)
+	static inline SResult ForCall_win32(WIN_BOOL bSuccess)
 	{
 		if (bSuccess)
 		{
@@ -83,7 +118,13 @@ public:
 			return For_win32_LastError();
 		}
 	}
-#endif
+	// Note: SEH exception codes can be Win32 codes, but are usually NTSTATUS values. These are similar, 
+	// but not the same, as HRESULT values.
+	// See: https://jpassing.com/2007/08/20/error-codes-win32-vs-hresult-vs-ntstatus/
+	static SResult For_win32_SEHExceptionCode(DWORD dwExceptionCode);
+	// If we know the SEH exception is from RPC explicitly, then we can set the RPC facility bit.
+	static SResult For_win32_SEHExceptionCode_RPC(DWORD dwExceptionCode);
+#endif // defined(WIN32)
 
 	static inline auto ForCallSpecificResult(unsigned long nResultCode)
 	{
@@ -102,6 +143,14 @@ public:
 	constexpr auto isSet() const
 	{
 		return m_nResultCode != Uninitialized;
+	}
+	constexpr unsigned short GetFacilityCode() const
+	{
+		return (m_nResultCode & 0x07FF0000) >> 16;
+	}
+	constexpr unsigned short GetUnqualifiedResultCode() const
+	{
+		return static_cast<unsigned short>(m_nResultCode & 0xFFFF);
 	}
 
 public:

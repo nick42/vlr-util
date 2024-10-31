@@ -199,6 +199,7 @@
     <ClCompile Include="util.MRUCache.cpp" />
     <ClCompile Include="util.NonOwningSharedPtr.cpp" />
     <ClCompile Include="util.range_checked_cast.cpp" />
+    <ClCompile Include="util.Result.test.cpp" />
     <ClCompile Include="vlr-util.test.cpp" />
     <ClCompile Include="win32.filesystem.enum_files.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
