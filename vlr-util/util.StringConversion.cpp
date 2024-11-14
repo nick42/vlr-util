@@ -126,13 +126,17 @@ HRESULT CStringConversion::MultiByte_to_UTF16_choice(
 	const StringConversionOptions& oStringConversionOptions,
 	StringConversionResults* /*pStringConversionResults*/)
 {
-	std::wstring swValue = VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString(svValue, oConversionOptions);
+	std::wstring swValue = VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString(svValue, oStringConversionOptions);
 	if (nOutputBufferLengthBytes < swValue.length() + sizeof(wchar_t))
 	{
 		return E_FAIL;
 	}
 
+#if defined(WIN32)
+	wcscpy_s(pOutputBuffer, nOutputBufferLengthBytes / sizeof(wchar_t), swValue.c_str());
+#else
 	wcscpy(pOutputBuffer, swValue.c_str());
+#endif
 
 	return S_OK;
 }
@@ -149,13 +153,17 @@ HRESULT CStringConversion::UTF16_to_MultiByte_choice(
 	const StringConversionOptions& oStringConversionOptions,
 	StringConversionResults* /*pStringConversionResults*/)
 {
-	std::string saValue = VLR_FALLBACK_Inline_UTF16_to_MultiByte_StdString(svValue, oConversionOptions);
-	if (nOutputBufferLengthBytes < swValue.length() + sizeof(char))
+	std::string saValue = VLR_FALLBACK_Inline_UTF16_to_MultiByte_StdString(svValue, oStringConversionOptions);
+	if (nOutputBufferLengthBytes < saValue.length() + sizeof(char))
 	{
 		return E_FAIL;
 	}
 
+#if defined(WIN32)
+	strcpy_s(pOutputBuffer, nOutputBufferLengthBytes / sizeof(char), saValue.c_str());
+#else
 	strcpy(pOutputBuffer, swValue.c_str());
+#endif
 
 	return S_OK;
 }
