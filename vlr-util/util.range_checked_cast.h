@@ -59,22 +59,18 @@ inline constexpr auto range_checked_cast_choice(TSource nValue, choice<1>&&)
 	{
 		if constexpr (std::is_unsigned_v<TSource>)
 		{
-			if constexpr (sizeof(TDest) < sizeof(TSource))
-			{
-				// Possible overflow
-				auto nMaxDest_AsSource = static_cast<TSource>(std::numeric_limits<TDest>().max());
-				if (nValue > nMaxDest_AsSource)
-				{
-					return fGetOutOfRangeResult(nValue);
-				}
+			// This should only be called if the dest size is strictly smaller; if the source was smaller or equal, then 
+			// this should have been handled in the external function.
+			static_assert(sizeof(TDest) < sizeof(TSource));
 
-				return fGetInRangeResult(nValue);
-			}
-			else
+			// Handle possible overflow
+			auto nMaxDest_AsSource = static_cast<TSource>(std::numeric_limits<TDest>().max());
+			if (nValue > nMaxDest_AsSource)
 			{
-				// This should always fit; should not call here
-				VLR_TYPE_DEPENDENT_STATIC_FAIL(TDest);
+				return fGetOutOfRangeResult(nValue);
 			}
+
+			return fGetInRangeResult(nValue);
 		}
 		else // std::is_signed_v<TSource>
 		{
@@ -105,46 +101,38 @@ inline constexpr auto range_checked_cast_choice(TSource nValue, choice<1>&&)
 	{
 		if constexpr (std::is_unsigned_v<TSource>)
 		{
-			if constexpr (sizeof(TDest) <= sizeof(TSource))
-			{
-				// Possible overflow
-				auto nMaxDest_AsSource = static_cast<TSource>(std::numeric_limits<TDest>().max());
-				if (nValue > nMaxDest_AsSource)
-				{
-					return fGetOutOfRangeResult(nValue);
-				}
+			// This should only be called if the dest size is smaller or equal; if the source was smaller, this should have been 
+			// handled in the external function.
+			static_assert(sizeof(TDest) <= sizeof(TSource));
 
-				return fGetInRangeResult(nValue);
-			}
-			else
+			// Handle possible overflow
+			auto nMaxDest_AsSource = static_cast<TSource>(std::numeric_limits<TDest>().max());
+			if (nValue > nMaxDest_AsSource)
 			{
-				// This should always fit; should not call here
-				VLR_TYPE_DEPENDENT_STATIC_FAIL(TDest);
+				return fGetOutOfRangeResult(nValue);
 			}
+
+			return fGetInRangeResult(nValue);
 		}
 		else // std::is_signed_v<TSource>
 		{
-			if constexpr (sizeof(TDest) >= sizeof(TSource))
-			{
-				// This should always fit; should not call here
-				VLR_TYPE_DEPENDENT_STATIC_FAIL(TDest);
-			}
-			else
-			{
-				// Possible underflow or overflow
-				auto nMinDest_AsSource = static_cast<TSource>(std::numeric_limits<TDest>().min());
-				if (nValue < nMinDest_AsSource)
-				{
-					return fGetOutOfRangeResult(nValue);
-				}
-				auto nMaxDest_AsSource = static_cast<TSource>(std::numeric_limits<TDest>().max());
-				if (nValue > nMaxDest_AsSource)
-				{
-					return fGetOutOfRangeResult(nValue);
-				}
+			// This should only be called if the dest size is strictly smaller; if the source was smaller or equal, then 
+			// this should have been handled in the external function.
+			static_assert(sizeof(TDest) < sizeof(TSource));
 
-				return fGetInRangeResult(nValue);
+			// Handle possible underflow or overflow
+			auto nMinDest_AsSource = static_cast<TSource>(std::numeric_limits<TDest>().min());
+			if (nValue < nMinDest_AsSource)
+			{
+				return fGetOutOfRangeResult(nValue);
 			}
+			auto nMaxDest_AsSource = static_cast<TSource>(std::numeric_limits<TDest>().max());
+			if (nValue > nMaxDest_AsSource)
+			{
+				return fGetOutOfRangeResult(nValue);
+			}
+
+			return fGetInRangeResult(nValue);
 		}
 	}
 }

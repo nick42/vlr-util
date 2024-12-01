@@ -176,7 +176,7 @@ const std::vector<std::string_view>& CCaptureConsoleDataAnalysisHelper::GetAsTex
 	return m_arrTextLines;
 }
 
-int CCaptureConsoleDataAnalysisHelper::FindMatchingLineIndex_Contains(std::string_view svFindData, size_t nStartIndex /*= 0*/)
+size_t CCaptureConsoleDataAnalysisHelper::FindMatchingLineIndex_Contains(std::string_view svFindData, size_t nStartIndex /*= 0*/)
 {
 	auto& arrTextLines = GetAsTextLines();
 	auto nCurrentIndex = nStartIndex;
@@ -190,7 +190,7 @@ int CCaptureConsoleDataAnalysisHelper::FindMatchingLineIndex_Contains(std::strin
 		return nCurrentIndex - 1;
 	}
 
-	return -1;
+	return std::string_view::npos;
 }
 
 StandardResult CCaptureConsoleOut::BeginCapture(const CaptureOptions& oCaptureOptions /*= {}*/)

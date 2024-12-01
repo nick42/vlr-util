@@ -125,7 +125,7 @@ public:
 public:
     const std::vector<std::string_view>& GetAsTextLines();
 
-    int FindMatchingLineIndex_Contains(std::string_view svLine, size_t nStartIndex = 0);
+    size_t FindMatchingLineIndex_Contains(std::string_view svLine, size_t nStartIndex = 0);
 
     inline bool DoesOutputContainContent(std::string_view svLine)
     {
@@ -136,11 +136,11 @@ public:
     template< typename TLineCollection >
     inline bool DoesOutputContainSequence(const TLineCollection& tLineCollection)
     {
-        int nCurrentIndex = 0;
+        size_t nCurrentIndex = 0;
         for (const auto& tLine : tLineCollection)
         {
             nCurrentIndex = FindMatchingLineIndex_Contains(tLine, nCurrentIndex);
-            if (nCurrentIndex == -1)
+            if (nCurrentIndex == std::string_view::npos)
             {
                 return false;
             }
