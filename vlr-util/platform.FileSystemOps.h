@@ -15,6 +15,8 @@ public:
 	struct Options_DeleteFile
 	{
 		bool m_bAllowRelativeFilePath = false;
+
+		VLR_DEFINE_DEFAULT_CONSTRUCTOR_CONSTEXPR_NOEXCEPT(Options_DeleteFile);
 	};
 	SResult DeleteFile(
 		vlr::tzstring_view svzFilePath,

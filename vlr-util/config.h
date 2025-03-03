@@ -79,3 +79,4 @@
 
 #include "typeshim.win32.h"
 #include "util.types.h"
+#include "UtilMacros.CompilerSupport.h"

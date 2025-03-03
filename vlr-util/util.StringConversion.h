@@ -127,8 +127,7 @@ public:
 		return theInstance;
 	}
 
-	// Make sure we instantiate a constexpr default constructor if possible
-	constexpr StringConversionOptions() = default;
+	VLR_DEFINE_DEFAULT_CONSTRUCTOR_CONSTEXPR_NOEXCEPT(StringConversionOptions);
 };
 
 struct StringConversionResults
@@ -195,7 +194,7 @@ protected:
 	{
 		return UTF16_to_MultiByte_Win32(svValue, pOutputBuffer, nOutputBufferLengthBytes, oStringConversionOptions, pStringConversionResults);
 	}
-#endif defined(WIN32)
+#endif // defined(WIN32)
 
 	// Note: By leaving these not included, the code will not compile unless one of the above options is available.
 	// 

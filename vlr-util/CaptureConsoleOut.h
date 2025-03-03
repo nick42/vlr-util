@@ -32,6 +32,7 @@
 #endif
 
 #include "util.Result.h"
+#include "UtilMacros.CompilerSupport.h"
 
 namespace vlr {
 
@@ -99,6 +100,8 @@ public:
             m_nFileDescriptorToCapture = nFileDescriptorToCapture;
             return *this;
         }
+
+        VLR_DEFINE_DEFAULT_CONSTRUCTOR_NOEXCEPT(CaptureOptions);
     };
     StandardResult BeginCapture(const CaptureOptions& oCaptureOptions);
     inline StandardResult BeginCapture(FILE* pStream, int nFileDescriptorToCapture)
