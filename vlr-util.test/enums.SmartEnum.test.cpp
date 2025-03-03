@@ -94,4 +94,7 @@ TEST(SmartEnum, general)
 	eColor = Color::Red;
 	auto sValue = eColor.ToString();
 	EXPECT_EQ(vlr::StringCompare::CS().StringHasPostfix(sValue, "Red"), true);
+
+	eColor = SEColor::FromNumber((int)Color::Red);
+	EXPECT_EQ(eColor, Color::Red);
 }

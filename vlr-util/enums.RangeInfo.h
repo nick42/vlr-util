@@ -210,7 +210,9 @@ using CRangeInfoSequential_Signed_Default = CRangeInfoSequential_DWORD_PTR<nMaxV
 
 // Bitmask iterator
 
-template <typename TNumericType, TNumericType tMaxValue, TNumericType tMinValue = 0, typename std::enable_if_t<vlr::util::IsSingleBitValue(tMaxValue)>* = nullptr>
+template <typename TNumericType, TNumericType tMaxValue, TNumericType tMinValue = 1
+	, typename = std::enable_if_t<std::is_unsigned_v<TNumericType>>
+	, typename = std::enable_if_t<vlr::util::IsSingleBitValue(tMaxValue)>>
 class BitmaskRangeIterator {
 public:
 	using iterator_category = std::bidirectional_iterator_tag;
@@ -253,7 +255,9 @@ public:
 
 	BitmaskRangeIterator& operator++()
 	{
-		if (m_tCurrent == tMaxValue)
+		// Check for last bit, or overflow condition
+		if ((m_tCurrent >= tMaxValue)
+			|| ((m_tCurrent << 1) < m_tCurrent))
 		{
 			m_bIsValid = false;
 			m_tCurrent = {};

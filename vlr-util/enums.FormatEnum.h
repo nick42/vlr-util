@@ -15,15 +15,15 @@ class CFormatEnumBase
 {
 public:
 	[[nodiscard]]
-	static inline auto FormatAsNumber( TNumericType nValue )
+	static inline auto FormatAsNumber(TNumericType nValue)
 	{
-		return formatpf( _T( "%d" ), static_cast<unsigned int>(nValue) );
+		return formatpf(_T("%d"), static_cast<unsigned int>(nValue));
 	}
 
 	template< typename TTestValue, typename TAction >
-	static inline HRESULT OnBitSet_DoAction( TNumericType nValue, TTestValue nBitValue, const TAction& fAction )
+	static inline HRESULT OnBitSet_DoAction(TNumericType nValue, TTestValue nBitValue, const TAction& fAction)
 	{
-		if (!util::IsBitSet( nValue, nBitValue ))
+		if (!util::IsBitSet(nValue, nBitValue))
 		{
 			return S_FALSE;
 		}
@@ -38,17 +38,17 @@ public:
 
 template< typename TEnum, typename std::enable_if_t<std::is_enum_v<TEnum>>* = nullptr >
 class CFormatEnum
-	: public CFormatEnumBase<DWORD_PTR>
+	: public CFormatEnumBase<std::underlying_type_t<TEnum>>
 {
 private:
 	using this_type = CFormatEnum<TEnum>;
-	using base_type = CFormatEnumBase<DWORD_PTR>;
+	using base_type = CFormatEnumBase<std::underlying_type_t<TEnum>>;
 
 public:
 	[[nodiscard]]
-	static inline auto FormatValue( TEnum eValue )
+	static inline auto FormatValue(TEnum eValue)
 	{
-		return base_type::FormatAsNumber( eValue );
+		return base_type::FormatAsNumber(eValue);
 	}
 };
 
