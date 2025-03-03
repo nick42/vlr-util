@@ -69,11 +69,13 @@ SResult CFileSystmOps::CheckFileExists(vlr::tzstring_view svzFilePath)
 
 	if (!std::filesystem::is_regular_file(oFilePath))
 	{
+		auto eFileType = std::filesystem::status(oFilePath).type();
+		using TFileTypeNumberBase = std::underlying_type_t<decltype(eFileType)>;
 		logging::LogMessageFmt(VLR_LOG_CONTEXT_WARNING,
 			_T("{}: called with non normal file path (path: {}; type: {})."),
 			_T(__FUNCTION__),
 			svzFilePath,
-			std::filesystem::status(oFilePath).type());
+			(TFileTypeNumberBase)eFileType);
 		return E_FAIL;
 	}
 
@@ -99,11 +101,13 @@ SResult CFileSystmOps::CheckDirectoryExists(vlr::tzstring_view svzFilePath)
 
 	if (!std::filesystem::is_directory(oFilePath))
 	{
+		auto eFileType = std::filesystem::status(oFilePath).type();
+		using TFileTypeNumberBase = std::underlying_type_t<decltype(eFileType)>;
 		logging::LogMessageFmt(VLR_LOG_CONTEXT_WARNING,
 			_T("{}: called with non directory path (path: {}; type: {})."),
 			_T(__FUNCTION__),
 			svzFilePath,
-			std::filesystem::status(oFilePath).type());
+			(TFileTypeNumberBase)eFileType);
 		return E_FAIL;
 	}
 
