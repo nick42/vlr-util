@@ -162,7 +162,7 @@ HRESULT CStringConversion::UTF16_to_MultiByte_choice(
 #if defined(WIN32)
 	strcpy_s(pOutputBuffer, nOutputBufferLengthBytes / sizeof(char), saValue.c_str());
 #else
-	strcpy(pOutputBuffer, swValue.c_str());
+	strcpy(pOutputBuffer, saValue.c_str());
 #endif
 
 	return S_OK;
