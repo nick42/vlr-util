@@ -181,6 +181,7 @@
     <ClCompile Include="platform.FileSystemOps.test.cpp" />
     <ClCompile Include="RegexCache.cpp" />
     <ClCompile Include="ResourceStringLookupValue.test.cpp" />
+    <ClCompile Include="SharedInstanceRegistrar.test.cpp" />
     <ClCompile Include="strings.split.test.cpp" />
     <ClCompile Include="StringCompare.test.cpp" />
     <ClCompile Include="TestAssignment.cpp" />

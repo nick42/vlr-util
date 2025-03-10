@@ -62,6 +62,7 @@
     <ClInclude Include="ResourceStringLookupValue.h" />
     <ClInclude Include="RetrySettings.h" />
     <ClInclude Include="SharedInstance.h" />
+    <ClInclude Include="SharedInstanceRegistrar.h" />
     <ClInclude Include="StringCompare.h" />
     <ClInclude Include="strings.split.h" />
     <ClInclude Include="ThreadOperationContext.h" />

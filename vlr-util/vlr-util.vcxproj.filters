@@ -285,6 +285,9 @@
     <ClInclude Include="UtilMacros.CompilerSupport.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SharedInstanceRegistrar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleContext.Runtime.CommandLine.cpp">
