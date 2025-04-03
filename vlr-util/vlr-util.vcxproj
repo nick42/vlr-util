@@ -71,7 +71,6 @@
     <ClInclude Include="typeshim.win32.h" />
     <ClInclude Include="util.api_adaptor.OutString.h" />
     <ClInclude Include="util.AutoCleanupBase.h" />
-    <ClInclude Include="util.AutoCleanup_SC_HANDLE.h" />
     <ClInclude Include="util.CallWithAutoRetry.h" />
     <ClInclude Include="util.choice.h" />
     <ClInclude Include="util.convert.Arithmetic.h" />
@@ -132,7 +131,6 @@
     <ClCompile Include="ThreadOperationContext.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="util.AutoCleanupBase.cpp" />
-    <ClCompile Include="util.AutoCleanup_SC_HANDLE.cpp" />
     <ClCompile Include="util.Result.cpp" />
     <ClCompile Include="util.StringConversion.cpp" />
   </ItemGroup>
