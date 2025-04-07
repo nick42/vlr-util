@@ -1,12 +1,11 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.14)
 
 project(vlr-util)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(boost REQUIRED)
-find_package(fmt REQUIRED)
+find_package(fmt CONFIG REQUIRED)
 
 set(PROJECT_NAME vlr-util)
 
@@ -19,7 +18,7 @@ set(no_group_source_files
 )
 source_group("" FILES ${no_group_source_files})
 
-set(Header_Files
+set(VLR_HEADER_FILES
     "ActionOnDestruction.h"
     "as_span.h"
     "as_string_view.h"
@@ -88,9 +87,9 @@ set(Header_Files
     "win32.targetver.WINXP.h"
     "zstring_view.h"
 )
-source_group("Header Files" FILES ${Header_Files})
+source_group("Header Files" FILES ${VLR_HEADER_FILES})
 
-set(Source_Files
+set(VLR_SOURCE_FILES
     "CloseEnough.cpp"
     "ModuleContext.Runtime.CommandLine.cpp"
     "ModuleContext.Runtime.ConfigOptionsBase.cpp"
@@ -105,18 +104,21 @@ set(Source_Files
     "util.Unicode.cpp"
     "vlr-util.cpp"
 )
-source_group("Source Files" FILES ${Source_Files})
+source_group("Source Files" FILES ${VLR_SOURCE_FILES})
 
 set(ALL_FILES
     ${no_group_source_files}
-    ${Header_Files}
-    ${Source_Files}
+    ${VLR_HEADER_FILES}
+    ${VLR_SOURCE_FILES}
 )
 
 ################################################################################
 # Target
 ################################################################################
-add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
+add_library(${PROJECT_NAME} STATIC 
+	${ALL_FILES}
+	fmt::fmt-header-only
+)
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE
     "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/pch.h>"

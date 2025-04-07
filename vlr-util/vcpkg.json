@@ -1,8 +1,9 @@
 {
-  "name": "vlr-util.test",
+  "name": "vlr-util",
   "version-string": "0.1",
   "dependencies": [
+    "fmt",
     "gtest",
-    "catch2",
+    "catch2"
   ]
 }

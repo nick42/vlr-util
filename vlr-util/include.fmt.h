@@ -32,7 +32,7 @@ using FormatStringT = std::basic_string_view<TCHAR>;
 
 template<>
 struct fmt::formatter<CStringA>
-	: fmt::formatter<string_view>
+	: fmt::formatter<std::string_view>
 {
 	//constexpr auto parse( format_parse_context& ctx )
 	//{
@@ -47,7 +47,7 @@ struct fmt::formatter<CStringA>
 
 template<>
 struct fmt::formatter<CStringW>
-	: fmt::formatter<wstring_view>
+	: fmt::formatter<std::wstring_view>
 {
 	//constexpr auto parse( format_parse_context& ctx )
 	//{
