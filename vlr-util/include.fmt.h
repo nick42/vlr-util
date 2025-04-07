@@ -4,7 +4,7 @@
 #include "config.h"
 
 //#define FMT_HEADER_ONLY
-#define FMT_UNICODE
+#define FMT_UNICODE 1
 
 #include <fmt/format.h>
 #include <fmt/printf.h>
