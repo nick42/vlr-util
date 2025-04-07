@@ -117,7 +117,7 @@ set(ALL_FILES
 ################################################################################
 add_library(${PROJECT_NAME} STATIC 
 	${ALL_FILES}
-	fmt::fmt-header-only
+	fmt::fmt
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE

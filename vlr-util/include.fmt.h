@@ -4,9 +4,10 @@
 #include "config.h"
 
 //#define FMT_HEADER_ONLY
-#define FMT_UNICODE 1
+//#define FMT_UNICODE 1
 
 #include <fmt/format.h>
+#include <fmt/xchar.h>
 #include <fmt/printf.h>
 
 // Note: Some using aliases to allow us to specify the types which the fmt library expects 
