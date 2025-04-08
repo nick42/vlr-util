@@ -1,11 +1,11 @@
 #include "pch.h"
 
-#include <fmt/format.h>
+#include <vlr-util/include.fmt.h>
 
-#include "vlr-util/util.convert.StringConversion.h"
-#include "vlr-util/zstring_view.h"
-#include "vlr-util/StringCompare.h"
-#include "vlr-util/ActionOnDestruction.h"
+#include <vlr-util/util.convert.StringConversion.h>
+#include <vlr-util/zstring_view.h>
+#include <vlr-util/StringCompare.h>
+#include <vlr-util/ActionOnDestruction.h>
 
 using namespace vlr::util;
 

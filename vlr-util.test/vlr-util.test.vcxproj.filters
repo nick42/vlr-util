@@ -163,7 +163,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\vlr-util\vcpkg.json" />
+    <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="AppOptionSource_basic.txt">

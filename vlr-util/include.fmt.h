@@ -6,6 +6,8 @@
 //#define FMT_HEADER_ONLY
 
 #include <fmt/format.h>
+// Note: This file is required to support the UTF-16 char set in formatting
+#include <fmt/xchar.h>
 #include <fmt/printf.h>
 
 // Note: Some using aliases to allow us to specify the types which the fmt library expects 
@@ -32,7 +34,7 @@ using FormatStringT = std::basic_string_view<TCHAR>;
 
 template<>
 struct fmt::formatter<CStringA>
-	: fmt::formatter<string_view>
+	: fmt::formatter<std::string_view>
 {
 	//constexpr auto parse( format_parse_context& ctx )
 	//{
@@ -47,7 +49,7 @@ struct fmt::formatter<CStringA>
 
 template<>
 struct fmt::formatter<CStringW>
-	: fmt::formatter<wstring_view>
+	: fmt::formatter<std::wstring_view>
 {
 	//constexpr auto parse( format_parse_context& ctx )
 	//{

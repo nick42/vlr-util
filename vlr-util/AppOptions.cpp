@@ -129,7 +129,7 @@ SResult CAppOptions::SetAppOptionQualifiers(
 	auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
 
 	auto& spAppOptionQualifiers_InMap = m_mapNormalizedNameToQualifiers[sNormalizedName];
-	bool bOverwriteExisting = (spAppOptionQualifiers_InMap != nullptr);
+	//bool bOverwriteExisting = (spAppOptionQualifiers_InMap != nullptr);
 	spAppOptionQualifiers_InMap = spAppOptionQualifiers;
 
 	// If we have accessed this app option, then set the qualifiers in that structure as well

@@ -1,5 +1,5 @@
 {
-  "name": "vlr-util",
+  "name": "vlr-util-test",
   "version-string": "0.1",
   "dependencies": [
     {
@@ -9,7 +9,9 @@
     "spdlog",
     "gsl-lite",
     "boost-asio",
-    "boost-program-options"
+    "boost-program-options",
+    "gtest",
+    "catch2"
   ],
   "builtin-baseline": "e113942454e6b829366af7bcf196bbdbccbd6b3c"
 }
