@@ -9,7 +9,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include "UtilMacros.Namespace.h"
 #include "config.h"
 
 #include "util.std_aliases.h"

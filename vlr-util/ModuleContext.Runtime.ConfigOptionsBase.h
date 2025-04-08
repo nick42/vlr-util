@@ -1,11 +1,12 @@
 #pragma once
 
+#include "config.h"
+#if VLR_HASDEP_BOOST_PROGRAM_OPTIONS
+
 #include <vector>
 
 #include <boost/program_options.hpp>
 
-#include "UtilMacros.Namespace.h"
-#include "config.h"
 #include "util.std_aliases.h"
 
 #include "ModuleContext.Runtime.CommandLine.h"
@@ -65,3 +66,5 @@ protected:
 } // namespace ModuleContext
 
 } // namespace vlr
+
+#endif // VLR_HASDEP_BOOST_PROGRAM_OPTIONS

@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.20)
 
-project(vlr-util)
+project(vlr-util-cmake)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -44,15 +44,16 @@ set(VLR_HEADER_FILES
     "ModuleContext.Runtime.h"
     "ops.NetworkTargetInfo.h"
     "pch.h"
+    "platform.FileSystemOps.h"
     "RegexCache.h"
     "SharedInstance.h"
     "StringCompare.h"
     "strings.split.h"
+    "ThreadOperationContext.h"
     "ThreadPool.h"
     "typeshim.win32.ASSERT.h"
     "typeshim.win32.h"
     "util.api_adaptor.OutString.h"
-    "util.AutoCleanup_SC_HANDLE.h"
     "util.AutoCleanupBase.h"
     "util.choice.h"
     "util.convert.Arithmetic.h"
@@ -78,10 +79,9 @@ set(VLR_HEADER_FILES
     "util.types.h"
     "util.types.linux.h"
     "util.types.win32.h"
-    "util.Unicode.h"
+    "util.StringConversion.h"
     "UtilMacros.Assertions.h"
     "UtilMacros.General.h"
-    "UtilMacros.Namespace.h"
     "win32.targetver.WIN2K.h"
     "win32.targetver.WIN7.h"
     "win32.targetver.WINXP.h"
@@ -95,14 +95,15 @@ set(VLR_SOURCE_FILES
     "ModuleContext.Runtime.ConfigOptionsBase.cpp"
     "ModuleContext.Runtime.cpp"
     "ops.NetworkTargetInfo.cpp"
-    "pch.cpp"
+#    "pch.cpp"
+    "platform.FileSystemOps.cpp"
     "RegexCache.cpp"
+    "ThreadOperationContext.cpp"
     "ThreadPool.cpp"
-    "util.AutoCleanup_SC_HANDLE.cpp"
     "util.AutoCleanupBase.cpp"
     "util.Result.cpp"
-    "util.Unicode.cpp"
-    "vlr-util.cpp"
+    "util.StringConversion.cpp"
+#    "vlr-util.cpp"
 )
 source_group("Source Files" FILES ${VLR_SOURCE_FILES})
 
@@ -128,13 +129,13 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE
 ################################################################################
 # Includes for CMake from *.props
 ################################################################################
-if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
-    use_props(${PROJECT_NAME} Debug   "Project.cmake")
-    use_props(${PROJECT_NAME} Release "Project.cmake")
-elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
-    use_props(${PROJECT_NAME} Debug   "Project.cmake")
-    use_props(${PROJECT_NAME} Release "Project.cmake")
-endif()
+#if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
+#    use_props(${PROJECT_NAME} Debug   "Project.cmake")
+#    use_props(${PROJECT_NAME} Release "Project.cmake")
+#elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
+#    use_props(${PROJECT_NAME} Debug   "Project.cmake")
+#    use_props(${PROJECT_NAME} Release "Project.cmake")
+#endif()
 
 set(ROOT_NAMESPACE vlrutil)
 

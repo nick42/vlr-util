@@ -1,6 +1,5 @@
 #pragma once
 
-#include "UtilMacros.Namespace.h"
 #include "config.h"
 #include "ModuleContext.Compilation.h"
 #include "UtilMacros.Assertions.h"

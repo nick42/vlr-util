@@ -1,7 +1,5 @@
 #pragma once
 
-#include "UtilMacros.Namespace.h"
-
 namespace vlr {
 
 namespace util {

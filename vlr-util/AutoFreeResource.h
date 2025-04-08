@@ -3,7 +3,6 @@
 #include <functional>
 #include <optional>
 
-#include "UtilMacros.Namespace.h"
 #include "config.h"
 
 #include "ActionOnDestruction.h"

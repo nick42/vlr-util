@@ -2,7 +2,6 @@
 
 #include <atomic>
 
-#include "UtilMacros.Namespace.h"
 #include "config.h"
 
 #include "logging.MessageContext.h"

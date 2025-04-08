@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include "UtilMacros.Namespace.h"
 #include "config.h"
 
 #include "AutoFreeResource.h"

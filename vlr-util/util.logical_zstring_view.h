@@ -1,6 +1,5 @@
 #pragma once
 
-#include "UtilMacros.Namespace.h"
 #include "cpp_namespace.h"
 
 #include "zstring_view.h"

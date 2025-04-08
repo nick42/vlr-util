@@ -5,7 +5,6 @@
 #include <string>
 #include <string_view>
 
-#include "UtilMacros.Namespace.h"
 #include "config.h"
 
 #include "util.choice.h"

@@ -2,6 +2,8 @@
 
 #include "vlr-util/ThreadPool.h"
 
+#if VLR_HASDEP_BOOST_ASIO
+
 TEST(ThreadPool, general)
 {
 	auto oThreadPool = vlr::CThreadPool{};
@@ -26,3 +28,5 @@ TEST(ThreadPool, ResultAsFuture)
 	auto nFutureAnswer = oFutureAnswer.get();
 	ASSERT_EQ( nFutureAnswer, 42 );
 }
+
+#endif VLR_HASDEP_BOOST_ASIO

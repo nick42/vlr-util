@@ -93,9 +93,6 @@
     <ClInclude Include="util.api_adaptor.OutString.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="util.AutoCleanup_SC_HANDLE.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="util.AutoCleanupBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -285,6 +282,9 @@
     <ClInclude Include="UtilMacros.CompilerSupport.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SharedInstanceRegistrar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleContext.Runtime.CommandLine.cpp">
@@ -303,9 +303,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ThreadPool.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="util.AutoCleanup_SC_HANDLE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="util.AutoCleanupBase.cpp">
@@ -343,7 +340,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="vcpkg.json" />
     <None Include="..\README.md" />
+    <None Include="vcpkg.json" />
   </ItemGroup>
 </Project>

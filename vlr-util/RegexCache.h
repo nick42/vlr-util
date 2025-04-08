@@ -5,7 +5,6 @@
 #include <shared_mutex>
 #include <regex>
 
-#include "UtilMacros.Namespace.h"
 #include "config.h"
 #include "util.Result.h"
 #include "zstring_view.h"

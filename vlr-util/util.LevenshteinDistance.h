@@ -6,7 +6,6 @@
 #include <functional>
 #include <vector>
 
-#include "UtilMacros.Namespace.h"
 #include "config.h"
 
 namespace vlr {

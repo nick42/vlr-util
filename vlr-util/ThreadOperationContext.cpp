@@ -260,7 +260,6 @@ SResult CThreadOperationContext::PopulateThreadOperationContext(std::vector<Thre
 	{
 		return SResult::Success_NoWorkDone;
 	}
-	auto& oPerThreadContext = *spPerThreadContext;
 
 	sr = spPerThreadContext->PopulateThreadOperationContext(vecContextStack);
 	VLR_ASSERT_SR_SUCCEEDED_OR_RETURN_SRESULT(sr);

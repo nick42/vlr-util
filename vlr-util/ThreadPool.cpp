@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "ThreadPool.h"
 
+#if VLR_HASDEP_BOOST_ASIO
+
 #include "UtilMacros.Assertions.h"
 
 namespace vlr {
@@ -40,3 +42,5 @@ HRESULT CThreadPool::WaitForCompletion()
 }
 
 } // namespace vlr
+
+#endif VLR_HASDEP_BOOST_ASIO
