@@ -1,7 +1,7 @@
 #pragma once
 
-#include "UtilMacros.Namespace.h"
 #include "config.h"
+#if VLR_HASDEP_BOOST_ASIO
 
 #include <boost/asio/thread_pool.hpp>
 #include <boost/asio/post.hpp>
@@ -99,3 +99,5 @@ HRESULT CThreadPool::AddTaskToPool_ResultAsFuture(F&& fTask, std::future<decltyp
 }
 
 } // namespace vlr
+
+#endif // VLR_HASDEP_BOOST_ASIO

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "UtilMacros.Namespace.h"
 #include "config.h"
 
 //#define FMT_HEADER_ONLY

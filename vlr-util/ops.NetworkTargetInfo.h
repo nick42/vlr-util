@@ -1,10 +1,12 @@
 #pragma once
 
+#include "config.h"
+
 #include <optional>
+#if VLR_HASDEP_BOOST_ASIO
 #include <boost/asio/ip/address_v4.hpp>
 #include <boost/asio/ip/address_v6.hpp>
-
-#include "UtilMacros.Namespace.h"
+#endif // VLR_HASDEP_BOOST_ASIO
 
 #include "util.std_aliases.h"
 #include "util.convert.StringConversion.h"
@@ -20,8 +22,10 @@ public:
 	bool m_bIsLocalSystem = false;
 	std::optional<vlr::tstring> m_osTargetName_NetBIOS;
 	std::optional<vlr::tstring> m_osTargetName_DNS;
+#if VLR_HASDEP_BOOST_ASIO
 	std::optional<boost::asio::ip::address_v4> m_ooTargetAddress_IPv4;
 	std::optional<boost::asio::ip::address_v6> m_ooTargetAddress_IPv6;
+#endif // VLR_HASDEP_BOOST_ASIO
 
 public:
 	inline decltype(auto) withIsLocalSystem( bool bValue = true )
@@ -39,6 +43,7 @@ public:
 		m_osTargetName_DNS = sTargetName;
 		return *this;
 	}
+#if VLR_HASDEP_BOOST_ASIO
 	inline decltype(auto) withTargetAddress_IPv4( const boost::asio::ip::address_v4& oTargetAddress )
 	{
 		m_ooTargetAddress_IPv4 = oTargetAddress;
@@ -59,6 +64,7 @@ public:
 		m_ooTargetAddress_IPv6 = boost::asio::ip::make_address_v6( util::Convert::ToStdStringA( sTargetAddress ) );
 		return *this;
 	}
+#endif // VLR_HASDEP_BOOST_ASIO
 
 public:
 	vlr::tzstring_view GetNameForIntent_win32_OpenSCManager() const;

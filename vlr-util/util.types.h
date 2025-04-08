@@ -2,7 +2,6 @@
 
 #include <type_traits>
 
-#include "UtilMacros.Namespace.h"
 #include "config.h"
 #include "ModuleContext.Compilation.h"
 

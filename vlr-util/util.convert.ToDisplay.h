@@ -3,7 +3,6 @@
 #include <string>
 #include <optional>
 
-#include "UtilMacros.Namespace.h"
 #include "config.h"
 #include "ModuleContext.Compilation.h"
 

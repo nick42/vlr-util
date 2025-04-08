@@ -77,6 +77,27 @@
 
 #endif
 
+#ifdef __has_include
+
+#if __has_include(<boost/program_options.hpp>)
+#define VLR_HASDEP_BOOST_PROGRAM_OPTIONS 1
+#else
+#define VLR_HASDEP_BOOST_PROGRAM_OPTIONS 0
+#endif
+
+#if __has_include(<boost/asio/ip/address_v4.hpp>)
+#define VLR_HASDEP_BOOST_ASIO 1
+#else
+#define VLR_HASDEP_BOOST_ASIO 0
+#endif
+
+#else
+
+#define VLR_HASDEP_BOOST_PROGRAM_OPTIONS 0
+#define VLR_HASDEP_BOOST_ASIO 0
+
+#endif // __has_include
+
 #include "typeshim.win32.h"
 #include "util.types.h"
 #include "UtilMacros.CompilerSupport.h"

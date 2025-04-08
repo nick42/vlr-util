@@ -2,7 +2,6 @@
 
 #include <string_view>
 
-#include "UtilMacros.Namespace.h"
 #include "config.h"
 #include "zstring_view.h"
 

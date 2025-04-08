@@ -1,6 +1,5 @@
 #pragma once
 
-#include "UtilMacros.Namespace.h"
 #include "config.h"
 
 #include "AssertionHandling_Config.h"

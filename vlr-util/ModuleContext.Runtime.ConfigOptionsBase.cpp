@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "ModuleContext.Runtime.ConfigOptionsBase.h"
 
+#if VLR_HASDEP_BOOST_PROGRAM_OPTIONS
+
 #include "util.convert.StringConversion.h"
 #include "UtilMacros.Assertions.h"
 
@@ -135,3 +137,5 @@ HRESULT CConfigOptionsBase::RecordParsedOptions(
 } // namespace ModuleContext
 
 } // namespace vlr
+
+#endif // VLR_HASDEP_BOOST_PROGRAM_OPTIONS

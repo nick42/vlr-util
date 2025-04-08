@@ -1,9 +1,5 @@
 #pragma once
 
-#ifndef VLR_UTIL_EXCLUDE_UTILMACROS_NAMESPACE
-#include <vlr-util/UtilMacros.Namespace.h>
-#endif
-
 #include <vlr-util/config.h>
 
 #ifndef VLR_UTIL_EXCLUDE_UTIL_STDALIASES
