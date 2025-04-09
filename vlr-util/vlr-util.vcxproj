@@ -78,7 +78,6 @@
     <ClInclude Include="util.convert.StringConversion.h" />
     <ClInclude Include="util.convert.ToDisplay.h" />
     <ClInclude Include="util.crc32.h" />
-    <ClInclude Include="util.CStringBufferAccess.h" />
     <ClInclude Include="util.data_adaptor.MultiSZ.h" />
     <ClInclude Include="util.includes.h" />
     <ClInclude Include="util.IsBitSet.h" />
@@ -97,6 +96,7 @@
     <ClInclude Include="util.Result.h" />
     <ClInclude Include="util.static_assert.h" />
     <ClInclude Include="util.std_aliases.h" />
+    <ClInclude Include="util.StringConversion.base.h" />
     <ClInclude Include="util.types.h" />
     <ClInclude Include="util.types.linux.h" />
     <ClInclude Include="util.types.win32.h" />
@@ -108,6 +108,8 @@
     <ClInclude Include="win32.targetver.WIN2K.h" />
     <ClInclude Include="win32.targetver.WIN7.h" />
     <ClInclude Include="win32.targetver.WINXP.h" />
+    <ClInclude Include="Win32\util.CStringBufferAccess.h" />
+    <ClInclude Include="Win32\util.win32.StringConversion.h" />
     <ClInclude Include="zstring_view.h" />
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +135,7 @@
     <ClCompile Include="util.AutoCleanupBase.cpp" />
     <ClCompile Include="util.Result.cpp" />
     <ClCompile Include="util.StringConversion.cpp" />
+    <ClCompile Include="Win32\util.win32.StringConversion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
@@ -220,7 +223,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -239,7 +242,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -258,7 +261,7 @@
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -277,7 +280,7 @@
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>

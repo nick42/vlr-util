@@ -91,10 +91,17 @@
 #define VLR_HASDEP_BOOST_ASIO 0
 #endif
 
+#if __has_include(<spdlog/spdlog.h>)
+#define VLR_HASDEP_SPDLOG 1
+#else
+#define VLR_HASDEP_SPDLOG 0
+#endif
+
 #else
 
 #define VLR_HASDEP_BOOST_PROGRAM_OPTIONS 0
 #define VLR_HASDEP_BOOST_ASIO 0
+#define VLR_HASDEP_SPDLOG 0
 
 #endif // __has_include
 
