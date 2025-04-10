@@ -1,11 +1,14 @@
 #pragma once
 
+#include <functional>
+#include <mutex>
 #include <string>
 #include <string_view>
 
 #include "config.h"
 #include "util.StringConversion.base.h"
 #include "util.choice.h"
+#include "UtilMacros.Assertions.h"
 
 #if defined(WIN32)
 #include "Win32/util.win32.StringConversion.h"
@@ -15,12 +18,109 @@ namespace vlr {
 
 namespace util {
 
+namespace StringConversion {
+
+class CExternalImpl
+{
+public:
+	static auto& GetSharedInstanceMutable()
+	{
+		static auto theInstance = CExternalImpl{};
+		return theInstance;
+	}
+	static const auto& GetSharedInstance()
+	{
+		return GetSharedInstanceMutable();
+	}
+
+public:
+	using FMultiByte_to_UTF16_StdString_Inline = std::function<std::wstring(std::string_view svValue, const StringConversionOptions& oStringConversionOptions)>;
+	using FUTF16_to_MultiByte_StdString_Inline = std::function<std::string(std::wstring_view svValue, const StringConversionOptions& oStringConversionOptions)>;
+
+protected:
+	mutable std::mutex m_mutexDataAccess;
+	FMultiByte_to_UTF16_StdString_Inline m_fMultiByte_to_UTF16_StdString_Inline;
+	FUTF16_to_MultiByte_StdString_Inline m_fUTF16_to_MultiByte_StdString_Inline;
+
+public:
+	// Note: Returns Success_NoWorkDone if there is no function set
+
+	inline SResult Call_MultiByte_to_UTF16_StdString(
+		std::string_view svValue,
+		std::wstring& swValue,
+		const StringConversionOptions& oStringConversionOptions) const
+	{
+		auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+		if (!m_fMultiByte_to_UTF16_StdString_Inline)
+		{
+			return SResult::Success_NoWorkDone;
+		}
+
+		swValue = m_fMultiByte_to_UTF16_StdString_Inline(svValue, oStringConversionOptions);
+
+		return SResult::Success;
+	}
+	inline SResult Call_UTF16_to_MultiByte_StdString(
+		std::wstring_view svValue,
+		std::string& saValue,
+		const StringConversionOptions& oStringConversionOptions) const
+	{
+		auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+		if (!m_fUTF16_to_MultiByte_StdString_Inline)
+		{
+			return SResult::Success_NoWorkDone;
+		}
+
+		saValue = m_fUTF16_to_MultiByte_StdString_Inline(svValue, oStringConversionOptions);
+
+		return SResult::Success;
+	}
+
+	inline SResult Set_MultiByte_to_UTF16_StdString_Inline(const FMultiByte_to_UTF16_StdString_Inline& fMultiByte_to_UTF16_StdString_Inline)
+	{
+		auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+		m_fMultiByte_to_UTF16_StdString_Inline = fMultiByte_to_UTF16_StdString_Inline;
+
+		return SResult::Success;
+	}
+	inline SResult Set_MultiByte_to_UTF16_StdString_Inline(FMultiByte_to_UTF16_StdString_Inline&& fMultiByte_to_UTF16_StdString_Inline)
+	{
+		auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+		m_fMultiByte_to_UTF16_StdString_Inline = std::move(fMultiByte_to_UTF16_StdString_Inline);
+
+		return SResult::Success;
+	}
+	inline SResult Set_UTF16_to_MultiByte_StdString_Inline(const FUTF16_to_MultiByte_StdString_Inline& fUTF16_to_MultiByte_StdString_Inline)
+	{
+		auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+		m_fUTF16_to_MultiByte_StdString_Inline = fUTF16_to_MultiByte_StdString_Inline;
+
+		return SResult::Success;
+	}
+	inline SResult Set_UTF16_to_MultiByte_StdString_Inline(FUTF16_to_MultiByte_StdString_Inline&& fUTF16_to_MultiByte_StdString_Inline)
+	{
+		auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+		m_fUTF16_to_MultiByte_StdString_Inline = std::move(fUTF16_to_MultiByte_StdString_Inline);
+
+		return SResult::Success;
+	}
+
+};
+
+} // namespace StringConversion
+
 class CStringConversion
 {
 protected:
 	// choice<0> is the externally defined inline fallback. If this is defined, call by preference.
 
-#if defined(VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString)
+#if defined(VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS)
 	inline HRESULT MultiByte_to_UTF16_choice(
 		vlr::util::choice<0>&&,
 		std::string_view svValue,
@@ -29,7 +129,22 @@ protected:
 		const StringConversionOptions& oStringConversionOptions,
 		StringConversionResults* pStringConversionResults)
 	{
-		std::wstring swValue = VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString(svValue, oStringConversionOptions);
+		SResult sr;
+
+		std::wstring swValue;
+		sr = StringConversion::CExternalImpl::GetSharedInstance().Call_MultiByte_to_UTF16_StdString(svValue, swValue, oStringConversionOptions);
+		if (sr != SResult::Success)
+		{
+			// Call the next potential conversion explicitly
+			return MultiByte_to_UTF16_choice(
+				vlr::util::choice<1>{},
+				svValue,
+				pOutputBuffer,
+				nOutputBufferLengthBytes,
+				oStringConversionOptions,
+				pStringConversionResults);
+		}
+
 		if (nOutputBufferLengthBytes < swValue.length() + sizeof(wchar_t))
 		{
 			return E_FAIL;
@@ -43,8 +158,6 @@ protected:
 
 		return S_OK;
 	}
-#endif // defined(VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString)
-#if defined(VLR_FALLBACK_Inline_UTF16_to_MultiByte_StdString)
 	inline HRESULT UTF16_to_MultiByte_choice(
 		vlr::util::choice<0>&&,
 		std::wstring_view svValue,
@@ -53,7 +166,22 @@ protected:
 		const StringConversionOptions& oStringConversionOptions,
 		StringConversionResults* pStringConversionResults)
 	{
-		std::string saValue = VLR_FALLBACK_Inline_UTF16_to_MultiByte_StdString(svValue, oStringConversionOptions);
+		SResult sr;
+
+		std::string saValue;
+		sr = StringConversion::CExternalImpl::GetSharedInstance().Call_UTF16_to_MultiByte_StdString(svValue, saValue, oStringConversionOptions);
+		if (sr != SResult::Success)
+		{
+			// Call the next potential conversion explicitly
+			return UTF16_to_MultiByte_choice(
+				vlr::util::choice<1>{},
+				svValue,
+				pOutputBuffer,
+				nOutputBufferLengthBytes,
+				oStringConversionOptions,
+				pStringConversionResults);
+		}
+
 		if (nOutputBufferLengthBytes < saValue.length() + sizeof(char))
 		{
 			return E_FAIL;
@@ -67,7 +195,7 @@ protected:
 
 		return S_OK;
 	}
-#endif // defined(VLR_FALLBACK_Inline_UTF16_to_MultiByte_StdString)
+#endif // defined(VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS)
 
 	// Note: choice<1> through choice<9> are internally defined platform specific methods (with room to expand).
 
@@ -222,26 +350,44 @@ public:
 protected:
 	// choice<0> is the externally defined inline fallback. If this is defined, call by preference.
 
-#if defined(VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString)
+#if defined(VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS)
 	inline auto Inline_MultiByte_to_UTF16_StdString_choice(
 		vlr::util::choice<0>&&,
 		std::string_view svValue,
 		const StringConversionOptions& oStringConversionOptions,
-		StringConversionResults* /*pStringConversionResults*/)
+		StringConversionResults* /*pStringConversionResults*/) -> std::wstring
 	{
-		return VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString(svValue, oStringConversionOptions);
+		SResult sr;
+
+		std::wstring swValue;
+		sr = StringConversion::CExternalImpl::GetSharedInstance().Call_MultiByte_to_UTF16_StdString(svValue, swValue, oStringConversionOptions);
+		if (sr != SResult::Success)
+		{
+			// No fallback case if we're expecting an external conversion
+			VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION(L"");
+		}
+
+		return swValue;
 	}
-#endif // defined(VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString)
-#if defined(VLR_FALLBACK_Inline_UTF16_to_MultiByte_StdString)
 	inline auto Inline_UTF16_to_MultiByte_StdString_choice(
 		vlr::util::choice<0>&&,
 		std::wstring_view svValue,
 		const StringConversionOptions& oStringConversionOptions,
-		StringConversionResults* /*pStringConversionResults*/)
+		StringConversionResults* /*pStringConversionResults*/) -> std::string
 	{
-		return VLR_FALLBACK_Inline_UTF16_to_MultiByte_StdString(svValue, oStringConversionOptions);
+		SResult sr;
+
+		std::string saValue;
+		sr = StringConversion::CExternalImpl::GetSharedInstance().Call_UTF16_to_MultiByte_StdString(svValue, saValue, oStringConversionOptions);
+		if (sr != SResult::Success)
+		{
+			// No fallback case if we're expecting an external conversion
+			VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION("");
+		}
+
+		return saValue;
 	}
-#endif // defined(VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString)
+#endif // defined(VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS)
 
 	// Note: The fallback here calls the internal conversion methods
 
