@@ -113,6 +113,11 @@ set(ALL_FILES
     ${VLR_SOURCE_FILES}
 )
 
+option(FEATURE_ENABLE_CUSTOM_STRING_CONVERSION "Enable custom string conversions" OFF)
+if(FEATURE_ENABLE_CUSTOM_STRING_CONVERSION)
+	add_definitions(-DVLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS)
+endif()
+
 ################################################################################
 # Target
 ################################################################################
