@@ -224,29 +224,28 @@ protected:
 
 	// choice<10> would be the default, but there is no current default (not possible in non-deprecated std code).
 	// Note: Potentially enhance this in the future based on an optional dependency on the utf external library.
-	// Note: By leaving these not included, the code will not compile unless one of the above options is available.
-	// Note: Currently, this means this must be implemented via macro for unsupported platforms.
-	// 
-	//inline HRESULT MultiByte_to_UTF16_choice(
-	//	vlr::util::choice<10>&&,
-	//	std::string_view /*svValue*/,
-	//	wchar_t* /*pOutputBuffer*/,
-	//	size_t /*nOutputBufferLengthBytes*/,
-	//	const StringConversionOptions& /*oStringConversionOptions*/,
-	//	StringConversionResults* /*pStringConversionResults*/)
-	//{
-	//	return E_FAIL;
-	//}
-	//inline HRESULT UTF16_to_MultiByte_choice(
-	//	vlr::util::choice<10>&&,
-	//	std::wstring_view /*svValue*/,
-	//	char* /*pOutputBuffer*/,
-	//	size_t /*nOutputBufferLengthBytes*/,
-	//	const StringConversionOptions& /*oStringConversionOptions*/,
-	//	StringConversionResults* /*pStringConversionResults*/)
-	//{
-	//	return E_FAIL;
-	//}
+	// Note: This must be compiled in now, based on updated library design.
+	 
+	inline HRESULT MultiByte_to_UTF16_choice(
+		vlr::util::choice<10>&&,
+		std::string_view /*svValue*/,
+		wchar_t* /*pOutputBuffer*/,
+		size_t /*nOutputBufferLengthBytes*/,
+		const StringConversionOptions& /*oStringConversionOptions*/,
+		StringConversionResults* /*pStringConversionResults*/)
+	{
+		return E_FAIL;
+	}
+	inline HRESULT UTF16_to_MultiByte_choice(
+		vlr::util::choice<10>&&,
+		std::wstring_view /*svValue*/,
+		char* /*pOutputBuffer*/,
+		size_t /*nOutputBufferLengthBytes*/,
+		const StringConversionOptions& /*oStringConversionOptions*/,
+		StringConversionResults* /*pStringConversionResults*/)
+	{
+		return E_FAIL;
+	}
 
 public:
 	inline HRESULT MultiByte_to_UTF16(
