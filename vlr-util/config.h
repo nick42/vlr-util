@@ -35,13 +35,9 @@
 
 // Other options which can be defined (partial list):
 
-// VLR_FALLBACK_Inline_UTF16_to_MultiByte_StdString
-// Prototype: std::string function(std::wstring_view svValue, const StringConversionOptions & oConversionOptions);
-// Used by: string conversion code, if native conversion is not available
-
-// VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString
-// Prototype: std::wstring function(std::string_view svValue, const StringConversionOptions & oConversionOptions);
-// Used by: string conversion code, if native conversion is not available
+// VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS
+// Use this to enable calling the custom string conversion callbacks.
+// Note: The library must be compiled with this option enabled to call the callbacks for internal conversions.
 
 // VLR_CONFIG_ASSERTIONS_INCLUDE_FUNCTION
 // Define this to have assertion failure messages include the function name as a context prefix
@@ -91,10 +87,17 @@
 #define VLR_HASDEP_BOOST_ASIO 0
 #endif
 
+#if __has_include(<spdlog/spdlog.h>)
+#define VLR_HASDEP_SPDLOG 1
+#else
+#define VLR_HASDEP_SPDLOG 0
+#endif
+
 #else
 
 #define VLR_HASDEP_BOOST_PROGRAM_OPTIONS 0
 #define VLR_HASDEP_BOOST_ASIO 0
+#define VLR_HASDEP_SPDLOG 0
 
 #endif // __has_include
 

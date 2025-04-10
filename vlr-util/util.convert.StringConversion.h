@@ -32,24 +32,12 @@ noexcept(noexcept(std::string{svValue}))
 
 inline auto ToStdStringA(std::wstring_view svValue, const StringConversionOptions& oConversionOptions = {})
 {
-#ifdef WIN32
 	return CStringConversion{}.Inline_UTF16_to_MultiByte_StdString(svValue, oConversionOptions);
-#elif defined(VLR_FALLBACK_Inline_UTF16_to_MultiByte_StdString)
-	return VLR_FALLBACK_Inline_UTF16_to_MultiByte_StdString(svValue, oConversionOptions);
-#else
-	static_assert();
-#endif
 }
 
 inline auto ToStdStringW(std::string_view svValue, const StringConversionOptions& oConversionOptions = {})
 {
-#ifdef WIN32
 	return CStringConversion{}.Inline_MultiByte_to_UTF16_StdString(svValue, oConversionOptions);
-#elif defined(VLR_FALLBACK_Inline_UTF16_to_MultiByte_StdString)
-	return VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString(svValue, oConversionOptions);
-#else
-	static_assert();
-#endif
 }
 
 inline auto ToStdStringW(std::wstring_view svValue, const StringConversionOptions& /*oConversionOptions*/ = {})

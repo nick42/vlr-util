@@ -7,6 +7,7 @@
 #pragma once
 
 #define VLR_CONFIG_ASSERTIONS_INCLUDE_FUNCTION
+#define VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS
 
 #include <vlr-util/config.h>
 

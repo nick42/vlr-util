@@ -1,176 +1,203 @@
 #pragma once
 
+#include <functional>
+#include <mutex>
 #include <string>
 #include <string_view>
 
 #include "config.h"
+#include "util.StringConversion.base.h"
 #include "util.choice.h"
+#include "UtilMacros.Assertions.h"
 
-#include "zstring_view.h"
+#if defined(WIN32)
+#include "Win32/util.win32.StringConversion.h"
+#endif
 
 namespace vlr {
 
 namespace util {
 
-namespace CodePageWin32 {
+namespace StringConversion {
 
-// Note: This must match defines in WinNls.h; code from there for reference:
-//
-//  Code Page Default Values.
-//  Please Use Unicode, either UTF-16 (as in WCHAR) or UTF-8 (code page CP_ACP)
-//
-//#define CP_ACP                    0           // default to ANSI code page
-//#define CP_OEMCP                  1           // default to OEM  code page
-//#define CP_MACCP                  2           // default to MAC  code page
-//#define CP_THREAD_ACP             3           // current thread's ANSI code page
-//#define CP_SYMBOL                 42          // SYMBOL translations
-//
-//#define CP_UTF7                   65000       // UTF-7 translation
-//#define CP_UTF8                   65001       // UTF-8 translation
-
-enum ECodePageWin32
-{
-	ANSI = 0,
-	OEM = 1,
-	MAC = 2,
-	ANSI_CurrentThread = 3,
-	SYMBOL = 42,
-	UTF7 = 65000,
-	UTF8 = 65001,
-};
-
-} // namespace CodePageWin32
-
-struct StringConversionResults;
-
-// Note: We want StringConversionOptions to be as constexpr constructable (for default case) as possible,
-// so that the compiler can inline and optimize that case as much as possible.
-
-struct StringConversionOptions
+class CExternalImpl
 {
 public:
-	bool m_bInputStringIsNullTerminated = false;
-	bool m_bGenerateResultNotNullTerminated = false;
-	UINT m_nCodePage = CodePageWin32::UTF8;
-	DWORD m_dwFlags_MultiByteToWideChar = 0;
-	DWORD m_dwFlags_WideCharToMultiByte = 0;
-
-public:
-	inline auto& withNullTerminatedString(bool bValue = true)
+	static auto& GetSharedInstanceMutable()
 	{
-		m_bInputStringIsNullTerminated = bValue;
-		return *this;
-	}
-	inline auto& withGenerateResultNotNullTerminated(bool bValue = true)
-	{
-		m_bGenerateResultNotNullTerminated = bValue;
-		return *this;
-	}
-	inline decltype(auto) withCodePage(UINT nCodePage)
-	{
-		m_nCodePage = nCodePage;
-		return *this;
-	}
-	// Note: This is arbitrary and can change between systems. Try not to use.
-	// See: https://learn.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar
-	inline decltype(auto) withCodePage_SystemDefaultASCII()
-	{
-		m_nCodePage = CodePageWin32::ANSI;
-		return *this;
-	}
-	inline decltype(auto) withCodePage_UTF8()
-	{
-		m_nCodePage = CodePageWin32::UTF8;
-		return *this;
-	}
-	inline decltype(auto) withFlags_MultiByteToWideChar(DWORD dwFlags_MultiByteToWideChar)
-	{
-		m_dwFlags_MultiByteToWideChar = dwFlags_MultiByteToWideChar;
-		return *this;
-	}
-	inline decltype(auto) withFlags_WideCharToMultiByte(DWORD dwFlags_WideCharToMultiByte)
-	{
-		m_dwFlags_WideCharToMultiByte = dwFlags_WideCharToMultiByte;
-		return *this;
-	}
-
-public:
-	inline UINT GetCodePageIdentifier() const
-	{
-		return m_nCodePage;
-	}
-	inline DWORD OnMultiByteToWideChar_GetFlags() const
-	{
-		return m_dwFlags_MultiByteToWideChar;
-	}
-	inline DWORD OnWideCharToMultiByte_GetFlags() const
-	{
-		return m_dwFlags_WideCharToMultiByte;
-	}
-	const CHAR* OnWideCharToMultiByte_GetDefaultChar() const
-	{
-		// Note: If codepage if UTF7/UTF8, this must be NULL
-		return nullptr;
-	}
-	WIN_BOOL* OnWideCharToMultiByte_GetUsedDefaultChar(StringConversionResults* /*pStringConversionResults*/) const
-	{
-		// Note: If codepage if UTF7/UTF8, this must be NULL
-		return nullptr;
-	}
-
-public:
-	static constexpr auto ForSystemDefaultASCIIIngress()
-	{
-		StringConversionOptions theInstance;
-		theInstance.m_nCodePage = CodePageWin32::ANSI;
+		static auto theInstance = CExternalImpl{};
 		return theInstance;
 	}
+	static const auto& GetSharedInstance()
+	{
+		return GetSharedInstanceMutable();
+	}
 
-	VLR_DEFINE_DEFAULT_CONSTRUCTOR_CONSTEXPR_NOEXCEPT(StringConversionOptions);
-};
-
-struct StringConversionResults
-{
 public:
-	size_t m_nOuputSizeBytes = 0;
+	using FMultiByte_to_UTF16_StdString_Inline = std::function<std::wstring(std::string_view svValue, const StringConversionOptions& oStringConversionOptions)>;
+	using FUTF16_to_MultiByte_StdString_Inline = std::function<std::string(std::wstring_view svValue, const StringConversionOptions& oStringConversionOptions)>;
+
+protected:
+	mutable std::mutex m_mutexDataAccess;
+	FMultiByte_to_UTF16_StdString_Inline m_fMultiByte_to_UTF16_StdString_Inline;
+	FUTF16_to_MultiByte_StdString_Inline m_fUTF16_to_MultiByte_StdString_Inline;
+
+public:
+	// Note: Returns Success_NoWorkDone if there is no function set
+
+	inline SResult Call_MultiByte_to_UTF16_StdString(
+		std::string_view svValue,
+		std::wstring& swValue,
+		const StringConversionOptions& oStringConversionOptions) const
+	{
+		auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+		if (!m_fMultiByte_to_UTF16_StdString_Inline)
+		{
+			return SResult::Success_NoWorkDone;
+		}
+
+		swValue = m_fMultiByte_to_UTF16_StdString_Inline(svValue, oStringConversionOptions);
+
+		return SResult::Success;
+	}
+	inline SResult Call_UTF16_to_MultiByte_StdString(
+		std::wstring_view svValue,
+		std::string& saValue,
+		const StringConversionOptions& oStringConversionOptions) const
+	{
+		auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+		if (!m_fUTF16_to_MultiByte_StdString_Inline)
+		{
+			return SResult::Success_NoWorkDone;
+		}
+
+		saValue = m_fUTF16_to_MultiByte_StdString_Inline(svValue, oStringConversionOptions);
+
+		return SResult::Success;
+	}
+
+	inline SResult Set_MultiByte_to_UTF16_StdString_Inline(const FMultiByte_to_UTF16_StdString_Inline& fMultiByte_to_UTF16_StdString_Inline)
+	{
+		auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+		m_fMultiByte_to_UTF16_StdString_Inline = fMultiByte_to_UTF16_StdString_Inline;
+
+		return SResult::Success;
+	}
+	inline SResult Set_MultiByte_to_UTF16_StdString_Inline(FMultiByte_to_UTF16_StdString_Inline&& fMultiByte_to_UTF16_StdString_Inline)
+	{
+		auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+		m_fMultiByte_to_UTF16_StdString_Inline = std::move(fMultiByte_to_UTF16_StdString_Inline);
+
+		return SResult::Success;
+	}
+	inline SResult Set_UTF16_to_MultiByte_StdString_Inline(const FUTF16_to_MultiByte_StdString_Inline& fUTF16_to_MultiByte_StdString_Inline)
+	{
+		auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+		m_fUTF16_to_MultiByte_StdString_Inline = fUTF16_to_MultiByte_StdString_Inline;
+
+		return SResult::Success;
+	}
+	inline SResult Set_UTF16_to_MultiByte_StdString_Inline(FUTF16_to_MultiByte_StdString_Inline&& fUTF16_to_MultiByte_StdString_Inline)
+	{
+		auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+		m_fUTF16_to_MultiByte_StdString_Inline = std::move(fUTF16_to_MultiByte_StdString_Inline);
+
+		return SResult::Success;
+	}
+
 };
+
+} // namespace StringConversion
 
 class CStringConversion
 {
 protected:
-#if defined(WIN32)
-	HRESULT MultiByte_to_UTF16_Win32(
-		std::string_view svValue,
-		wchar_t* pOutputBuffer,
-		size_t nOutputBufferLengthBytes,
-		const StringConversionOptions& oStringConversionOptions,
-		StringConversionResults* pStringConversionResults);
-	HRESULT UTF16_to_MultiByte_Win32(
-		std::wstring_view svValue,
-		char* pOutputBuffer,
-		size_t nOutputBufferLengthBytes,
-		const StringConversionOptions& oStringConversionOptions,
-		StringConversionResults* pStringConversionResults);
-#endif // defined(WIN32)
+	// choice<0> is the externally defined inline fallback. If this is defined, call by preference.
 
-#if defined(VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString)
-	HRESULT MultiByte_to_UTF16_choice(
+#if defined(VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS)
+	inline HRESULT MultiByte_to_UTF16_choice(
 		vlr::util::choice<0>&&,
 		std::string_view svValue,
 		wchar_t* pOutputBuffer,
 		size_t nOutputBufferLengthBytes,
 		const StringConversionOptions& oStringConversionOptions,
-		StringConversionResults* pStringConversionResults);
-#endif // defined(VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString)
-#if defined(VLR_FALLBACK_Inline_UTF16_to_MultiByte_StdString)
-	HRESULT UTF16_to_MultiByte_choice(
+		StringConversionResults* pStringConversionResults)
+	{
+		SResult sr;
+
+		std::wstring swValue;
+		sr = StringConversion::CExternalImpl::GetSharedInstance().Call_MultiByte_to_UTF16_StdString(svValue, swValue, oStringConversionOptions);
+		if (sr != SResult::Success)
+		{
+			// Call the next potential conversion explicitly
+			return MultiByte_to_UTF16_choice(
+				vlr::util::choice<1>{},
+				svValue,
+				pOutputBuffer,
+				nOutputBufferLengthBytes,
+				oStringConversionOptions,
+				pStringConversionResults);
+		}
+
+		if (nOutputBufferLengthBytes < swValue.length() + sizeof(wchar_t))
+		{
+			return E_FAIL;
+		}
+
+#if defined(WIN32)
+		wcscpy_s(pOutputBuffer, nOutputBufferLengthBytes / sizeof(wchar_t), swValue.c_str());
+#else
+		wcscpy(pOutputBuffer, swValue.c_str());
+#endif
+
+		return S_OK;
+	}
+	inline HRESULT UTF16_to_MultiByte_choice(
 		vlr::util::choice<0>&&,
 		std::wstring_view svValue,
 		char* pOutputBuffer,
 		size_t nOutputBufferLengthBytes,
 		const StringConversionOptions& oStringConversionOptions,
-		StringConversionResults* pStringConversionResults);
-#endif // defined(VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString)
+		StringConversionResults* pStringConversionResults)
+	{
+		SResult sr;
+
+		std::string saValue;
+		sr = StringConversion::CExternalImpl::GetSharedInstance().Call_UTF16_to_MultiByte_StdString(svValue, saValue, oStringConversionOptions);
+		if (sr != SResult::Success)
+		{
+			// Call the next potential conversion explicitly
+			return UTF16_to_MultiByte_choice(
+				vlr::util::choice<1>{},
+				svValue,
+				pOutputBuffer,
+				nOutputBufferLengthBytes,
+				oStringConversionOptions,
+				pStringConversionResults);
+		}
+
+		if (nOutputBufferLengthBytes < saValue.length() + sizeof(char))
+		{
+			return E_FAIL;
+		}
+
+#if defined(WIN32)
+		strcpy_s(pOutputBuffer, nOutputBufferLengthBytes / sizeof(char), saValue.c_str());
+#else
+		strcpy(pOutputBuffer, saValue.c_str());
+#endif
+
+		return S_OK;
+	}
+#endif // defined(VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS)
+
+	// Note: choice<1> through choice<9> are internally defined platform specific methods (with room to expand).
 
 #if defined(WIN32)
 	inline HRESULT MultiByte_to_UTF16_choice(
@@ -181,7 +208,7 @@ protected:
 		const StringConversionOptions& oStringConversionOptions,
 		StringConversionResults* pStringConversionResults)
 	{
-		return MultiByte_to_UTF16_Win32(svValue, pOutputBuffer, nOutputBufferLengthBytes, oStringConversionOptions, pStringConversionResults);
+		return win32::MultiByte_to_UTF16(svValue, pOutputBuffer, nOutputBufferLengthBytes, oStringConversionOptions, pStringConversionResults);
 	}
 	inline HRESULT UTF16_to_MultiByte_choice(
 		vlr::util::choice<1>&&,
@@ -191,59 +218,97 @@ protected:
 		const StringConversionOptions& oStringConversionOptions,
 		StringConversionResults* pStringConversionResults)
 	{
-		return UTF16_to_MultiByte_Win32(svValue, pOutputBuffer, nOutputBufferLengthBytes, oStringConversionOptions, pStringConversionResults);
+		return win32::UTF16_to_MultiByte(svValue, pOutputBuffer, nOutputBufferLengthBytes, oStringConversionOptions, pStringConversionResults);
 	}
 #endif // defined(WIN32)
 
-	// Note: By leaving these not included, the code will not compile unless one of the above options is available.
-	// 
-	//inline HRESULT MultiByte_to_UTF16_choice(
-	//	vlr::util::choice<10>&&,
-	//	std::string_view /*svValue*/,
-	//	wchar_t* /*pOutputBuffer*/,
-	//	size_t /*nOutputBufferLengthBytes*/,
-	//	const StringConversionOptions& /*oStringConversionOptions*/,
-	//	StringConversionResults* /*pStringConversionResults*/)
-	//{
-	//	return E_FAIL;
-	//}
-	//inline HRESULT UTF16_to_MultiByte_choice(
-	//	vlr::util::choice<10>&&,
-	//	std::wstring_view /*svValue*/,
-	//	char* /*pOutputBuffer*/,
-	//	size_t /*nOutputBufferLengthBytes*/,
-	//	const StringConversionOptions& /*oStringConversionOptions*/,
-	//	StringConversionResults* /*pStringConversionResults*/)
-	//{
-	//	return E_FAIL;
-	//}
+	// choice<10> would be the default, but there is no current default (not possible in non-deprecated std code).
+	// Note: Potentially enhance this in the future based on an optional dependency on the utf external library.
+	// Note: This must be compiled in now, based on updated library design.
+	 
+	inline HRESULT MultiByte_to_UTF16_choice(
+		vlr::util::choice<10>&&,
+		std::string_view /*svValue*/,
+		wchar_t* /*pOutputBuffer*/,
+		size_t /*nOutputBufferLengthBytes*/,
+		const StringConversionOptions& /*oStringConversionOptions*/,
+		StringConversionResults* /*pStringConversionResults*/)
+	{
+		return E_FAIL;
+	}
+	inline HRESULT UTF16_to_MultiByte_choice(
+		vlr::util::choice<10>&&,
+		std::wstring_view /*svValue*/,
+		char* /*pOutputBuffer*/,
+		size_t /*nOutputBufferLengthBytes*/,
+		const StringConversionOptions& /*oStringConversionOptions*/,
+		StringConversionResults* /*pStringConversionResults*/)
+	{
+		return E_FAIL;
+	}
 
 public:
-	HRESULT MultiByte_to_UTF16(
+	inline HRESULT MultiByte_to_UTF16(
 		std::string_view svValue,
 		wchar_t* pOutputBuffer,
 		size_t nOutputBufferLengthBytes,
 		const StringConversionOptions& oStringConversionOptions = {},
-		StringConversionResults* pStringConversionResults = nullptr );
-	HRESULT UTF16_to_MultiByte(
+		StringConversionResults* pStringConversionResults = nullptr)
+	{
+		if (svValue.empty())
+		{
+			return S_FALSE;
+		}
+
+		return MultiByte_to_UTF16_choice(util::choice<0>{}, svValue, pOutputBuffer, nOutputBufferLengthBytes, oStringConversionOptions, pStringConversionResults);
+	}
+	inline HRESULT UTF16_to_MultiByte(
 		std::wstring_view svValue,
 		char* pOutputBuffer,
 		size_t nOutputBufferLengthBytes,
 		const StringConversionOptions& oStringConversionOptions = {},
-		StringConversionResults* pStringConversionResults = nullptr );
+		StringConversionResults* pStringConversionResults = nullptr )
+	{
+		if (svValue.empty())
+		{
+			return S_FALSE;
+		}
 
-	HRESULT MultiByte_to_UTF16(
+		return UTF16_to_MultiByte_choice(util::choice<0>{}, svValue, pOutputBuffer, nOutputBufferLengthBytes, oStringConversionOptions, pStringConversionResults);
+	}
+
+	inline HRESULT MultiByte_to_UTF16(
 		vlr::zstring_view svValue,
 		wchar_t* pOutputBuffer,
 		size_t nOutputBufferLengthBytes,
 		const StringConversionOptions& oStringConversionOptions = {},
-		StringConversionResults* pStringConversionResults = nullptr );
-	HRESULT UTF16_to_MultiByte(
+		StringConversionResults* pStringConversionResults = nullptr )
+	{
+		auto oStringConversionOptions_Updated = StringConversionOptions{ oStringConversionOptions }.withNullTerminatedString(true);
+
+		return MultiByte_to_UTF16(
+			static_cast<std::string_view>(svValue),
+			pOutputBuffer,
+			nOutputBufferLengthBytes,
+			oStringConversionOptions_Updated,
+			pStringConversionResults);
+	}
+	inline HRESULT UTF16_to_MultiByte(
 		vlr::wzstring_view svValue,
 		char* pOutputBuffer,
 		size_t nOutputBufferLengthBytes,
 		const StringConversionOptions& oStringConversionOptions = {},
-		StringConversionResults* pStringConversionResults = nullptr );
+		StringConversionResults* pStringConversionResults = nullptr )
+	{
+		auto oStringConversionOptions_Updated = StringConversionOptions{ oStringConversionOptions }.withNullTerminatedString(true);
+
+		return UTF16_to_MultiByte(
+			static_cast<std::wstring_view>(svValue),
+			pOutputBuffer,
+			nOutputBufferLengthBytes,
+			oStringConversionOptions_Updated,
+			pStringConversionResults);
+	}
 
 	HRESULT MultiByte_to_UTF16(
 		std::string_view svValue,
@@ -256,38 +321,72 @@ public:
 		const StringConversionOptions& oStringConversionOptions = {},
 		StringConversionResults* pStringConversionResults = nullptr );
 
-	HRESULT MultiByte_to_UTF16(
+	inline HRESULT MultiByte_to_UTF16(
 		const std::string& strValue,
 		std::wstring& strOutput,
 		const StringConversionOptions& oStringConversionOptions = {},
-		StringConversionResults* pStringConversionResults = nullptr );
-	HRESULT UTF16_to_MultiByte(
+		StringConversionResults* pStringConversionResults = nullptr )
+	{
+		return MultiByte_to_UTF16(
+			std::string_view{ strValue.c_str(), strValue.length() },
+			strOutput,
+			oStringConversionOptions,
+			pStringConversionResults);
+	}
+	inline HRESULT UTF16_to_MultiByte(
 		const std::wstring& strValue,
 		std::string& strOutput,
 		const StringConversionOptions& oStringConversionOptions = {},
-		StringConversionResults* pStringConversionResults = nullptr );
+		StringConversionResults* pStringConversionResults = nullptr )
+	{
+		return UTF16_to_MultiByte(
+			std::wstring_view{ strValue.c_str(), strValue.length() },
+			strOutput,
+			oStringConversionOptions,
+			pStringConversionResults);
+	}
 
 protected:
-#if defined(VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString)
+	// choice<0> is the externally defined inline fallback. If this is defined, call by preference.
+
+#if defined(VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS)
 	inline auto Inline_MultiByte_to_UTF16_StdString_choice(
 		vlr::util::choice<0>&&,
 		std::string_view svValue,
 		const StringConversionOptions& oStringConversionOptions,
-		StringConversionResults* /*pStringConversionResults*/)
+		StringConversionResults* /*pStringConversionResults*/) -> std::wstring
 	{
-		return VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString(svValue, oStringConversionOptions);
+		SResult sr;
+
+		std::wstring swValue;
+		sr = StringConversion::CExternalImpl::GetSharedInstance().Call_MultiByte_to_UTF16_StdString(svValue, swValue, oStringConversionOptions);
+		if (sr != SResult::Success)
+		{
+			// No fallback case if we're expecting an external conversion
+			VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION(L"");
+		}
+
+		return swValue;
 	}
-#endif // defined(VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString)
-#if defined(VLR_FALLBACK_Inline_UTF16_to_MultiByte_StdString)
 	inline auto Inline_UTF16_to_MultiByte_StdString_choice(
 		vlr::util::choice<0>&&,
 		std::wstring_view svValue,
 		const StringConversionOptions& oStringConversionOptions,
-		StringConversionResults* /*pStringConversionResults*/)
+		StringConversionResults* /*pStringConversionResults*/) -> std::string
 	{
-		return VLR_FALLBACK_Inline_UTF16_to_MultiByte_StdString(svValue, oStringConversionOptions);
+		SResult sr;
+
+		std::string saValue;
+		sr = StringConversion::CExternalImpl::GetSharedInstance().Call_UTF16_to_MultiByte_StdString(svValue, saValue, oStringConversionOptions);
+		if (sr != SResult::Success)
+		{
+			// No fallback case if we're expecting an external conversion
+			VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION("");
+		}
+
+		return saValue;
 	}
-#endif // defined(VLR_FALLBACK_Inline_MultiByte_to_UTF16_StdString)
+#endif // defined(VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS)
 
 	// Note: The fallback here calls the internal conversion methods
 
@@ -344,16 +443,22 @@ public:
 	}
 
 #if VLR_CONFIG_INCLUDE_ATL_CString
-	HRESULT MultiByte_to_UTF16(
+	inline HRESULT MultiByte_to_UTF16(
 		std::string_view svValue,
 		CStringW& sOutput,
 		const StringConversionOptions& oStringConversionOptions = {},
-		StringConversionResults* pStringConversionResults = nullptr );
-	HRESULT UTF16_to_MultiByte(
+		StringConversionResults* pStringConversionResults = nullptr)
+	{
+		return win32::MultiByte_to_UTF16(svValue, sOutput, oStringConversionOptions, pStringConversionResults);
+	}
+	inline HRESULT UTF16_to_MultiByte(
 		std::wstring_view svValue,
 		CStringA& sOutput,
 		const StringConversionOptions& oStringConversionOptions = {},
-		StringConversionResults* pStringConversionResults = nullptr );
+		StringConversionResults* pStringConversionResults = nullptr)
+	{
+		return win32::UTF16_to_MultiByte(svValue, sOutput, oStringConversionOptions, pStringConversionResults);
+	}
 
 	inline auto Inline_MultiByte_to_UTF16_CString(
 		std::string_view svValue,

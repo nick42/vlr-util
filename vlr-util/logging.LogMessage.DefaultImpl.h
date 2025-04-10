@@ -7,13 +7,17 @@
 #include "formatpf.h"
 #include "util.convert.StringConversion.h"
 
+#if VLR_HASDEP_SPDLOG
 #include "include.spdlog.h"
+#endif // VLR_HASDEP_SPDLOG
 
 namespace vlr {
 
 namespace logging {
 
 namespace DefaultImpl {
+
+#if VLR_HASDEP_SPDLOG
 
 inline auto GetLevel_spdlog(const CMessageContext& oMessageContext)
 {
@@ -36,42 +40,24 @@ inline auto GetLevel_spdlog(const CMessageContext& oMessageContext)
 	}
 }
 
+#endif // VLR_HASDEP_SPDLOG
+
 inline SResult CheckCouldMessageBeLogged(const CMessageContext& /*oMessageContext*/)
 {
 	return SResult::Success;
 }
 
-inline SResult LogMessage(const CMessageContext& oMessageContext, const vlr::tstring& sMessage)
+inline SResult LogMessage([[maybe_unused]] const CMessageContext& oMessageContext, [[maybe_unused]] const vlr::tstring& sMessage)
 {
+#if VLR_HASDEP_SPDLOG
 	auto eLevel_spdlog = GetLevel_spdlog(oMessageContext);
 	spdlog::log(eLevel_spdlog, sMessage);
 
 	return SResult::Success;
+#else
+	return SResult::Success_NoWorkDone;
+#endif
 }
-
-//template< typename TString >
-//inline auto LogMessage(const CMessageContext& oMessageContext, const TString& tMessage)
-//{
-//	// TODO? Pre-checking based on message context, if message will be logged, early abort (before formatting)
-//
-//	auto eLevel_spdlog = GetLevel_spdlog(oMessageContext);
-//	spdlog::log(eLevel_spdlog, tMessage);
-//
-//	return tMessage;
-//}
-//
-//template< typename TFormatString, typename... Arg >
-//inline auto LogMessagePF(const CMessageContext& oMessageContext, TFormatString svFormatString, Arg&&... args)
-//{
-//	// TODO? Pre-checking based on message context, if message will be logged, early abort (before formatting)
-//
-//	auto sMessage = formatpf(svFormatString, std::forward<Arg>(args)...);
-//
-//	auto eLevel_spdlog = GetLevel_spdlog(oMessageContext);
-//	spdlog::log(eLevel_spdlog, sMessage);
-//
-//	return sMessage;
-//}
 
 } // namespace DefaultImpl
 

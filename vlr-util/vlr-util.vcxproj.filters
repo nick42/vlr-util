@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Win32">
+      <UniqueIdentifier>{147fe85f-d068-401f-a2a0-97fc693cc98e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActionOnDestruction.h">
@@ -109,9 +112,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="util.convert.ToDisplay.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util.CStringBufferAccess.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="util.data_adaptor.MultiSZ.h">
@@ -285,6 +285,15 @@
     <ClInclude Include="SharedInstanceRegistrar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Win32\util.win32.StringConversion.h">
+      <Filter>Win32</Filter>
+    </ClInclude>
+    <ClInclude Include="util.StringConversion.base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32\util.CStringBufferAccess.h">
+      <Filter>Win32</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleContext.Runtime.CommandLine.cpp">
@@ -337,6 +346,9 @@
     </ClCompile>
     <ClCompile Include="platform.FileSystemOps.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32\util.win32.StringConversion.cpp">
+      <Filter>Win32</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
