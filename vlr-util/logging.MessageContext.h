@@ -54,7 +54,7 @@ public:
 		{
 			return _T("[unknown]");
 		}
-		return fmt::format(_T("{}:{}"), GetFileNameOnly(), m_nLineNumber);
+		return fmt::format(_T("{}:{}"), GetFileNameOnly().asStringView(), m_nLineNumber);
 	}
 
 public:

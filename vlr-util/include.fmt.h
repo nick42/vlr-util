@@ -3,6 +3,7 @@
 #include "config.h"
 
 //#define FMT_HEADER_ONLY
+//#define FMT_UNICODE 1
 
 #include <fmt/format.h>
 // Note: This file is required to support the UTF-16 char set in formatting

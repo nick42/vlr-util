@@ -85,6 +85,11 @@
   <PropertyGroup Label="Vcpkg">
     <VcpkgEnableManifest>true</VcpkgEnableManifest>
   </PropertyGroup>
+  <PropertyGroup>
+	<Message Text="FEATURE_ENABLE_CUSTOM_STRING_CONVERSION = $(FEATURE_ENABLE_CUSTOM_STRING_CONVERSION)"/>
+	<DefineConstants Condition="'$(FEATURE_ENABLE_CUSTOM_STRING_CONVERSION)'=='ON'">$(DefineConstants);VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS</DefineConstants>
+	<PreprocessorDefinitions Condition="'$(FEATURE_ENABLE_CUSTOM_STRING_CONVERSION)'=='ON'">VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
