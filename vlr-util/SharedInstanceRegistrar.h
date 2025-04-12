@@ -18,7 +18,7 @@ public:
 
 	// Note: Intent here is for the child class to potentially add a static method which calls this, with name/template auto populated
 	template <typename TSharedInstance>
-	static std::shared_ptr<TSharedInstance> GetSharedInstanceMutableSP(
+	static std::shared_ptr<TSharedInstance> GetTypedSharedInstanceMutableSP(
 		tzstring_view svzSharedInstanceName,
 		CSharedInstanceRegistrar* pSharedInstanceRegistrar = nullptr);
 
@@ -63,7 +63,7 @@ public:
 };
 
 template <typename TSharedInstance>
-std::shared_ptr<TSharedInstance> CSharedInstanceBase::GetSharedInstanceMutableSP(tzstring_view svzSharedInstanceName, CSharedInstanceRegistrar* pSharedInstanceRegistrar /*= nullptr*/)
+std::shared_ptr<TSharedInstance> CSharedInstanceBase::GetTypedSharedInstanceMutableSP(tzstring_view svzSharedInstanceName, CSharedInstanceRegistrar* pSharedInstanceRegistrar /*= nullptr*/)
 {
 	auto& oSharedInstanceRegistrar = pSharedInstanceRegistrar ? *pSharedInstanceRegistrar : CSharedInstanceRegistrar::GetSharedInstance();
 

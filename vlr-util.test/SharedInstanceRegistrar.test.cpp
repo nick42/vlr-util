@@ -22,6 +22,15 @@ public:
 	{
 		return GetTypeName();
 	}
+	static auto GetSharedInstanceMutableSP(CSharedInstanceRegistrar* pSharedInstanceRegistrar_Override = nullptr)
+	{
+		CSharedInstanceRegistrar* pSharedInstanceRegistrar = pSharedInstanceRegistrar_Override ?
+			pSharedInstanceRegistrar_Override
+			: &CSharedInstanceRegistrar::GetSharedInstance();
+		std::shared_ptr<CTestSharedInstanceType> spSharedInstance;
+		pSharedInstanceRegistrar->PopulateSharedInstance<CTestSharedInstanceType>(GetTypeName(), spSharedInstance);
+		return spSharedInstance;
+	}
 };
 
 TEST_F(TestSharedInstanceRegistrar, PopulateSharedInstance_basic)
@@ -80,7 +89,7 @@ TEST_F(TestSharedInstanceRegistrar, PopulateSharedInstance_IndirectPopulation)
 {
 	SResult sr;
 
-	auto spSharedInstance = CTestSharedInstanceType::GetSharedInstanceMutableSP<CTestSharedInstanceType>(CTestSharedInstanceType::GetTypeName(), &m_oSharedInstanceRegistrar);
+	auto spSharedInstance = CTestSharedInstanceType::GetTypedSharedInstanceMutableSP<CTestSharedInstanceType>(CTestSharedInstanceType::GetTypeName(), &m_oSharedInstanceRegistrar);
 	EXPECT_NE(spSharedInstance, nullptr);
 
 	std::shared_ptr<CTestSharedInstanceType> spSharedInstance_SecondRequest;
@@ -143,4 +152,20 @@ TEST_F(TestSharedInstanceRegistrar, RePopulateAfterClear)
 	EXPECT_NE(spSharedInstance_SecondRequest, nullptr);
 
 	EXPECT_NE(spSharedInstance.get(), spSharedInstance_SecondRequest.get());
+}
+
+TEST_F(TestSharedInstanceRegistrar, PopulateUsingClassDirectly)
+{
+	SResult sr;
+
+	auto spSharedInstance = CTestSharedInstanceType::GetSharedInstanceMutableSP(&m_oSharedInstanceRegistrar);
+	EXPECT_NE(spSharedInstance, nullptr);
+
+	SPCSharedInstanceBase spSharedInstance_Check;
+	sr = m_oSharedInstanceRegistrar.CheckSharedInstanceCached(CTestSharedInstanceType::GetTypeName(), spSharedInstance_Check);
+	EXPECT_TRUE(sr.isSuccess());
+	EXPECT_NE(spSharedInstance_Check, nullptr);
+
+	// This should be the same
+	EXPECT_EQ(spSharedInstance.get(), spSharedInstance_Check.get());
 }
