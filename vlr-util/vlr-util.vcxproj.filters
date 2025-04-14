@@ -294,6 +294,9 @@
     <ClInclude Include="Win32\util.CStringBufferAccess.h">
       <Filter>Win32</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleContext.LogicalState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleContext.Runtime.CommandLine.cpp">

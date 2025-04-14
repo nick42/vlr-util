@@ -52,6 +52,7 @@
     <ClInclude Include="logging.LogMessage.h" />
     <ClInclude Include="logging.MessageContext.h" />
     <ClInclude Include="ModuleContext.Compilation.h" />
+    <ClInclude Include="ModuleContext.LogicalState.h" />
     <ClInclude Include="ModuleContext.Runtime.CommandLine.h" />
     <ClInclude Include="ModuleContext.Runtime.ConfigOptionsBase.h" />
     <ClInclude Include="ModuleContext.Runtime.h" />
@@ -218,7 +219,7 @@
   </PropertyGroup>
   <!-- Note: Added to support custom properties for features -->
   <PropertyGroup>
-	<VcpkgFeature_EnableCustomStringConversion Condition="'$(VcpkgFeature_EnableCustomStringConversion)'==''">OFF</VcpkgFeature_EnableCustomStringConversion>
+    <VcpkgFeature_EnableCustomStringConversion Condition="'$(VcpkgFeature_EnableCustomStringConversion)'==''">OFF</VcpkgFeature_EnableCustomStringConversion>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

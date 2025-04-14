@@ -4,8 +4,10 @@
 #include <mutex>
 #include <unordered_map>
 
+#include "StringCompare.h"
 #include "zstring_view.h"
 #include "util.Result.h"
+#include "ModuleContext.LogicalState.h"
 
 namespace vlr {
 
@@ -42,6 +44,8 @@ public:
 protected:
 	mutable std::mutex m_mutexDataAccess;
 	std::unordered_map<tstring, SPCSharedInstanceBase> m_mapInstanceNameToInstance;
+	// Note: We maintain an ordered vector of instances, so that we can destruct in reverse order
+	std::vector<std::tuple<tstring, SPCSharedInstanceBase>> m_vecSharedInstanceCollection;
 
 public:
 	template <typename TSharedInstance>
@@ -59,6 +63,15 @@ public:
 	SResult CheckSharedInstanceCached(
 		tzstring_view svzSharedInstanceName,
 		SPCSharedInstanceBase& spSharedInstance_Result) const;
+	size_t GetSharedInstanceCount() const;
+
+protected:
+	SResult EnsureSharedInstanceInOrderedCollection_UnderLock(
+		tzstring_view svzSharedInstanceName,
+		const SPCSharedInstanceBase& spSharedInstanceBase);
+	SResult RemoveSharedInstanceFromOrderedCollection_UnderLock(
+		tzstring_view svzSharedInstanceName,
+		SPCSharedInstanceBase& spSharedInstanceBase_Result);
 
 };
 
@@ -110,6 +123,10 @@ SResult CSharedInstanceRegistrar::PopulateSharedInstance(
 		return SResult::Success;
 	}
 
+	bool bNormalStateForClassInit = ModuleContext::CLogicalState::GetSharedInstance().IsInNormalStateFor_ClassInit();
+	// Note: Only doing debug check here; not safe to log or take other actions.
+	ASSERT(bNormalStateForClassInit);
+
 	// Note: Creating with new explicitly, because we may take weak_ptr's
 	// Note: This will not compile without a default constuctor (set manually otherwise)
 	auto spSharedInstanceTyped = std::shared_ptr<TSharedInstance>{ new TSharedInstance() };
@@ -119,6 +136,7 @@ SResult CSharedInstanceRegistrar::PopulateSharedInstance(
 	}
 
 	spSharedInstanceBase = spSharedInstanceTyped;
+	m_vecSharedInstanceCollection.push_back(std::make_tuple(svzSharedInstanceName.toStdString(), spSharedInstanceBase));
 	spSharedInstance_Result = spSharedInstanceTyped;
 
 	return SResult::Success;
@@ -138,18 +156,42 @@ inline SResult CSharedInstanceRegistrar::SetSharedInstance(
 inline SResult CSharedInstanceRegistrar::ClearSharedInstance(
 	tzstring_view svzSharedInstanceName)
 {
-	auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+	// Note: We're being a bit careful here. It's _possible_ that the destructor for a shared instance 
+	// will invoke other functionality in the registrar. If we are holding the mutex at that time, we 
+	// would deadlock. So we release the internal mutex _before_ we free our handle to the previous 
+	// shared instance.
 
-	m_mapInstanceNameToInstance.erase(svzSharedInstanceName.toStdString());
+	SPCSharedInstanceBase spSharedInstanceBase_Removing;
+
+	{
+		auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+		m_mapInstanceNameToInstance.erase(svzSharedInstanceName.toStdString());
+		RemoveSharedInstanceFromOrderedCollection_UnderLock(svzSharedInstanceName, spSharedInstanceBase_Removing);
+	}
 
 	return SResult::Success;
 }
 
 inline SResult CSharedInstanceRegistrar::ClearAllSharedInstances()
 {
-	auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+	// Note: See note in ClearSharedInstance for caution about reference holding.
 
-	m_mapInstanceNameToInstance.clear();
+	while (true)
+	{
+		SPCSharedInstanceBase spSharedInstanceBase_Removing;
+
+		auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+		if (m_vecSharedInstanceCollection.size() == 0)
+		{
+			break;
+		}
+		spSharedInstanceBase_Removing = std::get<1>(m_vecSharedInstanceCollection.back());
+		m_vecSharedInstanceCollection.pop_back();
+
+		m_mapInstanceNameToInstance.erase(spSharedInstanceBase_Removing->GetSharedInstanceName().toStdString());
+	}
 
 	return SResult::Success;
 }
@@ -170,6 +212,59 @@ inline SResult CSharedInstanceRegistrar::CheckSharedInstanceCached(
 	spSharedInstance_Result = iterIndex->second;
 
 	return SResult::Success;
+}
+
+size_t CSharedInstanceRegistrar::GetSharedInstanceCount() const
+{
+	auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+	return m_mapInstanceNameToInstance.size();
+}
+
+SResult CSharedInstanceRegistrar::EnsureSharedInstanceInOrderedCollection_UnderLock(
+	tzstring_view svzSharedInstanceName,
+	const SPCSharedInstanceBase& spSharedInstanceBase)
+{
+	for (auto& oSharedInstanceTuple : m_vecSharedInstanceCollection)
+	{
+		if (vlr::StringCompare::CS().AreEqual(std::get<0>(oSharedInstanceTuple), svzSharedInstanceName))
+		{
+			if (std::get<1>(oSharedInstanceTuple).get() == spSharedInstanceBase.get())
+			{
+				return SResult::Success;
+			}
+			// Update with new shared instance (eg: from set operation)
+			std::get<1>(oSharedInstanceTuple) = spSharedInstanceBase;
+
+			return SResult::Success;
+		}
+	}
+
+	// If we get to here, the instance was not in the ordered collection previously; add to the end
+	m_vecSharedInstanceCollection.push_back(std::make_tuple(svzSharedInstanceName.toStdString(), spSharedInstanceBase));
+
+	return SResult::Success;
+}
+
+SResult CSharedInstanceRegistrar::RemoveSharedInstanceFromOrderedCollection_UnderLock(
+	tzstring_view svzSharedInstanceName,
+	SPCSharedInstanceBase& spSharedInstanceBase_Result)
+{
+	for (auto iterIndex = m_vecSharedInstanceCollection.begin(); iterIndex != m_vecSharedInstanceCollection.end(); ++iterIndex)
+	{
+		const auto& oSharedInstanceTuple = *iterIndex;
+		if (vlr::StringCompare::CS().AreEqual(std::get<0>(oSharedInstanceTuple), svzSharedInstanceName))
+		{
+			spSharedInstanceBase_Result = std::get<1>(oSharedInstanceTuple);
+			m_vecSharedInstanceCollection.erase(iterIndex);
+			// Note: Reference above not valid any more here, just to note.
+			return SResult::Success;
+		}
+	}
+
+	// If we get to here, the instance was not in the ordered collection previously
+
+	return SResult::Success_WithNuance;
 }
 
 } // namespace vlr
