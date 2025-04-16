@@ -354,7 +354,7 @@ protected:
 		vlr::util::choice<0>&&,
 		std::string_view svValue,
 		const StringConversionOptions& oStringConversionOptions,
-		StringConversionResults* /*pStringConversionResults*/) -> std::wstring
+		StringConversionResults* pStringConversionResults) -> std::wstring
 	{
 		SResult sr;
 
@@ -362,8 +362,12 @@ protected:
 		sr = StringConversion::CExternalImpl::GetSharedInstance().Call_MultiByte_to_UTF16_StdString(svValue, swValue, oStringConversionOptions);
 		if (sr != SResult::Success)
 		{
-			// No fallback case if we're expecting an external conversion
-			VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION(L"");
+			// Call the next potential conversion explicitly
+			return Inline_MultiByte_to_UTF16_StdString_choice(
+				vlr::util::choice<1>{},
+				svValue,
+				oStringConversionOptions,
+				pStringConversionResults);
 		}
 
 		return swValue;
@@ -372,7 +376,7 @@ protected:
 		vlr::util::choice<0>&&,
 		std::wstring_view svValue,
 		const StringConversionOptions& oStringConversionOptions,
-		StringConversionResults* /*pStringConversionResults*/) -> std::string
+		StringConversionResults* pStringConversionResults) -> std::string
 	{
 		SResult sr;
 
@@ -380,8 +384,12 @@ protected:
 		sr = StringConversion::CExternalImpl::GetSharedInstance().Call_UTF16_to_MultiByte_StdString(svValue, saValue, oStringConversionOptions);
 		if (sr != SResult::Success)
 		{
-			// No fallback case if we're expecting an external conversion
-			VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION("");
+			// Call the next potential conversion explicitly
+			return Inline_UTF16_to_MultiByte_StdString_choice(
+				vlr::util::choice<1>{},
+				svValue,
+				oStringConversionOptions,
+				pStringConversionResults);
 		}
 
 		return saValue;
