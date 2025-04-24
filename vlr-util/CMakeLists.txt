@@ -245,3 +245,28 @@ if(MSVC)
     endif()
 endif()
 
+install(TARGETS vlr-util
+        EXPORT vlr-util-targets
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin)
+
+#install(DIRECTORY ${ONEID_LIB_COMMON_INC}/ DESTINATION include/vlr-util)
+
+# Generate and install *-targets.cmake 
+install(EXPORT vlr-util-targets
+        FILE vlr-util-targets.cmake
+        NAMESPACE vlr-util::
+        DESTINATION share/vlr-util)
+
+# Generate the config file in the current binary dir (this ensures it's not placed directly in source)
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/vlr-util-config.cmake"
+"include(CMakeFindDependencyMacro)\n"
+"find_package(fmt CONFIG REQUIRED)\n"
+"include(\"\${CMAKE_CURRENT_LIST_DIR}/vlr-util-targets.cmake\")\n"
+)
+
+# Install the generated config file
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/vlr-util-config.cmake"
+        DESTINATION share/vlr-util)
+
