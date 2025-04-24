@@ -19,6 +19,13 @@ set(no_group_source_files
 source_group("" FILES ${no_group_source_files})
 
 set(VLR_HEADER_FILES
+    "AppOptionAccess.h"
+    "AppOptionQualifiers.h"
+    "AppOptionSource.h"
+    "AppOptionSourceInfo.h"
+    "AppOptionSource_File_Basic.h"
+    "AppOptionSpecifiedValue.h"
+    "AppOptions.h"
     "ActionOnDestruction.h"
     "as_span.h"
     "as_string_view.h"
@@ -88,6 +95,9 @@ set(VLR_HEADER_FILES
 source_group("Header Files" FILES ${VLR_HEADER_FILES})
 
 set(VLR_SOURCE_FILES
+    "AppOptionSource_File_Basic.cpp"
+    "AppOptionSpecifiedValue.cpp"
+    "AppOptions.cpp"
     "CloseEnough.cpp"
     "ModuleContext.Runtime.CommandLine.cpp"
     "ModuleContext.Runtime.ConfigOptionsBase.cpp"
