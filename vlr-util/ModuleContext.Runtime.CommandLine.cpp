@@ -1,14 +1,14 @@
-#ifdef __WINDOWS__
-
 #include "pch.h"
 #include "ModuleContext.Runtime.CommandLine.h"
 
-#include "ModuleContext.Compilation.h"
+// Note: Currently this file only works for Windows
 
 #ifdef _WIN32
+
+#include "ModuleContext.Compilation.h"
+
 #include <processenv.h>
 #include <shellapi.h>
-#endif
 
 namespace vlr {
 
@@ -83,4 +83,4 @@ bool CCommandLine::HavePopulatedInfo() const
 
 } // namespace vlr
 
-#endif // __WINDOWS__
+#endif // _WIN32

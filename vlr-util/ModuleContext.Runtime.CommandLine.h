@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef __WINDOWS__
+#ifdef _WIN32
 
 #include <memory>
 
@@ -45,4 +45,4 @@ public:
 
 } // namespace vlr
 
-#endif // __WINDOWS__
+#endif // _WIN32
