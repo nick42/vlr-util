@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef __WINDOWS__
+
 #include <memory>
 
 #include "config.h"
@@ -42,3 +44,5 @@ public:
 } // namespace ModuleContext
 
 } // namespace vlr
+
+#endif // __WINDOWS__

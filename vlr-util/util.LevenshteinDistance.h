@@ -11,11 +11,11 @@
 namespace vlr {
 
 template <typename T, typename TCostType = size_t, typename TCharType = T::value_type>
-typename TCostType GeneralizedLevenshteinDistanceCustomCost(
+TCostType GeneralizedLevenshteinDistanceCustomCost(
     const T& source,
     const T& target,
-    typename TCostType insert_cost,
-    typename TCostType delete_cost,
+    TCostType insert_cost,
+    TCostType delete_cost,
     const std::function<TCostType(TCharType cSource, TCharType cTarget)>& getDeltaCost)
 {
     if (source.size() > target.size()) {
@@ -52,12 +52,12 @@ typename TCostType GeneralizedLevenshteinDistanceCustomCost(
 }
 
 template <typename T, typename TCostType = size_t, typename TCharType = T::value_type>
-typename TCostType GeneralizedLevenshteinDistance(
+TCostType GeneralizedLevenshteinDistance(
     const T& source,
     const T& target,
-    typename TCostType insert_cost = 1,
-    typename TCostType delete_cost = 1,
-    typename TCostType replace_cost = 1)
+    TCostType insert_cost = 1,
+    TCostType delete_cost = 1,
+    TCostType replace_cost = 1)
 {
     auto fGetDeltaCost = [=](TCharType cSource, TCharType cTarget)
     {

@@ -19,6 +19,13 @@ set(no_group_source_files
 source_group("" FILES ${no_group_source_files})
 
 set(VLR_HEADER_FILES
+    "AppOptionAccess.h"
+    "AppOptionQualifiers.h"
+    "AppOptionSource.h"
+    "AppOptionSourceInfo.h"
+    "AppOptionSource_File_Basic.h"
+    "AppOptionSpecifiedValue.h"
+    "AppOptions.h"
     "ActionOnDestruction.h"
     "as_span.h"
     "as_string_view.h"
@@ -51,7 +58,6 @@ set(VLR_HEADER_FILES
     "strings.split.h"
     "ThreadOperationContext.h"
     "ThreadPool.h"
-    "typeshim.win32.ASSERT.h"
     "typeshim.win32.h"
     "util.api_adaptor.OutString.h"
     "util.AutoCleanupBase.h"
@@ -60,7 +66,6 @@ set(VLR_HEADER_FILES
     "util.convert.DateTime.h"
     "util.convert.StringConversion.h"
     "util.convert.ToDisplay.h"
-    "util.CStringBufferAccess.h"
     "util.data_adaptor.MultiSZ.h"
     "util.includes.h"
     "util.IsBitSet.h"
@@ -90,6 +95,9 @@ set(VLR_HEADER_FILES
 source_group("Header Files" FILES ${VLR_HEADER_FILES})
 
 set(VLR_SOURCE_FILES
+    "AppOptionSource_File_Basic.cpp"
+    "AppOptionSpecifiedValue.cpp"
+    "AppOptions.cpp"
     "CloseEnough.cpp"
     "ModuleContext.Runtime.CommandLine.cpp"
     "ModuleContext.Runtime.ConfigOptionsBase.cpp"
@@ -123,6 +131,9 @@ endif()
 ################################################################################
 add_library(${PROJECT_NAME} STATIC 
 	${ALL_FILES}
+)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC
 	fmt::fmt
 )
 
@@ -144,104 +155,94 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE
 
 set(ROOT_NAMESPACE vlrutil)
 
-set_target_properties(${PROJECT_NAME} PROPERTIES
-    VS_GLOBAL_KEYWORD "Win32Proj"
-)
-if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
+if (MSVC)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        VS_GLOBAL_KEYWORD "Win32Proj"
+    )
+
     set_target_properties(${PROJECT_NAME} PROPERTIES
         INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
-    )
-elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
-    )
-endif()
-################################################################################
-# Include directories
-################################################################################
-if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
-    target_include_directories(${PROJECT_NAME} PUBLIC
-        "${CMAKE_CURRENT_SOURCE_DIR}/src"
-    )
-elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
-    target_include_directories(${PROJECT_NAME} PUBLIC
-        "${CMAKE_CURRENT_SOURCE_DIR}/src"
     )
 endif()
 
 ################################################################################
+# Include directories
+################################################################################
+target_include_directories(${PROJECT_NAME} PUBLIC
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
+    PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/src"
+)
+
+################################################################################
 # Compile definitions
 ################################################################################
-if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    "$<$<CONFIG:Debug>:"
+        "_DEBUG"
+    ">"
+    "$<$<CONFIG:Release>:"
+        "NDEBUG"
+    ">"
+    "_LIB;"
+)
+
+if(MSVC)
     target_compile_definitions(${PROJECT_NAME} PRIVATE
-        "$<$<CONFIG:Debug>:"
-            "_DEBUG"
-        ">"
-        "$<$<CONFIG:Release>:"
-            "NDEBUG"
-        ">"
-        "_LIB;"
         "UNICODE;"
         "_UNICODE"
     )
-elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
-    target_compile_definitions(${PROJECT_NAME} PRIVATE
-        "$<$<CONFIG:Debug>:"
-            "_DEBUG"
-        ">"
-        "$<$<CONFIG:Release>:"
-            "NDEBUG"
-        ">"
-        "WIN32;"
-        "_LIB;"
-        "UNICODE;"
-        "_UNICODE"
-    )
+    if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
+        target_compile_definitions(${PROJECT_NAME} PRIVATE
+            "WIN32;"
+        )
+    endif()
 endif()
 
 ################################################################################
 # Compile and link options
 ################################################################################
 if(MSVC)
-    if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
-        target_compile_options(${PROJECT_NAME} PRIVATE
-            $<$<CONFIG:Release>:
-                /Oi;
-                /Gy
-            >
-            /MP;
-            /sdl;
-            /W4;
-            ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
-            ${DEFAULT_CXX_EXCEPTION_HANDLING}
-        )
-    elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
-        target_compile_options(${PROJECT_NAME} PRIVATE
-            $<$<CONFIG:Release>:
-                /Oi;
-                /Gy
-            >
-            /MP;
-            /sdl;
-            /W4;
-            ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
-            ${DEFAULT_CXX_EXCEPTION_HANDLING}
-        )
-    endif()
-    if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
-        target_link_options(${PROJECT_NAME} PRIVATE
-            $<$<CONFIG:Release>:
-                /OPT:REF;
-                /OPT:ICF
-            >
-        )
-    elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
-        target_link_options(${PROJECT_NAME} PRIVATE
-            $<$<CONFIG:Release>:
-                /OPT:REF;
-                /OPT:ICF
-            >
-        )
-    endif()
+    target_compile_options(${PROJECT_NAME} PRIVATE
+        $<$<CONFIG:Release>:
+            /Oi;
+            /Gy
+        >
+        /MP;
+        /sdl;
+        /W4;
+        ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
+        ${DEFAULT_CXX_EXCEPTION_HANDLING}
+    )
+    target_link_options(${PROJECT_NAME} PRIVATE
+        $<$<CONFIG:Release>:
+            /OPT:REF;
+            /OPT:ICF
+        >
+    )
 endif()
+
+install(TARGETS vlr-util
+        EXPORT vlr-util-targets
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin)
+
+# Generate and install *-targets.cmake 
+install(EXPORT vlr-util-targets
+        FILE vlr-util-targets.cmake
+        NAMESPACE vlr-util::
+        DESTINATION share/vlr-util)
+
+# Generate the config file in the current binary dir (this ensures it's not placed directly in source)
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/vlr-util-config.cmake"
+"include(CMakeFindDependencyMacro)\n"
+"find_package(fmt CONFIG REQUIRED)\n"
+"include(\"\${CMAKE_CURRENT_LIST_DIR}/vlr-util-targets.cmake\")\n"
+)
+
+# Install the generated config file
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/vlr-util-config.cmake"
+        DESTINATION share/vlr-util)
 

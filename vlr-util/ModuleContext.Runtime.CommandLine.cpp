@@ -1,3 +1,5 @@
+#ifdef __WINDOWS__
+
 #include "pch.h"
 #include "ModuleContext.Runtime.CommandLine.h"
 
@@ -80,3 +82,5 @@ bool CCommandLine::HavePopulatedInfo() const
 } // namespace ModuleContext
 
 } // namespace vlr
+
+#endif // __WINDOWS__
