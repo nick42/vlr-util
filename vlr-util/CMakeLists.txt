@@ -229,8 +229,6 @@ install(TARGETS vlr-util
         LIBRARY DESTINATION lib
         RUNTIME DESTINATION bin)
 
-#install(DIRECTORY ${ONEID_LIB_COMMON_INC}/ DESTINATION include/vlr-util)
-
 # Generate and install *-targets.cmake 
 install(EXPORT vlr-util-targets
         FILE vlr-util-targets.cmake
