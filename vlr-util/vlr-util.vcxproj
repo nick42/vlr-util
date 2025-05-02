@@ -290,7 +290,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <PreprocessorDefinitions Condition="'$(VcpkgFeature_EnableCustomStringConversion)'!=''">VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(VcpkgFeature_EnableCustomStringConversion)'=='ON'">VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
