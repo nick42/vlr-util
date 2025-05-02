@@ -221,6 +221,15 @@
   <PropertyGroup>
     <VcpkgFeature_EnableCustomStringConversion Condition="'$(VcpkgFeature_EnableCustomStringConversion)'==''">OFF</VcpkgFeature_EnableCustomStringConversion>
   </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions Condition="'$(VcpkgFeature_EnableCustomStringConversion)'=='ON'">VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <!-- Automatically build for static CRT linkage if building within vcpkg, with appropriate triplet-->
+  <PropertyGroup>
+    <CRT_LINKAGE_STATIC Condition="$(VcpkgTriplet.Contains('-static'))">True</CRT_LINKAGE_STATIC>
+  </PropertyGroup>
   <!-- Settings for aggregate configurations: -->
   <ItemDefinitionGroup>
     <ClCompile>
@@ -287,11 +296,6 @@
       <SubSystem>
       </SubSystem>
     </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup>
-    <ClCompile>
-      <PreprocessorDefinitions Condition="'$(VcpkgFeature_EnableCustomStringConversion)'=='ON'">VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
