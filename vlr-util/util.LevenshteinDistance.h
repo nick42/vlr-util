@@ -10,7 +10,7 @@
 
 namespace vlr {
 
-template <typename T, typename TCostType = size_t, typename TCharType = T::value_type>
+template <typename T, typename TCostType = size_t, typename TCharType = typename T::value_type>
 TCostType GeneralizedLevenshteinDistanceCustomCost(
     const T& source,
     const T& target,
@@ -51,7 +51,7 @@ TCostType GeneralizedLevenshteinDistanceCustomCost(
     return lev_dist[min_size];
 }
 
-template <typename T, typename TCostType = size_t, typename TCharType = T::value_type>
+template <typename T, typename TCostType = size_t, typename TCharType = typename T::value_type>
 TCostType GeneralizedLevenshteinDistance(
     const T& source,
     const T& target,
