@@ -1,5 +1,7 @@
 #pragma once
 
+#include "typeshim.sal.h"
+
 #ifdef _WIN32
 
 #else
@@ -16,6 +18,10 @@
 // On Apple/Xcode, BOOL is defined in the compiler (as bool)
 #ifdef __APPLE__
 #include <_types/_uint32_t.h>
+#elif defined(__ANDROID__) 
+#include <stdint.h>
+#elif defined(__gnu_linux__)
+#include <stdint.h>
 #else
 using BOOL = int;
 #endif
