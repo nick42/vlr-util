@@ -101,11 +101,7 @@ SPCContextLifetime AddOperationContext(vlr::tzstring_view svzName, vlr::tzstring
 class CThreadOperationContext
 {
 public:
-	static auto& GetSharedInstance()
-	{
-		static auto theInstance = CThreadOperationContext{};
-		return theInstance;
-	}
+	static CThreadOperationContext& GetSharedInstance();
 
 protected:
 	std::mutex m_mutexDataAccess;

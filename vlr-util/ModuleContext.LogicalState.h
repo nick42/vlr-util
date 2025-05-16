@@ -88,11 +88,7 @@ using SELifecycleState = enums::SmartEnum<
 class CLogicalState
 {
 public:
-	static auto& GetSharedInstanceMutable()
-	{
-		static auto theInstance = CLogicalState{};
-		return theInstance;
-	}
+	static CLogicalState& GetSharedInstanceMutable();
 	static const auto& GetSharedInstance()
 	{
 		return GetSharedInstanceMutable();

@@ -21,11 +21,7 @@ public:
 	LogMessage m_fLogMessage;
 
 public:
-	static inline auto& getSharedInstanceMutable()
-	{
-		static auto theInstance = Callbacks{};
-		return theInstance;
-	}
+	static Callbacks& getSharedInstanceMutable();
 	static inline const auto& getSharedInstance()
 	{
 		return getSharedInstanceMutable();

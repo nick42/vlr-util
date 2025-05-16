@@ -23,12 +23,8 @@ public:
 	std::atomic<bool> m_bOnDefaultHandler_TriggerDebugBreak{ true };
 
 public:
-	static inline auto& getSharedInstanceMutable()
-	{
-		static auto theInstance = Callbacks{};
-		return theInstance;
-	}
-	static inline const auto& getSharedInstance()
+	static Callbacks& getSharedInstanceMutable();
+	static const auto& getSharedInstance()
 	{
 		return getSharedInstanceMutable();
 	}

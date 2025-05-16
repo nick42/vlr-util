@@ -23,11 +23,7 @@ namespace StringConversion {
 class CExternalImpl
 {
 public:
-	static auto& GetSharedInstanceMutable()
-	{
-		static auto theInstance = CExternalImpl{};
-		return theInstance;
-	}
+	static CExternalImpl& GetSharedInstanceMutable();
 	static const auto& GetSharedInstance()
 	{
 		return GetSharedInstanceMutable();

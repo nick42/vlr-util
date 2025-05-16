@@ -30,11 +30,12 @@ enum ESourceTypeHint
 class SResult
 {
 public:
-	static constexpr auto Uninitialized = HRESULT{0x0000FFFF};
+	static constexpr auto Uninitialized = HRESULT{ 0x0000FFFF };
 	static constexpr auto Success = S_OK;
 	static constexpr auto Success_WithNuance = S_FALSE;
 	static constexpr auto Success_NoWorkDone = S_FALSE;
 	static constexpr auto Failure = E_FAIL;
+	static constexpr auto Failure_NotImplemented = (HRESULT)0x80004001L; // E_NOTIMPL
 
 protected:
 	ResultCode m_nResultCode = Uninitialized;

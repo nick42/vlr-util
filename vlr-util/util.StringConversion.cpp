@@ -8,6 +8,16 @@ namespace vlr {
 
 namespace util {
 
+namespace StringConversion {
+
+CExternalImpl& CExternalImpl::GetSharedInstanceMutable()
+{
+	static auto theInstance = CExternalImpl{};
+	return theInstance;
+}
+
+} // namespace StringConversion
+
 HRESULT CStringConversion::MultiByte_to_UTF16(
 	std::string_view svValue,
 	std::wstring& strOutput,

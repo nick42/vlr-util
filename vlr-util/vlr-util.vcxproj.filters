@@ -353,6 +353,18 @@
     <ClCompile Include="Win32\util.win32.StringConversion.cpp">
       <Filter>Win32</Filter>
     </ClCompile>
+    <ClCompile Include="AssertionHandling_Config.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="logging.Callbacks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleContext.LogicalState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SharedInstanceRegistrar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />

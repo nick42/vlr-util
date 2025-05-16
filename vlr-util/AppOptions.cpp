@@ -3,6 +3,12 @@
 
 namespace vlr {
 
+CAppOptions& CAppOptions::GetSharedInstance()
+{
+	static auto theInstance = CAppOptions{};
+	return theInstance;
+}
+
 SResult CAppOptions::PopulateCollectionOfSpecifiedOptionValues_NameMatch(
 	const vlr::tstring& sNormalizedName,
 	std::vector<SPCAppOptionSpecifiedValue>& vecSpecifiedValues)

@@ -117,8 +117,11 @@
     <ClCompile Include="AppOptions.cpp" />
     <ClCompile Include="AppOptionSource_File_Basic.cpp" />
     <ClCompile Include="AppOptionSpecifiedValue.cpp" />
+    <ClCompile Include="AssertionHandling_Config.cpp" />
     <ClCompile Include="CaptureConsoleOut.cpp" />
     <ClCompile Include="CloseEnough.cpp" />
+    <ClCompile Include="logging.Callbacks.cpp" />
+    <ClCompile Include="ModuleContext.LogicalState.cpp" />
     <ClCompile Include="ModuleContext.Runtime.CommandLine.cpp" />
     <ClCompile Include="ModuleContext.Runtime.ConfigOptionsBase.cpp" />
     <ClCompile Include="ModuleContext.Runtime.cpp" />
@@ -131,6 +134,7 @@
     </ClCompile>
     <ClCompile Include="platform.FileSystemOps.cpp" />
     <ClCompile Include="RegexCache.cpp" />
+    <ClCompile Include="SharedInstanceRegistrar.cpp" />
     <ClCompile Include="ThreadOperationContext.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="util.AutoCleanupBase.cpp" />

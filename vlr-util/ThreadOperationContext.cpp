@@ -208,6 +208,12 @@ SResult CPerThreadContext::PopulateThreadOperationContext(std::vector<ThreadOper
 
 } // namespace ThreadOperationContext
 
+CThreadOperationContext& CThreadOperationContext::GetSharedInstance()
+{
+	static auto theInstance = CThreadOperationContext{};
+	return theInstance;
+}
+
 SResult CThreadOperationContext::GetCurrentThreadContext(
 	ThreadOperationContext::SPCPerThreadContext& spPerThreadContext_Result,
 	bool bEnsureExistsInMap /*= false*/)

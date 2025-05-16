@@ -14,11 +14,7 @@ namespace vlr {
 class CAppOptions
 {
 public:
-	static auto& GetSharedInstance()
-	{
-		static auto theInstance = CAppOptions{};
-		return theInstance;
-	}
+	static CAppOptions& GetSharedInstance();
 
 protected:
 	mutable std::mutex m_mutexDataAccess;
