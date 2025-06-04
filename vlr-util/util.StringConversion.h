@@ -343,6 +343,29 @@ public:
 	}
 
 protected:
+	// Note: The fallback here calls the internal conversion methods
+
+	inline auto Inline_MultiByte_to_UTF16_StdString_choice(
+		vlr::util::choice<10>&&,
+		std::string_view svValue,
+		const StringConversionOptions& oStringConversionOptions = {},
+		StringConversionResults* pStringConversionResults = nullptr)
+	{
+		std::wstring strOutput;
+		MultiByte_to_UTF16(svValue, strOutput, oStringConversionOptions, pStringConversionResults);
+		return strOutput;
+	}
+	inline auto Inline_UTF16_to_MultiByte_StdString_choice(
+		vlr::util::choice<10>&&,
+		std::wstring_view svValue,
+		const StringConversionOptions& oStringConversionOptions = {},
+		StringConversionResults* pStringConversionResults = nullptr)
+	{
+		std::string strOutput;
+		UTF16_to_MultiByte(svValue, strOutput, oStringConversionOptions, pStringConversionResults);
+		return strOutput;
+	}
+
 	// choice<0> is the externally defined inline fallback. If this is defined, call by preference.
 
 #if defined(VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS)
@@ -391,29 +414,6 @@ protected:
 		return saValue;
 	}
 #endif // defined(VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS)
-
-	// Note: The fallback here calls the internal conversion methods
-
-	inline auto Inline_MultiByte_to_UTF16_StdString_choice(
-		vlr::util::choice<10>&&,
-		std::string_view svValue,
-		const StringConversionOptions& oStringConversionOptions = {},
-		StringConversionResults* pStringConversionResults = nullptr)
-	{
-		std::wstring strOutput;
-		MultiByte_to_UTF16(svValue, strOutput, oStringConversionOptions, pStringConversionResults);
-		return strOutput;
-	}
-	inline auto Inline_UTF16_to_MultiByte_StdString_choice(
-		vlr::util::choice<10>&&,
-		std::wstring_view svValue,
-		const StringConversionOptions& oStringConversionOptions = {},
-		StringConversionResults* pStringConversionResults = nullptr)
-	{
-		std::string strOutput;
-		UTF16_to_MultiByte(svValue, strOutput, oStringConversionOptions, pStringConversionResults);
-		return strOutput;
-	}
 
 public:
 	inline auto Inline_MultiByte_to_UTF16_StdString(
