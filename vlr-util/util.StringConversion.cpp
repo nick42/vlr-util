@@ -26,7 +26,9 @@ HRESULT CStringConversion::MultiByte_to_UTF16(
 {
 	HRESULT hr;
 
-	auto nOutputBufferSizeChars = svValue.length();
+	// Note: For external conversion, we cannot do a conversion without adding a NULL terminator. So we need to always 
+	// account for this being added in the buffer size.
+	auto nOutputBufferSizeChars = svValue.length() + 1;
 
 	while (true)
 	{
@@ -70,10 +72,12 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 {
 	HRESULT hr;
 
+	// Note: For external conversion, we cannot do a conversion without adding a NULL terminator. So we need to always 
+	// account for this being added in the buffer size.
 	// Note: The maximum length of a converted string, I believe, is 4x the (chars) length of the source string.
 	// ie: If every source char is converted into an extended MBCS 4byte character.
 	// If longer is possible, than this can fail.
-	auto nOutputBufferSizeChars = svValue.length() * 4;
+	auto nOutputBufferSizeChars = (svValue.length() + 1) * 4;
 
 	while (true)
 	{
