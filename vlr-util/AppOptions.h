@@ -47,6 +47,10 @@ protected:
 public:
 	SResult AddSpecifiedValue(const SPCAppOptionSpecifiedValue& spAppOptionSpecifiedValue);
 
+	inline const auto& GetMap_SpecializedValues() const
+	{
+		return m_mapSpecifiedNameToSpecifiedValue;
+	}
 	inline auto GetCount_SpecifiedValues() const
 	{
 		auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };

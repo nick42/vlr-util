@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "util.win32.StringConversion.h"
 
-#include "UtilMacros.General.h"
+#include <vlr-util/UtilMacros.General.h>
 #include "util.CStringBufferAccess.h"
 
 namespace vlr {
@@ -112,6 +112,8 @@ HRESULT UTF16_to_MultiByte(
 	return S_OK;
 }
 
+#if VLR_CONFIG_INCLUDE_ATL_CString
+
 HRESULT MultiByte_to_UTF16(
 	std::string_view svValue,
 	CStringW& sOutput,
@@ -197,6 +199,8 @@ HRESULT UTF16_to_MultiByte(
 
 	return S_OK;
 }
+
+#endif // VLR_CONFIG_INCLUDE_ATL_CString
 
 } // namespace win32
 
