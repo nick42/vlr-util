@@ -44,7 +44,8 @@ HRESULT CStringConversion::MultiByte_to_UTF16(
 			nOutputBufferSizeBytes,
 			oStringConversionOptions_Local,
 			&oStringConversionResults);
-		VLR_ON_HR_NON_S_OK__RETURN_HRESULT(hr);
+		// Note: Returns S_FALSE on empty; proceed so we truncate properly
+		VLR_ON_ERROR_RETURN_VALUE(hr);
 
 		auto nOutputSizeChars = oStringConversionResults.m_nOuputSizeBytes / sizeof(wchar_t);
 		if (oStringConversionResults.m_nOuputSizeBytes > nOutputBufferSizeBytes)
@@ -93,7 +94,8 @@ HRESULT CStringConversion::UTF16_to_MultiByte(
 			nOutputBufferSizeBytes,
 			oStringConversionOptions_Local,
 			&oStringConversionResults);
-		VLR_ON_HR_NON_S_OK__RETURN_HRESULT(hr);
+		// Note: Returns S_FALSE on empty; proceed so we truncate properly
+		VLR_ON_ERROR_RETURN_VALUE(hr);
 
 		auto nOutputSizeChars = oStringConversionResults.m_nOuputSizeBytes / sizeof(char);
 		if (oStringConversionResults.m_nOuputSizeBytes > nOutputBufferSizeBytes)

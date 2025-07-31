@@ -88,3 +88,21 @@ TEST_F(TestStringConversion, UTF16_to_MultiByte_choice_0)
 	auto swValue = m_oStringConversion.Inline_UTF16_to_MultiByte_StdString(std::wstring_view{ L"test" });
 	EXPECT_STREQ(oStringConversionDataStore.m_swConversionSource.c_str(), L"test");
 }
+
+TEST_F(TestStringConversion, EmptyStringComversion_UTF16_to_MB)
+{
+	static const std::wstring swTest = L"";
+
+	auto saValue = m_oStringConversion.Inline_UTF16_to_MultiByte_StdString(swTest);
+	EXPECT_TRUE(saValue.empty());
+	EXPECT_STREQ(saValue.c_str(), "");
+}
+
+TEST_F(TestStringConversion, EmptyStringComversion_MB_to_UTF16)
+{
+	static const std::string saTest = "";
+
+	auto swValue = m_oStringConversion.Inline_MultiByte_to_UTF16_StdString(saTest);
+	EXPECT_TRUE(swValue.empty());
+	EXPECT_STREQ(swValue.c_str(), L"");
+}

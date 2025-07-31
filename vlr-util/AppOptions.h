@@ -47,7 +47,7 @@ protected:
 public:
 	SResult AddSpecifiedValue(const SPCAppOptionSpecifiedValue& spAppOptionSpecifiedValue);
 
-	inline const auto& GetMap_SpecializedValues() const
+	inline const auto& GetMap_SpecifiedValues() const
 	{
 		return m_mapSpecifiedNameToSpecifiedValue;
 	}

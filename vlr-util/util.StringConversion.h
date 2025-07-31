@@ -9,6 +9,7 @@
 #include "util.StringConversion.base.h"
 #include "util.choice.h"
 #include "UtilMacros.Assertions.h"
+#include "UtilMacros.General.h"
 
 #if defined(WIN32)
 #include "Win32/util.win32.StringConversion.h"
@@ -253,6 +254,7 @@ public:
 	{
 		if (svValue.empty())
 		{
+			VLR_IF_NOT_NULL_DEREF(pStringConversionResults).m_nOuputSizeBytes = 0;
 			return S_FALSE;
 		}
 
@@ -267,6 +269,7 @@ public:
 	{
 		if (svValue.empty())
 		{
+			VLR_IF_NOT_NULL_DEREF(pStringConversionResults).m_nOuputSizeBytes = 0;
 			return S_FALSE;
 		}
 
