@@ -15,6 +15,9 @@
 #include "Win32/util.win32.StringConversion.h"
 #endif
 
+// For dev testing (should be commented out in published version):
+//#define VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS
+
 namespace vlr {
 
 namespace util {
@@ -153,6 +156,8 @@ protected:
 		wcscpy(pOutputBuffer, swValue.c_str());
 #endif
 
+		VLR_IF_NOT_NULL_DEREF(pStringConversionResults).m_nOuputSizeBytes = swValue.length() * sizeof(wchar_t);
+
 		return S_OK;
 	}
 	inline HRESULT UTF16_to_MultiByte_choice(
@@ -189,6 +194,8 @@ protected:
 #else
 		strcpy(pOutputBuffer, saValue.c_str());
 #endif
+
+		VLR_IF_NOT_NULL_DEREF(pStringConversionResults).m_nOuputSizeBytes = saValue.length() * sizeof(char);
 
 		return S_OK;
 	}
