@@ -38,7 +38,7 @@ using INT_PTR = int;
 
 constexpr auto S_OK = HRESULT{ 0U };
 constexpr auto S_FALSE = HRESULT{ 1U };
-constexpr auto E_FAIL = HRESULT{ 0x80040005U };
+constexpr auto E_FAIL = HRESULT{ 0x80004005L };
 constexpr auto E_UNEXPECTED = HRESULT{ 0x8004FFFFU };
 constexpr auto E_OUTOFMEMORY = HRESULT{ 0x8007000EL };
 
