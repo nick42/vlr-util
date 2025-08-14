@@ -132,6 +132,8 @@ struct StringConversionResults
 {
 public:
 	size_t m_nOuputSizeBytes = 0;
+	std::string m_saResultOnException;
+	std::wstring m_swResultOnException;
 };
 
 } // namespace util

@@ -31,11 +31,13 @@ noexcept(noexcept(std::string{svValue}))
 }
 
 inline auto ToStdStringA(std::wstring_view svValue, const StringConversionOptions& oConversionOptions = {})
+noexcept(noexcept(CStringConversion{}.Inline_UTF16_to_MultiByte_StdString(svValue, oConversionOptions)))
 {
 	return CStringConversion{}.Inline_UTF16_to_MultiByte_StdString(svValue, oConversionOptions);
 }
 
 inline auto ToStdStringW(std::string_view svValue, const StringConversionOptions& oConversionOptions = {})
+noexcept(noexcept(CStringConversion{}.Inline_MultiByte_to_UTF16_StdString(svValue, oConversionOptions)))
 {
 	return CStringConversion{}.Inline_MultiByte_to_UTF16_StdString(svValue, oConversionOptions);
 }
@@ -411,23 +413,23 @@ namespace detail {
 // Convert from "width matching" string type (should include views of matching char width)
 
 template< typename TString, typename std::enable_if_t<std::is_convertible_v<const TString&, std::string_view>>* = nullptr >
-constexpr auto ToFmtArg_StringA_choice(TString&& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<1>&&)
+constexpr auto ToFmtArg_StringA_choice(TString&& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<1>&&) noexcept
 {
 	return static_cast<std::string_view>(tString);
 }
 template< typename TString, typename std::enable_if_t<std::is_convertible_v<const TString&, std::wstring_view>>* = nullptr  >
-constexpr auto ToFmtArg_StringW_choice(TString&& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<1>&&)
+constexpr auto ToFmtArg_StringW_choice(TString&& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<1>&&) noexcept
 {
 	return static_cast<std::wstring_view>(tString);
 }
 
 template< typename TString, typename std::enable_if_t<std::is_convertible_v<const TString&, const char*>>* = nullptr >
-constexpr auto ToFmtArg_StringA_choice(TString&& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<2>&&)
+constexpr auto ToFmtArg_StringA_choice(TString&& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<2>&&) noexcept
 {
 	return static_cast<const char*>(tString);
 }
 template< typename TString, typename std::enable_if_t<std::is_convertible_v<const TString&, const wchar_t*>>* = nullptr  >
-constexpr auto ToFmtArg_StringW_choice(TString&& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<2>&&)
+constexpr auto ToFmtArg_StringW_choice(TString&& tString, const StringConversionOptions& /*oConversionOptions*/, vlr::util::choice<2>&&) noexcept
 {
 	return static_cast<const wchar_t*>(tString);
 }

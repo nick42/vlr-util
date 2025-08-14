@@ -429,31 +429,59 @@ public:
 	inline auto Inline_MultiByte_to_UTF16_StdString(
 		std::string_view svValue,
 		const StringConversionOptions& oStringConversionOptions = {},
-		StringConversionResults* pStringConversionResults = nullptr )
+		StringConversionResults* pStringConversionResults = nullptr ) noexcept
 	{
-		return Inline_MultiByte_to_UTF16_StdString_choice(util::choice<0>{}, svValue, oStringConversionOptions, pStringConversionResults);
+		try
+		{
+			return Inline_MultiByte_to_UTF16_StdString_choice(util::choice<0>{}, svValue, oStringConversionOptions, pStringConversionResults);
+		}
+		catch (...)
+		{
+			return pStringConversionResults ? pStringConversionResults->m_swResultOnException : std::wstring{};
+		}
 	}
 	inline auto Inline_UTF16_to_MultiByte_StdString(
 		std::wstring_view svValue,
 		const StringConversionOptions& oStringConversionOptions = {},
-		StringConversionResults* pStringConversionResults = nullptr )
+		StringConversionResults* pStringConversionResults = nullptr ) noexcept
 	{
-		return Inline_UTF16_to_MultiByte_StdString_choice(util::choice<0>{}, svValue, oStringConversionOptions, pStringConversionResults);
+		try
+		{
+			return Inline_UTF16_to_MultiByte_StdString_choice(util::choice<0>{}, svValue, oStringConversionOptions, pStringConversionResults);
+		}
+		catch (...)
+		{
+			return pStringConversionResults ? pStringConversionResults->m_saResultOnException : std::string{};
+		}
 	}
 
 	inline auto Inline_MultiByte_to_UTF16_StdString(
 		const std::string& strValue,
 		const StringConversionOptions& oStringConversionOptions = {},
-		StringConversionResults* pStringConversionResults = nullptr )
+		StringConversionResults* pStringConversionResults = nullptr ) noexcept
 	{
-		return Inline_MultiByte_to_UTF16_StdString(static_cast<std::string_view>(strValue), oStringConversionOptions, pStringConversionResults);
+		try
+		{
+			return Inline_MultiByte_to_UTF16_StdString(static_cast<std::string_view>(strValue), oStringConversionOptions, pStringConversionResults);
+		}
+		catch (...)
+		{
+			return pStringConversionResults ? pStringConversionResults->m_swResultOnException : std::wstring{};
+		}
 	}
 	inline auto Inline_UTF16_to_MultiByte_StdString(
 		const std::wstring& strValue,
 		const StringConversionOptions& oStringConversionOptions = {},
-		StringConversionResults* pStringConversionResults = nullptr )
+		StringConversionResults* pStringConversionResults = nullptr ) noexcept
 	{
-		return Inline_UTF16_to_MultiByte_StdString(static_cast<std::wstring_view>(strValue), oStringConversionOptions, pStringConversionResults);
+		try
+		{
+			return Inline_UTF16_to_MultiByte_StdString(static_cast<std::wstring_view>(strValue), oStringConversionOptions, pStringConversionResults);
+		}
+		catch (...)
+		{
+			return pStringConversionResults ? pStringConversionResults->m_saResultOnException : std::string{};
+		}
 	}
 
 #if VLR_CONFIG_INCLUDE_ATL_CString

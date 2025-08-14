@@ -106,3 +106,11 @@ TEST_F(TestStringConversion, EmptyStringComversion_MB_to_UTF16)
 	EXPECT_TRUE(swValue.empty());
 	EXPECT_STREQ(swValue.c_str(), L"");
 }
+
+TEST_F(TestStringConversion, InlineConversionsAreNoexcept)
+{
+	static_assert(noexcept(m_oStringConversion.Inline_MultiByte_to_UTF16_StdString(std::string_view{})));
+	static_assert(noexcept(m_oStringConversion.Inline_UTF16_to_MultiByte_StdString(std::wstring_view{})));
+	static_assert(noexcept(m_oStringConversion.Inline_MultiByte_to_UTF16_StdString(std::string{})));
+	static_assert(noexcept(m_oStringConversion.Inline_UTF16_to_MultiByte_StdString(std::wstring{})));
+}
