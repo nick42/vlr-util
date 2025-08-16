@@ -425,6 +425,9 @@ protected:
 	}
 #endif // defined(VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS)
 
+	// Note on below: I believe (but have not exhaustively validated) that the only possible exception which might be thrown
+	// from internal and transitive dependency calls are of type std::exception.
+
 public:
 	inline auto Inline_MultiByte_to_UTF16_StdString(
 		std::string_view svValue,
@@ -435,7 +438,7 @@ public:
 		{
 			return Inline_MultiByte_to_UTF16_StdString_choice(util::choice<0>{}, svValue, oStringConversionOptions, pStringConversionResults);
 		}
-		catch (...)
+		catch (const std::exception& /*ex*/)
 		{
 			return pStringConversionResults ? pStringConversionResults->m_swResultOnException : std::wstring{};
 		}
@@ -449,7 +452,7 @@ public:
 		{
 			return Inline_UTF16_to_MultiByte_StdString_choice(util::choice<0>{}, svValue, oStringConversionOptions, pStringConversionResults);
 		}
-		catch (...)
+		catch (const std::exception& /*ex*/)
 		{
 			return pStringConversionResults ? pStringConversionResults->m_saResultOnException : std::string{};
 		}
@@ -464,7 +467,7 @@ public:
 		{
 			return Inline_MultiByte_to_UTF16_StdString(static_cast<std::string_view>(strValue), oStringConversionOptions, pStringConversionResults);
 		}
-		catch (...)
+		catch (const std::exception& /*ex*/)
 		{
 			return pStringConversionResults ? pStringConversionResults->m_swResultOnException : std::wstring{};
 		}
@@ -478,7 +481,7 @@ public:
 		{
 			return Inline_UTF16_to_MultiByte_StdString(static_cast<std::wstring_view>(strValue), oStringConversionOptions, pStringConversionResults);
 		}
-		catch (...)
+		catch (const std::exception& /*ex*/)
 		{
 			return pStringConversionResults ? pStringConversionResults->m_saResultOnException : std::string{};
 		}
