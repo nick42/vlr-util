@@ -14,7 +14,7 @@ namespace util {
 #if defined(WIN32)
 
 SResult SResult::For_win32_GeneralResultCode(DWORD dwResultCode,
-	Result::SourceTypeHint::ESourceTypeHint eSourceTypeHint /*= Result::SourceTypeHint::Unknown*/)
+	Result::SourceTypeHint::ESourceTypeHint eSourceTypeHint /*= Result::SourceTypeHint::Unknown*/) noexcept
 {
 	// For general result codes, the caller may pass a "success" value. For the general case,
 	// we will only consider 0 for success.
@@ -76,12 +76,12 @@ SResult SResult::For_win32_GeneralResultCode(DWORD dwResultCode,
 	return detail::MakeResultCode(detail::Severity_Failure, nNominalFacilityCode, nNominalUnqualifiedResultCode);
 }
 
-SResult SResult::For_win32_SEHExceptionCode(DWORD dwExceptionCode)
+SResult SResult::For_win32_SEHExceptionCode(DWORD dwExceptionCode) noexcept
 {
 	return For_win32_GeneralResultCode(dwExceptionCode, Result::SourceTypeHint::Win32_SEHException);
 }
 
-SResult SResult::For_win32_SEHExceptionCode_RPC(DWORD dwExceptionCode)
+SResult SResult::For_win32_SEHExceptionCode_RPC(DWORD dwExceptionCode) noexcept
 {
 	return For_win32_GeneralResultCode(dwExceptionCode, Result::SourceTypeHint::Win32_SEHException_RPC);
 }

@@ -41,40 +41,40 @@ protected:
 	ResultCode m_nResultCode = Uninitialized;
 
 public:
-	inline decltype(auto) withHRESULT(HRESULT hrResult)
+	inline decltype(auto) withHRESULT(HRESULT hrResult) noexcept
 	{
 		m_nResultCode = hrResult;
 		return *this;
 	}
-	inline decltype(auto) asHRESULT() const
+	inline decltype(auto) asHRESULT() const noexcept
 	{
 		return (m_nResultCode);
 	}
-	inline decltype(auto) asWin32Code() const
+	inline decltype(auto) asWin32Code() const noexcept
 	{
 		return (m_nResultCode & 0xFFFF);
 	}
 
 public:
-	inline operator ResultCode() const
+	inline operator ResultCode() const noexcept
 	{
 		return m_nResultCode;
 	}
 
 public:
-	static inline auto ForGeneralSuccess()
+	static inline auto ForGeneralSuccess() noexcept
 	{
 		return SResult{ S_OK };
 	}
-	static inline auto ForSuccessWithNuance()
+	static inline auto ForSuccessWithNuance() noexcept
 	{
 		return SResult{ S_FALSE };
 	}
-	static inline auto ForGeneralFailure()
+	static inline auto ForGeneralFailure() noexcept
 	{
 		return SResult{ E_FAIL };
 	}
-	static inline auto ForHRESULT(HRESULT hr)
+	static inline auto ForHRESULT(HRESULT hr) noexcept
 	{
 		return SResult{ hr };
 	}
@@ -86,8 +86,8 @@ public:
 	// - HRESULT value
 	// - ... other
 	static SResult For_win32_GeneralResultCode(DWORD dwResultCode,
-		Result::SourceTypeHint::ESourceTypeHint eSourceTypeHint = Result::SourceTypeHint::Unknown);
-	static inline SResult For_win32_ErrorCode(DWORD dwErrorCode)
+		Result::SourceTypeHint::ESourceTypeHint eSourceTypeHint = Result::SourceTypeHint::Unknown) noexcept;
+	static inline SResult For_win32_ErrorCode(DWORD dwErrorCode) noexcept
 	{
 		// Note: We assume that if this function is called, the result is an error, and treat even 0 as such.
 
@@ -102,12 +102,12 @@ public:
 		// For this case, we could truncate, or try to interpret as appropriate.
 		return For_win32_GeneralResultCode(dwErrorCode);
 	}
-	static inline SResult For_win32_LastError()
+	static inline SResult For_win32_LastError() noexcept
 	{
 		auto dwLastError = ::GetLastError();
 		return For_win32_ErrorCode(dwLastError);
 	}
-	static inline SResult ForCall_win32(WIN_BOOL bSuccess)
+	static inline SResult ForCall_win32(WIN_BOOL bSuccess) noexcept
 	{
 		if (bSuccess)
 		{
@@ -121,34 +121,34 @@ public:
 	// Note: SEH exception codes can be Win32 codes, but are usually NTSTATUS values. These are similar, 
 	// but not the same, as HRESULT values.
 	// See: https://jpassing.com/2007/08/20/error-codes-win32-vs-hresult-vs-ntstatus/
-	static SResult For_win32_SEHExceptionCode(DWORD dwExceptionCode);
+	static SResult For_win32_SEHExceptionCode(DWORD dwExceptionCode) noexcept;
 	// If we know the SEH exception is from RPC explicitly, then we can set the RPC facility bit.
-	static SResult For_win32_SEHExceptionCode_RPC(DWORD dwExceptionCode);
+	static SResult For_win32_SEHExceptionCode_RPC(DWORD dwExceptionCode) noexcept;
 #endif // defined(WIN32)
 
-	static inline auto ForCallSpecificResult(unsigned long nResultCode)
+	static inline auto ForCallSpecificResult(unsigned long nResultCode) noexcept
 	{
 		return SResult{ detail::MakeResultCode_Failure_CallSpecific(nResultCode) };
 	}
 
 public:
-	constexpr auto isSuccess() const
+	constexpr auto isSuccess() const noexcept
 	{
 		return !IsBitSet(m_nResultCode, 0x80000000);
 	}
-	constexpr auto isFailure() const
+	constexpr auto isFailure() const noexcept
 	{
 		return IsBitSet(m_nResultCode, 0x80000000);
 	}
-	constexpr auto isSet() const
+	constexpr auto isSet() const noexcept
 	{
 		return m_nResultCode != Uninitialized;
 	}
-	constexpr unsigned short GetFacilityCode() const
+	constexpr unsigned short GetFacilityCode() const noexcept
 	{
 		return (m_nResultCode & 0x07FF0000) >> 16;
 	}
-	constexpr unsigned short GetUnqualifiedResultCode() const
+	constexpr unsigned short GetUnqualifiedResultCode() const noexcept
 	{
 		return static_cast<unsigned short>(m_nResultCode & 0xFFFF);
 	}
@@ -157,8 +157,8 @@ public:
 	vlr::tstring ToString() const;
 
 public:
-	constexpr SResult() = default;
-	constexpr SResult(HRESULT hrResult)
+	constexpr SResult() noexcept = default;
+	constexpr SResult(HRESULT hrResult) noexcept
 		: m_nResultCode{ hrResult }
 	{}
 private:
