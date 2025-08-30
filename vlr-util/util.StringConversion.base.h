@@ -55,63 +55,63 @@ public:
 	DWORD m_dwFlags_WideCharToMultiByte = 0;
 
 public:
-	inline auto& withNullTerminatedString(bool bValue = true)
+	constexpr auto& withNullTerminatedString(bool bValue = true)
 	{
 		m_bInputStringIsNullTerminated = bValue;
 		return *this;
 	}
-	inline auto& withGenerateResultNotNullTerminated(bool bValue = true)
+	constexpr auto& withGenerateResultNotNullTerminated(bool bValue = true)
 	{
 		m_bGenerateResultNotNullTerminated = bValue;
 		return *this;
 	}
-	inline decltype(auto) withCodePage(UINT nCodePage)
+	constexpr auto& withCodePage(UINT nCodePage)
 	{
 		m_nCodePage = nCodePage;
 		return *this;
 	}
 	// Note: This is arbitrary and can change between systems. Try not to use.
 	// See: https://learn.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar
-	inline decltype(auto) withCodePage_SystemDefaultASCII()
+	constexpr auto& withCodePage_SystemDefaultASCII()
 	{
 		m_nCodePage = CodePageWin32::ANSI;
 		return *this;
 	}
-	inline decltype(auto) withCodePage_UTF8()
+	constexpr auto& withCodePage_UTF8()
 	{
 		m_nCodePage = CodePageWin32::UTF8;
 		return *this;
 	}
-	inline decltype(auto) withFlags_MultiByteToWideChar(DWORD dwFlags_MultiByteToWideChar)
+	constexpr auto& withFlags_MultiByteToWideChar(DWORD dwFlags_MultiByteToWideChar)
 	{
 		m_dwFlags_MultiByteToWideChar = dwFlags_MultiByteToWideChar;
 		return *this;
 	}
-	inline decltype(auto) withFlags_WideCharToMultiByte(DWORD dwFlags_WideCharToMultiByte)
+	constexpr auto& withFlags_WideCharToMultiByte(DWORD dwFlags_WideCharToMultiByte)
 	{
 		m_dwFlags_WideCharToMultiByte = dwFlags_WideCharToMultiByte;
 		return *this;
 	}
 
 public:
-	inline UINT GetCodePageIdentifier() const
+	constexpr UINT GetCodePageIdentifier() const
 	{
 		return m_nCodePage;
 	}
-	inline DWORD OnMultiByteToWideChar_GetFlags() const
+	constexpr DWORD OnMultiByteToWideChar_GetFlags() const
 	{
 		return m_dwFlags_MultiByteToWideChar;
 	}
-	inline DWORD OnWideCharToMultiByte_GetFlags() const
+	constexpr DWORD OnWideCharToMultiByte_GetFlags() const
 	{
 		return m_dwFlags_WideCharToMultiByte;
 	}
-	const CHAR* OnWideCharToMultiByte_GetDefaultChar() const
+	constexpr const CHAR* OnWideCharToMultiByte_GetDefaultChar() const
 	{
 		// Note: If codepage if UTF7/UTF8, this must be NULL
 		return nullptr;
 	}
-	WIN_BOOL* OnWideCharToMultiByte_GetUsedDefaultChar(StringConversionResults* /*pStringConversionResults*/) const
+	constexpr WIN_BOOL* OnWideCharToMultiByte_GetUsedDefaultChar(StringConversionResults* /*pStringConversionResults*/) const
 	{
 		// Note: If codepage if UTF7/UTF8, this must be NULL
 		return nullptr;
