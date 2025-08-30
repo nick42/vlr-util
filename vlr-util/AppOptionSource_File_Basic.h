@@ -14,7 +14,7 @@ class CSourceContext
 public:
 	vlr::tstring m_sFilePath;
 
-	decltype(auto) withFilePath(vlr::tzstring_view svzFilePath)
+	inline auto& withFilePath(vlr::tzstring_view svzFilePath)
 	{
 		m_sFilePath = svzFilePath;
 		return *this;
@@ -43,7 +43,7 @@ protected:
 	}
 
 public:
-	decltype(auto) withAppOptionsOverride(CAppOptions* pAppOptions)
+	constexpr auto& withAppOptionsOverride(CAppOptions* pAppOptions) noexcept
 	{
 		m_pAppOptions_Override = pAppOptions;
 		return *this;

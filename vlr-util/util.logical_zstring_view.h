@@ -43,13 +43,13 @@ public:
 	using base_type::operator const_pointer;
 
 public:
-	inline decltype(auto) operator=(const base_type& svzValue)
+	inline auto& operator=(const base_type& svzValue)
 	{
 		m_osValue_string = {};
 		*static_cast<base_type*>(this) = svzValue;
 		return *this;
 	}
-	inline decltype(auto) operator=(const backing_type_basic_string& sValue)
+	inline auto& operator=(const backing_type_basic_string& sValue)
 	{
 		m_osValue_string = sValue;
 		*static_cast<base_type*>(this) = m_osValue_string.value();

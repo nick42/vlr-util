@@ -21,12 +21,12 @@ protected:
 	std::optional<size_t> m_onFixedPoolSize;
 
 public:
-	decltype(auto) withDefaultPoolSize()
+	constexpr auto& withDefaultPoolSize()
 	{
 		m_onFixedPoolSize = {};
 		return *this;
 	}
-	decltype(auto) withFixedPoolSize( size_t nSize )
+	constexpr auto& withFixedPoolSize(size_t nSize)
 	{
 		m_onFixedPoolSize = nSize;
 		return *this;

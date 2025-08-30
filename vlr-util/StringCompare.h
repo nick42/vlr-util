@@ -228,7 +228,7 @@ struct CompareSettings
 {
 	CaseSensitivity::ECaseSensitivity m_eCaseSensitivity = CaseSensitivity::CaseSensitive;
 
-	inline decltype(auto) withCaseSensitivity(CaseSensitivity::ECaseSensitivity eCaseSensitivity)
+	constexpr auto& withCaseSensitivity(CaseSensitivity::ECaseSensitivity eCaseSensitivity)
 	{
 		m_eCaseSensitivity = eCaseSensitivity;
 		return *this;

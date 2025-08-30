@@ -76,7 +76,7 @@ public:
     FOnCaptureData m_fCaptureDataOverride;
 
     template< typename TCallback >
-    decltype(auto) withDataCaptureOverride(const TCallback& tCallback)
+    inline auto& withDataCaptureOverride(const TCallback& tCallback)
     {
         m_fCaptureDataOverride = tCallback;
         return *this;
@@ -90,12 +90,12 @@ public:
         // Note: If this is not set, capture will default to internal
         FOnCaptureData m_fOnCaptureData;
 
-        decltype(auto) withStream(FILE* pStream)
+        constexpr auto& withStream(FILE* pStream) noexcept
         {
             m_pStream = pStream;
             return *this;
         }
-        decltype(auto) withFileDescriptorToCapture(int nFileDescriptorToCapture)
+        constexpr auto& withFileDescriptorToCapture(int nFileDescriptorToCapture) noexcept
         {
             m_nFileDescriptorToCapture = nFileDescriptorToCapture;
             return *this;

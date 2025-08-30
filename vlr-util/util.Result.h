@@ -41,40 +41,40 @@ protected:
 	ResultCode m_nResultCode = Uninitialized;
 
 public:
-	inline decltype(auto) withHRESULT(HRESULT hrResult) noexcept
+	constexpr auto& withHRESULT(HRESULT hrResult) noexcept
 	{
 		m_nResultCode = hrResult;
 		return *this;
 	}
-	inline decltype(auto) asHRESULT() const noexcept
+	constexpr auto asHRESULT() const noexcept
 	{
-		return (m_nResultCode);
+		return static_cast<HRESULT>(m_nResultCode);
 	}
-	inline decltype(auto) asWin32Code() const noexcept
+	constexpr DWORD asWin32Code() const noexcept
 	{
 		return (m_nResultCode & 0xFFFF);
 	}
 
 public:
-	inline operator ResultCode() const noexcept
+	constexpr operator ResultCode() const noexcept
 	{
 		return m_nResultCode;
 	}
 
 public:
-	static inline auto ForGeneralSuccess() noexcept
+	static constexpr auto ForGeneralSuccess() noexcept
 	{
 		return SResult{ S_OK };
 	}
-	static inline auto ForSuccessWithNuance() noexcept
+	static constexpr auto ForSuccessWithNuance() noexcept
 	{
 		return SResult{ S_FALSE };
 	}
-	static inline auto ForGeneralFailure() noexcept
+	static constexpr auto ForGeneralFailure() noexcept
 	{
 		return SResult{ E_FAIL };
 	}
-	static inline auto ForHRESULT(HRESULT hr) noexcept
+	static constexpr auto ForHRESULT(HRESULT hr) noexcept
 	{
 		return SResult{ hr };
 	}
@@ -87,7 +87,7 @@ public:
 	// - ... other
 	static SResult For_win32_GeneralResultCode(DWORD dwResultCode,
 		Result::SourceTypeHint::ESourceTypeHint eSourceTypeHint = Result::SourceTypeHint::Unknown) noexcept;
-	static inline SResult For_win32_ErrorCode(DWORD dwErrorCode) noexcept
+	static constexpr SResult For_win32_ErrorCode(DWORD dwErrorCode) noexcept
 	{
 		// Note: We assume that if this function is called, the result is an error, and treat even 0 as such.
 
@@ -107,7 +107,7 @@ public:
 		auto dwLastError = ::GetLastError();
 		return For_win32_ErrorCode(dwLastError);
 	}
-	static inline SResult ForCall_win32(WIN_BOOL bSuccess) noexcept
+	static constexpr SResult ForCall_win32(WIN_BOOL bSuccess) noexcept
 	{
 		if (bSuccess)
 		{

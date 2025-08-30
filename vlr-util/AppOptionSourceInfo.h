@@ -11,7 +11,7 @@ public:
 	SEAppOptionSource m_eAppOptionSource;
 	vlr::tstring m_sSourceIndentifier;
 
-	decltype(auto) withAppOptionSourceInfo(
+	inline auto& withAppOptionSourceInfo(
 		SEAppOptionSource eAppOptionSource,
 		vlr::tzstring_view svzSourceIdentifier = {})
 	{

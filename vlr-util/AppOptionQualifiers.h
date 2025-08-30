@@ -29,32 +29,32 @@ protected:
 	uint32_t m_nFlags_AppSpecific = 0;
 
 public:
-	decltype(auto) withStandardFlagSet(uint32_t nFlag)
+	constexpr auto& withStandardFlagSet(uint32_t nFlag)
 	{
 		m_nFlags_Standard |= nFlag;
 		return *this;
 	}
-	decltype(auto) withStandardFlagUnset(uint32_t nFlag)
+	constexpr auto& withStandardFlagUnset(uint32_t nFlag)
 	{
 		m_nFlags_Standard &= (~nFlag);
 		return *this;
 	}
-	decltype(auto) withAppSpecificFlagSet(uint32_t nFlag)
+	constexpr auto& withAppSpecificFlagSet(uint32_t nFlag)
 	{
 		m_nFlags_AppSpecific |= nFlag;
 		return *this;
 	}
-	decltype(auto) withAppSpecificFlagUnset(uint32_t nFlag)
+	constexpr auto& withAppSpecificFlagUnset(uint32_t nFlag)
 	{
 		m_nFlags_AppSpecific &= (~nFlag);
 		return *this;
 	}
 
-	inline auto& GetFlags_Standard() const
+	constexpr auto& GetFlags_Standard() const
 	{
 		return m_nFlags_Standard;
 	}
-	inline auto& GetFlags_AppSpecific() const
+	constexpr auto& GetFlags_AppSpecific() const
 	{
 		return m_nFlags_AppSpecific;
 	}

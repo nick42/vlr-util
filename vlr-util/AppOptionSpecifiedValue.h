@@ -62,64 +62,64 @@ protected:
 public:
 	SResult SetAppOptionName(vlr::tstring_view svNativeOptionName);
 
-	inline decltype(auto) withSource(SEAppOptionSource eAppOptionSource)
+	inline auto& withSource(SEAppOptionSource eAppOptionSource)
 	{
 		m_oAppOptionSourceInfo = CAppOptionSourceInfo{ eAppOptionSource };
 		return *this;
 	}
-	inline decltype(auto) withSourceInfo(const CAppOptionSourceInfo& oAppOptionSourceInfo)
+	inline auto& withSourceInfo(const CAppOptionSourceInfo& oAppOptionSourceInfo)
 	{
 		m_oAppOptionSourceInfo = oAppOptionSourceInfo;
 		return *this;
 	}
-	inline decltype(auto) withName(vlr::tstring_view svNativeOptionName)
+	inline auto& withName(vlr::tstring_view svNativeOptionName)
 	{
 		SetAppOptionName(svNativeOptionName);
 		return *this;
 	}
-	inline decltype(auto) withValue(const std::string_view& svValue)
+	inline auto& withValue(const std::string_view& svValue)
 	{
 		m_vNativeOptionValue = std::string{ svValue };
 		return *this;
 	}
-	inline decltype(auto) withValue(const std::wstring_view& svValue)
+	inline auto& withValue(const std::wstring_view& svValue)
 	{
 		m_vNativeOptionValue = std::wstring{ svValue };
 		return *this;
 	}
 	template <typename TValue, typename std::enable_if_t<isTypeInList_v<TValue, VNativeOptionValue>>* = nullptr>
-	inline decltype(auto) withValue(const TValue& tValue)
+	inline auto& withValue(const TValue& tValue)
 	{
 		m_vNativeOptionValue = tValue;
 		return *this;
 	}
-	inline decltype(auto) withAppOptionQualifiers(const SPcCAppOptionQualifiers& spAppOptionQualifiers)
+	inline auto& withAppOptionQualifiers(const SPcCAppOptionQualifiers& spAppOptionQualifiers)
 	{
 		m_spAppOptionQualifiers = spAppOptionQualifiers;
 		return *this;
 	}
 
-	const auto& GetAppOptionSourceInfo() const
+	constexpr auto& GetAppOptionSourceInfo() const
 	{
 		return m_oAppOptionSourceInfo;
 	}
-	const auto& GetNativeOptionName() const
+	constexpr auto& GetNativeOptionName() const
 	{
 		return m_sNativeOptionName;
 	}
-	const auto& GetNativeOptionValue() const
+	constexpr auto& GetNativeOptionValue() const
 	{
 		return m_vNativeOptionValue;
 	}
-	const auto& GetNormalizedOptionName() const
+	constexpr auto& GetNormalizedOptionName() const
 	{
 		return m_sNormalizedOptionName;
 	}
-	const auto& GetCachedOptionValue() const
+	constexpr auto& GetCachedOptionValue() const
 	{
 		return m_vCachedOptionValue;
 	}
-	const auto& GetAppOptionQualifiers() const
+	constexpr auto& GetAppOptionQualifiers() const
 	{
 		return m_spAppOptionQualifiers;
 	}

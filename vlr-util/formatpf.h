@@ -14,7 +14,7 @@ namespace detail {
 // The pass-through case
 
 template< typename TResult, typename TSource, typename std::enable_if_t<std::is_same_v<std::decay_t<TResult>, std::decay_t<TSource>>>* = nullptr >
-inline decltype(auto) ConvertTo_choice( const TSource& tSource, vlr::util::choice<0>&& )
+constexpr decltype(auto) ConvertTo_choice(const TSource& tSource, vlr::util::choice<0>&&)
 {
 	return (tSource);
 }
@@ -22,7 +22,7 @@ inline decltype(auto) ConvertTo_choice( const TSource& tSource, vlr::util::choic
 // The direct convertible case
 
 template< typename TResult, typename TSource, typename std::enable_if_t<std::is_convertible_v<TSource, TResult>>* = nullptr >
-inline auto ConvertTo_choice( const TSource& tSource, vlr::util::choice<1>&& )
+constexpr auto ConvertTo_choice(const TSource& tSource, vlr::util::choice<1>&&)
 {
 	return static_cast<TResult>(tSource);
 }
@@ -30,15 +30,15 @@ inline auto ConvertTo_choice( const TSource& tSource, vlr::util::choice<1>&& )
 // The ToStdString case(s)
 
 template< typename TResult, typename TSource, typename std::enable_if_t<std::is_same_v<std::decay_t<TResult>, std::string>>* = nullptr >
-inline auto ConvertTo_choice( const TSource& tSource, vlr::util::choice<2>&& )
+constexpr auto ConvertTo_choice(const TSource& tSource, vlr::util::choice<2>&&)
 {
-	return util::Convert::ToStdStringA( tSource );
+	return util::Convert::ToStdStringA(tSource);
 }
 
 template< typename TResult, typename TSource, typename std::enable_if_t<std::is_same_v<std::decay_t<TResult>, std::wstring>>* = nullptr >
-inline auto ConvertTo_choice( const TSource& tSource, vlr::util::choice<3>&& )
+constexpr auto ConvertTo_choice(const TSource& tSource, vlr::util::choice<3>&&)
 {
-	return util::Convert::ToStdStringW( tSource );
+	return util::Convert::ToStdStringW(tSource);
 }
 
 #if VLR_CONFIG_INCLUDE_ATL_CString
@@ -46,15 +46,15 @@ inline auto ConvertTo_choice( const TSource& tSource, vlr::util::choice<3>&& )
 // The ToCString case(s)
 
 template< typename TResult, typename TSource, typename std::enable_if_t<std::is_same_v<std::decay_t<TResult>, CStringA>>* = nullptr >
-inline auto ConvertTo_choice( const TSource& tSource, vlr::util::choice<4>&& )
+constexpr auto ConvertTo_choice(const TSource& tSource, vlr::util::choice<4>&&)
 {
-	return util::Convert::ToCStringA( tSource );
+	return util::Convert::ToCStringA(tSource);
 }
 
 template< typename TResult, typename TSource, typename std::enable_if_t<std::is_same_v<std::decay_t<TResult>, CStringW>>* = nullptr >
-inline auto ConvertTo_choice( const TSource& tSource, vlr::util::choice<5>&& )
+constexpr auto ConvertTo_choice(const TSource& tSource, vlr::util::choice<5>&&)
 {
-	return util::Convert::ToCStringW( tSource );
+	return util::Convert::ToCStringW(tSource);
 }
 
 #endif
@@ -62,7 +62,7 @@ inline auto ConvertTo_choice( const TSource& tSource, vlr::util::choice<5>&& )
 // The fallthrough case
 
 template< typename TResult, typename TSource >
-inline auto ConvertTo_choice( const TSource& tSource, vlr::util::choice<6>&& )
+constexpr auto ConvertTo_choice(const TSource& tSource, vlr::util::choice<6>&&)
 {
 	return TResult{ tSource };
 }
@@ -70,20 +70,20 @@ inline auto ConvertTo_choice( const TSource& tSource, vlr::util::choice<6>&& )
 } // namespace detail
 
 template< typename TResult, typename TSource >
-inline auto ConvertTo( const TSource& tSource )
+constexpr auto ConvertTo(const TSource& tSource)
 {
-	return detail::ConvertTo_choice<TResult>( tSource, vlr::util::choice<0>{} );
+	return detail::ConvertTo_choice<TResult>(tSource, vlr::util::choice<0>{});
 }
 
 namespace detail {
 
 template< typename TResult, typename TFormatString, typename... Arg >
-inline auto formatpf_to_TResult( TFormatString svFormatString, Arg&&... args )
+inline auto formatpf_to_TResult(TFormatString svFormatString, Arg&&... args)
 {
 	try
 	{
-		auto sResult = fmt::sprintf( svFormatString, std::forward<Arg>(args)... );
-		return ConvertTo<TResult>( sResult );
+		auto sResult = fmt::sprintf(svFormatString, std::forward<Arg>(args)...);
+		return ConvertTo<TResult>(sResult);
 	}
 	catch (const fmt::format_error& /*oError*/)
 	{
@@ -95,12 +95,12 @@ inline auto formatpf_to_TResult( TFormatString svFormatString, Arg&&... args )
 }
 
 //template< typename TResult, typename TFormatString >
-//inline auto vformatpf_to_TResult( TFormatString svFormatString, const fmt::format_args_t<fmt::printf_context>& oArgs )
+//inline auto vformatpf_to_TResult(TFormatString svFormatString, const fmt::format_args_t<fmt::printf_context>& oArgs)
 //{
 //	try
 //	{
-//		auto sResult = fmt::vsprintf( svFormatString, oArgs );
-//		return ConvertTo<TResult>( sResult );
+//		auto sResult = fmt::vsprintf(svFormatString, oArgs);
+//		return ConvertTo<TResult>(sResult);
 //	}
 //	catch (const fmt::format_error& /*oError*/)
 //	{
@@ -114,29 +114,29 @@ inline auto formatpf_to_TResult( TFormatString svFormatString, Arg&&... args )
 } // namespace detail
 
 template< typename TResult, typename... Arg >
-inline auto formatpf_to( lib_fmt::FormatStringA svFormatString, Arg&&... args )
+inline auto formatpf_to(lib_fmt::FormatStringA svFormatString, Arg&&... args)
 -> TResult
 {
-	return detail::formatpf_to_TResult<TResult, lib_fmt::FormatStringA>( svFormatString, std::forward<Arg>(args)... );
+	return detail::formatpf_to_TResult<TResult, lib_fmt::FormatStringA>(svFormatString, std::forward<Arg>(args)...);
 }
 
 template< typename TResult, typename... Arg >
-inline auto formatpf_to( lib_fmt::FormatStringW svFormatString, Arg&&... args )
+inline auto formatpf_to(lib_fmt::FormatStringW svFormatString, Arg&&... args)
 -> TResult
 {
-	return detail::formatpf_to_TResult<TResult, lib_fmt::FormatStringW>( svFormatString, std::forward<Arg>(args)... );
+	return detail::formatpf_to_TResult<TResult, lib_fmt::FormatStringW>(svFormatString, std::forward<Arg>(args)...);
 }
 
 template< typename... Arg >
-inline auto formatpf( lib_fmt::FormatStringA svFormatString, Arg&&... args )
+inline auto formatpf(lib_fmt::FormatStringA svFormatString, Arg&&... args)
 {
-	return detail::formatpf_to_TResult<vlr::string, lib_fmt::FormatStringA>( svFormatString, std::forward<Arg>(args)... );
+	return detail::formatpf_to_TResult<vlr::string, lib_fmt::FormatStringA>(svFormatString, std::forward<Arg>(args)...);
 }
 
 template< typename... Arg >
-inline auto formatpf( lib_fmt::FormatStringW svFormatString, Arg&&... args )
+inline auto formatpf(lib_fmt::FormatStringW svFormatString, Arg&&... args)
 {
-	return detail::formatpf_to_TResult<vlr::tstring, lib_fmt::FormatStringW>( svFormatString, std::forward<Arg>(args)... );
+	return detail::formatpf_to_TResult<vlr::tstring, lib_fmt::FormatStringW>(svFormatString, std::forward<Arg>(args)...);
 }
 
 } // namespace vlr
