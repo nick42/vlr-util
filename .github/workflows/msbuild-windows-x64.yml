@@ -21,7 +21,7 @@ jobs:
         uses: lukka/run-vcpkg@v11
         with:
           # vcpkgDirectory: '${{ github.workspace }}'
-          vcpkgJsonGlob: 'vlr-util/vcpkg.json'
+          vcpkgJsonGlob: '**/vcpkg.json'
           runVcpkgInstall: true
 
       - name: Build vlr-util (Release)
