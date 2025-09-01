@@ -1,0 +1,41 @@
+name: Build (MSBuild .vcxproj)
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild path
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore vcpkg dependencies (if needed)
+        run: |
+          if exist vcpkg.json (
+            vcpkg install --triplet x64-windows
+          )
+
+      - name: Build vlr-util (Release)
+        run: msbuild vlr-util\vlr-util.vcxproj /p:Configuration=Release /p:Platform=x64 /m
+
+      - name: Build vlr-util.test (Release)
+        run: msbuild vlr-util.test\vlr-util.test.vcxproj /p:Configuration=Release /p:Platform=x64 /m
+
+      - name: Run unit tests and collect results (gtest)
+        run: |
+          .\vlr-util.test\Release\vlr-util.test.exe --gtest_output=xml:test-results.xml
+        continue-on-error: false
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: gtest-results
+          path: test-results.xml
