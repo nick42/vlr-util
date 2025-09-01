@@ -1,49 +1,45 @@
-cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
-
-set(CMAKE_SYSTEM_VERSION 10.0 CACHE STRING "" FORCE)
-
-project(vlr-util-cmake CXX)
-
-################################################################################
-# Set target arch type if empty. Visual studio solution generator provides it.
-################################################################################
-
-if (MSVC) 
-    if(NOT CMAKE_VS_PLATFORM_NAME)
-        set(CMAKE_VS_PLATFORM_NAME "x64")
-    endif()
-    message("${CMAKE_VS_PLATFORM_NAME} architecture in use")
-
-    if(NOT ("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64"
-        OR "${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86"))
-        message(FATAL_ERROR "${CMAKE_VS_PLATFORM_NAME} arch is not supported!")
-    endif()
+# Force static CRT globally for all MSVC targets (including precompiled headers)
+if(MSVC)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" CACHE STRING "" FORCE)
 endif()
 
-################################################################################
-# Global configuration types
-################################################################################
-set(CMAKE_CONFIGURATION_TYPES
-    "Debug"
-    "Release"
-    CACHE STRING "" FORCE
-)
 
-################################################################################
-# Global compiler options
-################################################################################
+
+
+
+
+
+cmake_minimum_required(VERSION 3.16)
+project(vlr-util-cmake CXX)
+
+# --- CRT Linkage Configuration ---
+# This project is currently configured to use static CRT linkage (/MT, /MTd) for all builds.
+# This is enforced by using the vcpkg static triplet (e.g., x64-windows-static).
+#
+# To build with static CRT:
+#   - Use: -DVCPKG_TARGET_TRIPLET=x64-windows-static when running cmake and vcpkg install
+#   - All vcpkg dependencies will be built with static CRT as well.
+#
+# To support both static and dynamic CRT linkage in the future:
+#   - Add a CMake option (e.g., VLR_UTIL_USE_STATIC_CRT) and set the triplet accordingly.
+#   - Consider using toolchain logic or generator expressions to propagate the correct flags.
+#   - Document the supported triplets and usage in the README.
+
+# --- vcpkg manifest mode integration ---
+# If using vcpkg, pass the toolchain file to CMake:
+#   -DCMAKE_TOOLCHAIN_FILE=%VCPKG_ROOT%/scripts/buildsystems/vcpkg.cmake
+# vcpkg.json should be present in the project root for manifest mode.
+
+# Set C++ standard globally
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Platform-specific configuration
 if(MSVC)
-    # remove default flags provided with CMake for MSVC
+    # Remove default MSVC flags if needed
     set(CMAKE_CXX_FLAGS "")
     set(CMAKE_CXX_FLAGS_DEBUG "")
     set(CMAKE_CXX_FLAGS_RELEASE "")
-endif()
-
-################################################################################
-# Global linker options
-################################################################################
-if(MSVC)
-    # remove default flags provided with CMake for MSVC
     set(CMAKE_EXE_LINKER_FLAGS "")
     set(CMAKE_MODULE_LINKER_FLAGS "")
     set(CMAKE_SHARED_LINKER_FLAGS "")
@@ -56,34 +52,18 @@ if(MSVC)
     set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "${CMAKE_MODULE_LINKER_FLAGS}")
     set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS}")
     set(CMAKE_STATIC_LINKER_FLAGS_RELEASE "${CMAKE_STATIC_LINKER_FLAGS}")
+else()
+    # GCC/Clang: add common warning flags
+    add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-################################################################################
-# Nuget packages function stub.
-################################################################################
-function(use_package TARGET PACKAGE VERSION)
-    message(WARNING "No implementation of use_package. Create yours. "
-                    "Package \"${PACKAGE}\" with version \"${VERSION}\" "
-                    "for target \"${TARGET}\" is ignored!")
-endfunction()
-
-################################################################################
 # Common utils
-################################################################################
 include(CMake/Utils.cmake)
-
-################################################################################
-# Additional Global Settings(add specific info there)
-################################################################################
 include(CMake/GlobalSettingsInclude.cmake OPTIONAL)
 
-################################################################################
-# Use solution folders feature
-################################################################################
+# Use solution folders feature if supported
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-################################################################################
 # Sub-projects
-################################################################################
 add_subdirectory(vlr-util)
-#add_subdirectory(vlr-util.test)
+add_subdirectory(vlr-util.test)

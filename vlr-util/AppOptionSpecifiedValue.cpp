@@ -229,6 +229,10 @@ SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(std::wstring& swValue) co
 #pragma warning(pop)
 }
 
+// Note: This lambda has unreachable code in the cases where we return early; suppress the warning
+// Note: I believe this needs to be pushed/popped around each function, else it doesn't always work as expected.
+#pragma warning(push)
+#pragma warning(disable: 4702)
 SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(int32_t& nValue) const
 {
 	using TDest = int32_t;
@@ -282,13 +286,10 @@ SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(int32_t& nValue) const
 			VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION(S_FALSE);
 		}
 
-		// Note: This is unreachable code in the cases where we return early; suppress the warning
-#pragma warning(push)
-#pragma warning(disable: 4702)
 		return S_OK;
 	}, m_vNativeOptionValue);
-#pragma warning(pop)
 }
+#pragma warning(pop)
 
 SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(uint32_t& nValue) const
 {

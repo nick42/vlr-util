@@ -18,34 +18,43 @@ set(no_group_source_files
 )
 source_group("" FILES ${no_group_source_files})
 
+
+# --- Updated file lists from .vcxproj ---
 set(VLR_HEADER_FILES
+    "ActionOnDestruction.h"
     "AppOptionAccess.h"
     "AppOptionQualifiers.h"
+    "AppOptions.h"
     "AppOptionSource.h"
     "AppOptionSourceInfo.h"
     "AppOptionSource_File_Basic.h"
     "AppOptionSpecifiedValue.h"
-    "AppOptions.h"
-    "ActionOnDestruction.h"
+    "AssertionHandling_Config.h"
     "as_span.h"
     "as_string_view.h"
-    "AssertionHandling_Config.h"
     "AutoFreeResource.h"
     "AutoRevertingAssignment.h"
     "BaseWithVirtualDestructor.h"
-    "c_runtime.StringFunctions.h"
+    "CaptureConsoleOut.h"
     "CloseEnough.h"
     "config.h"
     "cpp_namespace.h"
+    "c_runtime.StringFunctions.h"
+    "debugbreak.h"
+    "DynamicLoadedFunction.h"
     "enums.FormatEnum.h"
     "enums.RangeInfo.h"
+    "enums.SmartEnum.h"
     "formatpf.h"
     "framework.h"
     "include.fmt.h"
     "include.spdlog.h"
+    "logging.Callbacks.h"
+    "logging.LogMessage.DefaultImpl.h"
     "logging.LogMessage.h"
     "logging.MessageContext.h"
     "ModuleContext.Compilation.h"
+    "ModuleContext.LogicalState.h"
     "ModuleContext.Runtime.CommandLine.h"
     "ModuleContext.Runtime.ConfigOptionsBase.h"
     "ModuleContext.Runtime.h"
@@ -53,19 +62,25 @@ set(VLR_HEADER_FILES
     "pch.h"
     "platform.FileSystemOps.h"
     "RegexCache.h"
+    "ResourceStringLookupValue.h"
+    "RetrySettings.h"
     "SharedInstance.h"
+    "SharedInstanceRegistrar.h"
     "StringCompare.h"
     "strings.split.h"
     "ThreadOperationContext.h"
     "ThreadPool.h"
+    "typeshim.win32.ASSERT.h"
     "typeshim.win32.h"
     "util.api_adaptor.OutString.h"
     "util.AutoCleanupBase.h"
+    "util.CallWithAutoRetry.h"
     "util.choice.h"
     "util.convert.Arithmetic.h"
     "util.convert.DateTime.h"
     "util.convert.StringConversion.h"
     "util.convert.ToDisplay.h"
+    "util.crc32.h"
     "util.data_adaptor.MultiSZ.h"
     "util.includes.h"
     "util.IsBitSet.h"
@@ -74,46 +89,57 @@ set(VLR_HEADER_FILES
     "util.IsNotBlank.h"
     "util.LevenshteinDistance.h"
     "util.logical_zstring_view.h"
+    "util.MakeResultCode.h"
     "util.MathOps.h"
+    "util.MRUCache.h"
     "util.NonOwningSharedPtr.h"
     "util.OnValidAssignTo.h"
+    "util.overloaded.h"
     "util.range_checked_cast.h"
     "util.Result.h"
     "util.static_assert.h"
     "util.std_aliases.h"
+    "util.StringConversion.base.h"
     "util.types.h"
     "util.types.linux.h"
     "util.types.win32.h"
     "util.StringConversion.h"
     "UtilMacros.Assertions.h"
+    "UtilMacros.CompilerSupport.h"
     "UtilMacros.General.h"
+    "UtilMacros.Namespace.h"
     "win32.targetver.WIN2K.h"
     "win32.targetver.WIN7.h"
     "win32.targetver.WINXP.h"
+    $<$<PLATFORM_ID:Windows>:Win32/util.CStringBufferAccess.h>
+    $<$<PLATFORM_ID:Windows>:Win32/util.win32.StringConversion.h>
     "zstring_view.h"
 )
 source_group("Header Files" FILES ${VLR_HEADER_FILES})
 
 set(VLR_SOURCE_FILES
+    "AppOptions.cpp"
     "AppOptionSource_File_Basic.cpp"
     "AppOptionSpecifiedValue.cpp"
-    "AppOptions.cpp"
     "AssertionHandling_Config.cpp"
+    "CaptureConsoleOut.cpp"
     "CloseEnough.cpp"
+    "logging.Callbacks.cpp"
+    "ModuleContext.LogicalState.cpp"
     "ModuleContext.Runtime.CommandLine.cpp"
     "ModuleContext.Runtime.ConfigOptionsBase.cpp"
     "ModuleContext.Runtime.cpp"
-    "logging.Callbacks.cpp"
     "ops.NetworkTargetInfo.cpp"
-#    "pch.cpp"
+    "pch.cpp"
     "platform.FileSystemOps.cpp"
     "RegexCache.cpp"
+    "SharedInstanceRegistrar.cpp"
     "ThreadOperationContext.cpp"
     "ThreadPool.cpp"
     "util.AutoCleanupBase.cpp"
     "util.Result.cpp"
     "util.StringConversion.cpp"
-#    "vlr-util.cpp"
+    $<$<PLATFORM_ID:Windows>:Win32/util.win32.StringConversion.cpp>
 )
 source_group("Source Files" FILES ${VLR_SOURCE_FILES})
 
@@ -143,6 +169,16 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE
     "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/pch.h>"
 )
 
+# MSVC: Whole program optimization (Release) and incremental linking (Debug/Release)
+if(MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE $<$<CONFIG:Release>:/GL>)
+    target_link_options(${PROJECT_NAME} PRIVATE
+        $<$<CONFIG:Release>:/LTCG>
+        $<$<CONFIG:Debug>:/INCREMENTAL>
+        $<$<CONFIG:Release>:/INCREMENTAL:NO>
+    )
+endif()
+
 # use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
 ################################################################################
 # Includes for CMake from *.props
@@ -157,14 +193,16 @@ target_precompile_headers(${PROJECT_NAME} PRIVATE
 
 set(ROOT_NAMESPACE vlrutil)
 
-if (MSVC)
+
+if(MSVC)
     set_target_properties(${PROJECT_NAME} PROPERTIES
         VS_GLOBAL_KEYWORD "Win32Proj"
-    )
-
-    set_target_properties(${PROJECT_NAME} PROPERTIES
         INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
     )
+else()
+    # GCC/Clang: enable LTO in Release
+    target_compile_options(${PROJECT_NAME} PRIVATE $<$<CONFIG:Release>:-O3 -flto>)
+    target_link_options(${PROJECT_NAME} PRIVATE $<$<CONFIG:Release>:-flto>)
 endif()
 
 ################################################################################
@@ -190,6 +228,8 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
     "_LIB;"
 )
 
+
+# Platform-specific compile definitions
 if(MSVC)
     target_compile_definitions(${PROJECT_NAME} PRIVATE
         "UNICODE;"
@@ -200,29 +240,89 @@ if(MSVC)
             "WIN32;"
         )
     endif()
+else()
+    # No special defines for non-MSVC
 endif()
 
 ################################################################################
 # Compile and link options
 ################################################################################
+
+
+# Platform-specific compile/link options
 if(MSVC)
+    # Force static CRT and enable exception handling for all build types
+    foreach(flag_var
+        CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+        CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
+        CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+        if(${flag_var} MATCHES "/MDd")
+            string(REGEX REPLACE "/MDd" "/MTd" ${flag_var} "${${flag_var}}")
+        endif()
+        if(${flag_var} MATCHES "/MD")
+            string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+        endif()
+        if(NOT ${flag_var} MATCHES "/EHsc")
+            set(${flag_var} "${${flag_var}} /EHsc")
+        endif()
+    endforeach()
     target_compile_options(${PROJECT_NAME} PRIVATE
-        $<$<CONFIG:Release>:
-            /Oi;
-            /Gy
-        >
-        /MP;
-        /sdl;
-        /W4;
-        ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
-        ${DEFAULT_CXX_EXCEPTION_HANDLING}
+        $<$<CONFIG:Release>:/Oi;/Gy>
+        /MP
+        /sdl
+        /W4
+        /utf-8
+        /permissive-
+        /std:c++17
+        $<$<CONFIG:Debug>:/Zi>
     )
     target_link_options(${PROJECT_NAME} PRIVATE
-        $<$<CONFIG:Release>:
-            /OPT:REF;
-            /OPT:ICF
-        >
+        $<$<CONFIG:Release>:/OPT:REF;/OPT:ICF>
     )
+    # Whole program optimization (Release) and incremental linking (Debug/Release)
+    target_compile_options(${PROJECT_NAME} PRIVATE $<$<CONFIG:Release>:/GL>)
+    target_link_options(${PROJECT_NAME} PRIVATE
+        $<$<CONFIG:Release>:/LTCG>
+        $<$<CONFIG:Debug>:/INCREMENTAL>
+        $<$<CONFIG:Release>:/INCREMENTAL:NO>
+    )
+else()
+    target_compile_options(${PROJECT_NAME} PRIVATE
+        $<$<CONFIG:Debug>:-g>
+        $<$<CONFIG:Release>:-O3>
+    )
+endif()
+
+# Windows/MSVC-specific compile options and definitions
+if(WIN32 AND MSVC)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        VS_GLOBAL_KEYWORD "Win32Proj"
+        INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
+    )
+    target_compile_options(${PROJECT_NAME} PRIVATE
+        /utf-8
+        /permissive-
+        /std:c++17
+        /W4
+        /sdl
+        /MP
+        $<$<CONFIG:Release>:/Oi;/Gy>
+        $<$<CONFIG:Debug>:/Zi>
+    )
+    target_link_options(${PROJECT_NAME} PRIVATE
+        $<$<CONFIG:Release>:/OPT:REF;/OPT:ICF>
+    )
+    target_compile_definitions(${PROJECT_NAME} PRIVATE
+        WIN32
+        _LIB
+        $<$<CONFIG:Debug>:_DEBUG>
+        $<$<CONFIG:Release>:NDEBUG>
+        UNICODE
+        _UNICODE
+    )
+    target_precompile_headers(${PROJECT_NAME} PRIVATE pch.h)
+    target_include_directories(${PROJECT_NAME} PRIVATE ".")
 endif()
 
 install(TARGETS vlr-util
