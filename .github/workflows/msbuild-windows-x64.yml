@@ -17,11 +17,11 @@ jobs:
       - name: Setup MSBuild path
         uses: microsoft/setup-msbuild@v2
 
-      - name: Restore vcpkg dependencies (if needed)
-        run: |
-          if exist vcpkg.json (
-            vcpkg install --triplet x64-windows
-          )
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgJsonGlob: '**/vcpkg.json'
+          runVcpkgInstall: true
 
       - name: Build vlr-util (Release)
         run: msbuild vlr-util\vlr-util.vcxproj /p:Configuration=Release /p:Platform=x64 /m
