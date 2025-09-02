@@ -24,6 +24,8 @@ jobs:
         with:
           vcpkgJsonGlob: '**/vcpkg.json'
           runVcpkgInstall: true
+          vcpkgGitUrl: 'https://github.com/microsoft/vcpkg'
+          vcpkgGitRef: 'master'
 
       - name: Build vlr-util (Release)
         run: msbuild vlr-util\vlr-util.vcxproj /p:Configuration=Release /p:Platform=x64 /m
