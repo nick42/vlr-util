@@ -1,13 +1,12 @@
 {
-  "name": "vlr-util",
-  "version-string": "0.1",
-  "dependencies": [
-    {
-      "name": "fmt",
-      "version>=" : "10.1.0"
-    },
-    "gsl-lite",
-  "gtest",
-  "catch2"
-  ]
+    "name": "vlr-util",
+    "version-string": "0.1",
+    "dependencies": [
+        {
+            "name": "fmt"
+        },
+        "gsl-lite",
+        "gtest",
+        "catch2"
+    ]
 }
