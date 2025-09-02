@@ -123,6 +123,10 @@ SResult CAppOptionSpecifiedValue::CheckOptionNameMatch(
 	return CheckOptionNameMatch(vecNormalizedOptionNameElements, vecNormalizedOptionNameElements);
 }
 
+// Note: This is unreachable code in the cases where we return early; suppress the warning
+#pragma warning(push)
+#pragma warning(disable: 4702)
+
 SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(std::string& saValue) const
 {
 	return std::visit([&](auto&& tValue) -> SResult {
@@ -168,12 +172,8 @@ SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(std::string& saValue) con
 			VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION(S_FALSE);
 		}
 
-		// Note: This is unreachable code in the cases where we return early; suppress the warning
-#pragma warning(push)
-#pragma warning(disable: 4702)
 		return S_OK;
 	}, m_vNativeOptionValue);
-#pragma warning(pop)
 }
 
 SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(std::wstring& swValue) const
@@ -221,12 +221,8 @@ SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(std::wstring& swValue) co
 			VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION(S_FALSE);
 		}
 
-		// Note: This is unreachable code in the cases where we return early; suppress the warning
-#pragma warning(push)
-#pragma warning(disable: 4702)
 		return S_OK;
 	}, m_vNativeOptionValue);
-#pragma warning(pop)
 }
 
 SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(int32_t& nValue) const
@@ -282,12 +278,8 @@ SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(int32_t& nValue) const
 			VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION(S_FALSE);
 		}
 
-		// Note: This is unreachable code in the cases where we return early; suppress the warning
-#pragma warning(push)
-#pragma warning(disable: 4702)
 		return S_OK;
 	}, m_vNativeOptionValue);
-#pragma warning(pop)
 }
 
 SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(uint32_t& nValue) const
@@ -343,12 +335,8 @@ SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(uint32_t& nValue) const
 			VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION(S_FALSE);
 		}
 
-		// Note: This is unreachable code in the cases where we return early; suppress the warning
-#pragma warning(push)
-#pragma warning(disable: 4702)
 		return S_OK;
 	}, m_vNativeOptionValue);
-#pragma warning(pop)
 }
 
 SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(uint64_t& nValue) const
@@ -404,12 +392,8 @@ SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(uint64_t& nValue) const
 			VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION(S_FALSE);
 		}
 
-		// Note: This is unreachable code in the cases where we return early; suppress the warning
-#pragma warning(push)
-#pragma warning(disable: 4702)
 		return S_OK;
 	}, m_vNativeOptionValue);
-#pragma warning(pop)
 }
 
 SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(double& nValue) const
@@ -465,12 +449,8 @@ SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(double& nValue) const
 			VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION(S_FALSE);
 		}
 
-		// Note: This is unreachable code in the cases where we return early; suppress the warning
-#pragma warning(push)
-#pragma warning(disable: 4702)
 		return S_OK;
 	}, m_vNativeOptionValue);
-#pragma warning(pop)
 }
 
 SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(bool& bValue) const
@@ -558,12 +538,10 @@ SResult CAppOptionSpecifiedValue::ConvertOptionValueTo(bool& bValue) const
 			VLR_HANDLE_ASSERTION_FAILURE__AND_RETURN_EXPRESSION(S_FALSE);
 		}
 
-		// Note: This is unreachable code in the cases where we return early; suppress the warning
-#pragma warning(push)
-#pragma warning(disable: 4702)
 		return S_OK;
 	}, m_vNativeOptionValue);
-#pragma warning(pop)
 }
+
+#pragma warning(pop) // Disable warning 4702
 
 } // namespace vlr
