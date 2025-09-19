@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup MSBuild path
         uses: microsoft/setup-msbuild@v2
@@ -20,8 +20,12 @@ jobs:
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
         with:
-          vcpkgJsonGlob: '/vcpkg.json'
+          vcpkgJsonGlob: '**/vcpkg.json'
           runVcpkgInstall: true
+          vcpkgGitURL: 'https://github.com/microsoft/vcpkg'
+          # TODO: Make this dynamic
+          # Note: This either needs to be here, or we need to have a vcpkg-configuration.json file
+          vcpkgGitCommitId: b1b19307e2d2ec1eefbdb7ea069de7d4bcd31f01
 
       - name: Build vlr-util (Release)
         run: msbuild vlr-util\vlr-util.vcxproj /p:Configuration=Release /p:Platform=x64 /m
