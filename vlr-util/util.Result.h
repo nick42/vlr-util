@@ -132,17 +132,21 @@ public:
 	}
 
 public:
-	constexpr auto isSuccess() const noexcept
+	constexpr bool isSuccess() const noexcept
 	{
-		return !IsBitSet(m_nResultCode, 0x80000000);
+		return true
+			&& isSet()
+			&& (!IsBitSet(m_nResultCode, 0x80000000));
 	}
-	constexpr auto isFailure() const noexcept
+	constexpr bool isFailure() const noexcept
 	{
-		return IsBitSet(m_nResultCode, 0x80000000);
+		return true
+			&& isSet()
+			&& IsBitSet(m_nResultCode, 0x80000000);
 	}
-	constexpr auto isSet() const noexcept
+	constexpr bool isSet() const noexcept
 	{
-		return m_nResultCode != Uninitialized;
+		return (m_nResultCode != Uninitialized);
 	}
 	constexpr unsigned short GetFacilityCode() const noexcept
 	{
