@@ -88,6 +88,7 @@
     <ClInclude Include="util.convert.ToDisplay.h" />
     <ClInclude Include="util.crc32.h" />
     <ClInclude Include="util.data_adaptor.MultiSZ.h" />
+    <ClInclude Include="util.DebugBreak.h" />
     <ClInclude Include="util.includes.h" />
     <ClInclude Include="util.IsBitSet.h" />
     <ClInclude Include="util.IsBitValue.h" />

@@ -5,8 +5,8 @@
 #include <atomic>
 #include <functional>
 
-#include "debugbreak.h"
 #include "logging.MessageContext.h"
+#include "util.DebugBreak.h"
 #include "zstring_view.h"
 
 namespace vlr {
@@ -34,8 +34,7 @@ public:
 	{
 		if (m_bOnDefaultHandler_TriggerDebugBreak)
 		{
-			// This uses an open source cross-platform implementation (see header)
-			debug_break();
+			util::TriggerDebugBreak();
 		}
 	}
 };
