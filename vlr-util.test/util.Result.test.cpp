@@ -71,4 +71,23 @@ TEST(util_Result, For_win32_GeneralResultCode_PassthroughForRPC)
 //	static_assert(std::is_nothrow_constructible_v<SResult, HRESULT>);
 //}
 
+TEST(util_Result, ToString)
+{
+	auto srSuccess = SResult::ForGeneralSuccess();
+	auto srFailure = SResult::ForGeneralFailure();
+	auto sSuccess = srSuccess.ToString();
+	auto sFailure = srFailure.ToString();
+	EXPECT_FALSE(sSuccess.empty());
+	EXPECT_FALSE(sFailure.empty());
+	EXPECT_NE(sSuccess, sFailure);
+}
+
+TEST(util_Result, EnsureResultsAreNotValidIfNotSet)
+{
+	SResult srDefault;
+	EXPECT_FALSE(srDefault.isSet());
+	EXPECT_FALSE(srDefault.isSuccess());
+	EXPECT_FALSE(srDefault.isFailure());
+}
+
 #endif // defined(WIN32)
