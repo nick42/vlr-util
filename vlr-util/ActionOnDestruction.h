@@ -61,7 +61,12 @@ public:
 	CActionOnDestruction() = default;
 	CActionOnDestruction(const FAction& fAction)
 		: m_fAction{ fAction }
-	{}
+	{
+	}
+	CActionOnDestruction(FAction&& fAction)
+		: m_fAction{ std::move(fAction) }
+	{
+	}
 	// Note: We allow move, but not copy, since we do not currently do reference counting
 	CActionOnDestruction(CActionOnDestruction&&) = default;
 	CActionOnDestruction(const CActionOnDestruction&) = delete;
@@ -71,10 +76,10 @@ public:
 	}
 };
 
-template< typename TFunctor >
-inline auto MakeActionOnDestruction(const TFunctor& fAction)
+template <typename TFunctor>
+inline auto MakeActionOnDestruction(TFunctor&& fAction)
 {
-	return CActionOnDestruction<decltype(std::declval<TFunctor>()())>{ fAction };
+	return CActionOnDestruction<decltype(std::declval<TFunctor>()())>{ std::forward<TFunctor>(fAction) };
 }
 
 } // namespace vlr

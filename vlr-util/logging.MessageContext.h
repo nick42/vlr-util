@@ -57,6 +57,11 @@ public:
 		return fmt::format(_T("{}:{}"), GetFileNameOnly().asStringView(), m_nLineNumber);
 	}
 
+	static constexpr CCodeContext FunctionOnly()
+	{
+		return CCodeContext{ {}, 0, VLR_LOG_CONTEXT_FUNCTION };
+	}
+
 public:
 	constexpr explicit CCodeContext() = default;
 	constexpr CCodeContext(
@@ -73,7 +78,7 @@ public:
 
 namespace LogicalLevel {
 
-enum ELogicalLevel
+enum ELogicalLevel : uint16_t
 {
 	Unknown,
 	Debug,
@@ -92,8 +97,11 @@ class CMessageContext
 public:
 	CCodeContext m_oCodeContext;
 	LogicalLevel::ELogicalLevel m_eLogicalLevel = LogicalLevel::Unknown;
+	uint16_t m_nContextFlags = 0;
 
 public:
+	// Note: C++20 allows constexpr virtual destructors
+	virtual ~CMessageContext() = default;
 	constexpr explicit CMessageContext() = default;
 	constexpr CMessageContext( const CCodeContext& oCodeContext )
 		: m_oCodeContext{ oCodeContext }

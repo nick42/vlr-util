@@ -1,7 +1,5 @@
 #pragma once
 
-#define _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS
-
 #if defined(_WIN32) && (!defined(VLR_CONFIG_EXCLUDE_WIN32_AFX))
 #define VLR_CONFIG_INCLUDE_ATL_CString 1
 #define VLR_CONFIG_INCLUDE_ATL_CComBSTR 1
