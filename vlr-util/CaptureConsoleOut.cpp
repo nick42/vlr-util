@@ -124,7 +124,7 @@ StandardResult CCapturePipeData::EndCapture()
 		bytesRead = 0;
 		fd_blocked = false;
 #ifdef _MSC_VER
-		if (!eof(m_arrDupPipeHandles[PipeDirection::Read]))
+		if (!_eof(m_arrDupPipeHandles[PipeDirection::Read]))
 			bytesRead = read(m_arrDupPipeHandles[PipeDirection::Read], buf, bufSize - 1);
 #else
 		bytesRead = read(m_arrDupPipeHandles[PipeDirection::Read], buf, bufSize - 1);

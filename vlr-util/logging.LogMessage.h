@@ -75,7 +75,9 @@ struct TFormatResult
 #endif
 
 template< typename TString >
-inline auto LogMessage(const CMessageContext& oMessageContext, const TString& sMessage) VLR_LogMossageExceptionSpec
+inline auto LogMessage(
+	const CMessageContext& oMessageContext, 
+	const TString& sMessage) VLR_LogMossageExceptionSpec
 -> typename TFormatResult<TString>::type
 {
 	try
@@ -102,7 +104,10 @@ inline auto LogMessage(const CMessageContext& oMessageContext, const TString& sM
 }
 
 template< typename TFormatString, typename... Arg >
-inline auto LogMessagePF(const CMessageContext& oMessageContext, TFormatString svFormatString, Arg&&... args) VLR_LogMossageExceptionSpec
+inline auto LogMessagePF(
+	const CMessageContext& oMessageContext, 
+	TFormatString svFormatString, 
+	Arg&&... args) VLR_LogMossageExceptionSpec
 -> typename TFormatResult<TFormatString>::type
 {
 	try
@@ -131,7 +136,10 @@ inline auto LogMessagePF(const CMessageContext& oMessageContext, TFormatString s
 }
 
 template< typename TFormatString, typename... Arg >
-inline auto LogMessageFmt(const CMessageContext& oMessageContext, TFormatString svFormatString, Arg&&... args) VLR_LogMossageExceptionSpec
+constexpr auto LogMessageFmt(
+	const CMessageContext& oMessageContext,
+	TFormatString svFormatString,
+	Arg&&... args) VLR_LogMossageExceptionSpec
 -> typename TFormatResult<TFormatString>::type
 {
 	try
@@ -147,7 +155,7 @@ inline auto LogMessageFmt(const CMessageContext& oMessageContext, TFormatString 
 			return VLR_LOGGING_FORMATTED_MESSAGE_RESULT_EMPTY;
 		}
 
-		auto sMessage = fmt::format(svFormatString, std::forward<Arg>(args)...);
+		auto sMessage = fmt::format(fmt::runtime(svFormatString), std::forward<Arg>(args)...);
 
 		/*sr =*/ oCallbacks.m_fLogMessage(oMessageContext, util::Convert::ToStdString(sMessage));
 

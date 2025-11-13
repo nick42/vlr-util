@@ -14,7 +14,6 @@
 #define close _close
 #define pipe _pipe
 #define read _read
-#define eof _eof
 #else
 #include <unistd.h>
 #endif

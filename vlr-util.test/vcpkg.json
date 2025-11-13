@@ -3,12 +3,10 @@
   "version-string": "0.1",
   "dependencies": [
     {
-      "name": "fmt",
-      "version>=": "10.1.0"
+      "name": "fmt"
     },
     "gsl-lite",
     "gtest",
     "catch2"
-  ],
-  "builtin-baseline": "e113942454e6b829366af7bcf196bbdbccbd6b3c"
+  ]
 }

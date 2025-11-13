@@ -131,26 +131,26 @@ TEST(strings_split, GetTrimmedStringView)
 	{
 		auto svValue = strings::GetTrimmedStringView(svzTestValue_NoTrim, svzTestDelimiters);
 		EXPECT_TRUE(oStringCompareCS.AreEqual(svValue, svzTestResult_Expected))
-			<< _T("Test value which failed: ") << svzTestValue_NoTrim;
+			<< _T("Test value which failed: ") << svzTestValue_NoTrim.asConstPtr();
 	}
 	{
 		auto svValue = strings::GetTrimmedStringView(svzTestValue_WithPrefix, svzTestDelimiters);
 		EXPECT_TRUE(oStringCompareCS.AreEqual(svValue, svzTestResult_Expected))
-			<< _T("Test value which failed: ") << svzTestValue_WithPrefix;
+			<< _T("Test value which failed: ") << svzTestValue_WithPrefix.asConstPtr();
 	}
 	{
 		auto svValue = strings::GetTrimmedStringView(svzTestValue_WithPostfix, svzTestDelimiters);
 		EXPECT_TRUE(oStringCompareCS.AreEqual(svValue, svzTestResult_Expected))
-			<< _T("Test value which failed: ") << svzTestValue_WithPostfix;
+			<< _T("Test value which failed: ") << svzTestValue_WithPostfix.asConstPtr();
 	}
 	{
 		auto svValue = strings::GetTrimmedStringView(svzTestValue_WithBoth, svzTestDelimiters);
 		EXPECT_TRUE(oStringCompareCS.AreEqual(svValue, svzTestResult_Expected))
-			<< _T("Test value which failed: ") << svzTestValue_WithBoth;
+			<< _T("Test value which failed: ") << svzTestValue_WithBoth.asConstPtr();
 	}
 	{
 		auto svValue = strings::GetTrimmedStringView(svzTestValue_NoMatch, svzTestDelimiters);
 		EXPECT_FALSE(oStringCompareCS.AreEqual(svValue, svzTestResult_Expected))
-			<< _T("Test value which failed: ") << svzTestValue_NoMatch;
+			<< _T("Test value which failed: ") << svzTestValue_NoMatch.asConstPtr();
 	}
 }

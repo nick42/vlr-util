@@ -6,7 +6,13 @@
 #include <memory>
 #include <functional>
 
-#include <gsl/gsl-lite.hpp>
+#if __has_include(<span>) && (__cplusplus >= 202002L)
+#define VLR_HAS_INCLUDE_STD_SPAN 1
+#include <span>
+#else
+#define VLR_HAS_INCLUDE_STD_SPAN 0
+#include <gsl-lite/gsl-lite.hpp>
+#endif
 
 #include "util.std_aliases.h"
 #include "zstring_view.h"
@@ -27,6 +33,10 @@ using std::make_shared;
 
 using std::function;
 
-using gsl::span;
+#if VLR_HAS_INCLUDE_STD_SPAN
+using std::span;
+#else
+using gsl_lite::span;
+#endif
 
 } // namespace cpp

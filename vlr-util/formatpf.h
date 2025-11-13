@@ -82,6 +82,7 @@ inline auto formatpf_to_TResult(TFormatString svFormatString, Arg&&... args)
 {
 	try
 	{
+#pragma warning(suppress: 4996) // fmt::sprintf is deprecated
 		auto sResult = fmt::sprintf(svFormatString, std::forward<Arg>(args)...);
 		return ConvertTo<TResult>(sResult);
 	}
