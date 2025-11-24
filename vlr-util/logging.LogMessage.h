@@ -74,7 +74,7 @@ struct TFormatResult
 #define VLR_LogMessage_Rethrow
 #endif
 
-template< typename TString >
+template <typename TString>
 inline auto LogMessage(
 	const CMessageContext& oMessageContext, 
 	const TString& sMessage) VLR_LogMossageExceptionSpec
@@ -135,12 +135,14 @@ inline auto LogMessagePF(
 	}
 }
 
-template< typename TFormatString, typename... Arg >
-constexpr auto LogMessageFmt(
+namespace detail {
+
+template <typename TFormatString, typename... Arg>
+constexpr auto LogMessageFmt_WithFmtString(
 	const CMessageContext& oMessageContext,
 	TFormatString svFormatString,
 	Arg&&... args) VLR_LogMossageExceptionSpec
--> typename TFormatResult<TFormatString>::type
+	-> typename TFormatResult<TFormatString>::type
 {
 	try
 	{
@@ -155,7 +157,7 @@ constexpr auto LogMessageFmt(
 			return VLR_LOGGING_FORMATTED_MESSAGE_RESULT_EMPTY;
 		}
 
-		auto sMessage = fmt::format(fmt::runtime(svFormatString), std::forward<Arg>(args)...);
+		auto sMessage = fmt::format(svFormatString, std::forward<Arg>(args)...);
 
 		/*sr =*/ oCallbacks.m_fLogMessage(oMessageContext, util::Convert::ToStdString(sMessage));
 
@@ -165,6 +167,32 @@ constexpr auto LogMessageFmt(
 	{
 		VLR_LogMessage_Rethrow
 	}
+}
+
+} // namespace detail
+
+template <typename... Arg>
+constexpr auto LogMessageFmt(
+	const CMessageContext& oMessageContext,
+	fmt::format_string<Arg...> svFormatString,
+	Arg&&... args) VLR_LogMossageExceptionSpec
+{
+	return detail::LogMessageFmt_WithFmtString(
+		oMessageContext,
+		svFormatString,
+		std::forward<Arg>(args)...);
+}
+
+template <typename... Arg>
+constexpr auto LogMessageFmt(
+	const CMessageContext& oMessageContext,
+	fmt::wformat_string<Arg...> svFormatString,
+	Arg&&... args) VLR_LogMossageExceptionSpec
+{
+	return detail::LogMessageFmt_WithFmtString(
+		oMessageContext,
+		svFormatString,
+		std::forward<Arg>(args)...);
 }
 
 #undef VLR_LOGGING_FORMATTED_MESSAGE_RESULT_EMPTY

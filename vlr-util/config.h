@@ -1,5 +1,17 @@
 #pragma once
 
+#if (__cplusplus >= 202002L)
+#define VLR_CPP20_OR_LATER 1
+#else
+#define VLR_CPP20_OR_LATER 0
+#endif
+
+#if VLR_CPP20_OR_LATER
+#define VLR_VIRTUAL_DESTRUCTOR_CONSTEXPR constexpr
+#else
+#define VLR_VIRTUAL_DESTRUCTOR_CONSTEXPR
+#endif
+
 #if defined(_WIN32) && (!defined(VLR_CONFIG_EXCLUDE_WIN32_AFX))
 #define VLR_CONFIG_INCLUDE_ATL_CString 1
 #define VLR_CONFIG_INCLUDE_ATL_CComBSTR 1

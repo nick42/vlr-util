@@ -101,7 +101,7 @@ public:
 
 public:
 	// Note: C++20 allows constexpr virtual destructors
-	virtual ~CMessageContext() = default;
+	VLR_VIRTUAL_DESTRUCTOR_CONSTEXPR virtual ~CMessageContext() = default;
 	constexpr explicit CMessageContext() = default;
 	constexpr CMessageContext( const CCodeContext& oCodeContext )
 		: m_oCodeContext{ oCodeContext }
