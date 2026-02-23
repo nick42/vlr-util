@@ -156,4 +156,32 @@ SResult CAppOptions::SetAppOptionQualifiers(
 	return S_OK;
 }
 
+SResult CAppOptions::ClearSpecifiedValue(
+	const SPCAppOptionSpecifiedValue& spAppOptionSpecifiedValue)
+{
+	VLR_ASSERT_NONZERO_OR_RETURN_EUNEXPECTED(spAppOptionSpecifiedValue);
+
+	auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+	auto nCountOfRemoved = m_mapSpecifiedNameToSpecifiedValue.erase(spAppOptionSpecifiedValue->GetNativeOptionName());
+	if (nCountOfRemoved == 0)
+	{
+		return SResult::Success_WithNuance;
+	}
+
+	ClearAllPrePopulatedSpecifiedValuesOnValueAdd(spAppOptionSpecifiedValue->GetNativeOptionName());
+
+	return SResult::Success;
+}
+
+SResult CAppOptions::ClearAllSpecifiedValues()
+{
+	auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+	m_mapSpecifiedNameToSpecifiedValue.clear();
+	m_mapNormalizedNameToSpecifiedValue.clear();
+
+	return SResult::Success;
+}
+
 } // namespace vlr

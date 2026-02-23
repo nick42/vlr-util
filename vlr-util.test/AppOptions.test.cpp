@@ -224,3 +224,81 @@ TEST_F(AppOptions, OptionWithQualifiers_AfterSpecifiedValue)
 		EXPECT_EQ(spSpecifiedValue->GetAppOptionQualifiers()->GetFlags_Standard(), AppOptionQualifiers::StandardFlags::IsSensitive);
 	}
 }
+
+TEST_F(AppOptions, ClearSpecifiedValue)
+{
+	SResult sr;
+
+	static const vlr::tstring sName = _T("Options::Clear::Test");
+
+	auto spValue = std::make_shared<CAppOptionSpecifiedValue>();
+	spValue->withName(sName)
+		.withSource(vlr::AppOptionSource::ExplicitViaCode)
+		.withValue(123)
+		;
+
+	// Add and verify present
+	sr = m_oAppOptions.AddSpecifiedValue(spValue);
+	EXPECT_EQ(sr, S_OK);
+
+	SPCAppOptionSpecifiedValue spFound;
+	sr = m_oAppOptions.FindSpecifiedValueByName(spValue->GetNativeOptionName(), spFound);
+	EXPECT_EQ(sr, S_OK);
+	EXPECT_NE(spFound, nullptr);
+
+	// Clear the specified value and verify removed
+	sr = m_oAppOptions.ClearSpecifiedValue(spValue);
+	EXPECT_EQ(sr, SResult::Success);
+
+	sr = m_oAppOptions.FindSpecifiedValueByName(spValue->GetNativeOptionName(), spFound);
+	EXPECT_EQ(sr, S_FALSE);
+
+	// Clearing again should indicate nuance (was not present)
+	sr = m_oAppOptions.ClearSpecifiedValue(spValue);
+	EXPECT_EQ(sr, SResult::Success_WithNuance);
+}
+
+TEST_F(AppOptions, ClearAllSpecifiedValues)
+{
+	SResult sr;
+
+	static const vlr::tstring sNameA = _T("Options::ToClear::Name");
+	static const vlr::tstring sNameB = _T("options.toclear.name");
+
+	// Add two values that normalize to the same name
+	{
+		auto spValue = std::make_shared<CAppOptionSpecifiedValue>();
+		spValue->withName(sNameA)
+			.withSource(vlr::AppOptionSource::ExplicitViaCode)
+			.withValue(1)
+			;
+		sr = m_oAppOptions.AddSpecifiedValue(spValue);
+		EXPECT_EQ(sr, S_OK);
+	}
+
+	{
+		auto spValue = std::make_shared<CAppOptionSpecifiedValue>();
+		spValue->withName(sNameB)
+			.withSource(vlr::AppOptionSource::ExplicitViaCode)
+			.withValue(2)
+			;
+		sr = m_oAppOptions.AddSpecifiedValue(spValue);
+		EXPECT_EQ(sr, S_OK);
+	}
+
+	// Verify they are found via normalized lookup
+	std::vector<SPCAppOptionSpecifiedValue> vec;
+	sr = m_oAppOptions.FindSpecifiedValuesMatchingNormalizedName(_T("Options::ToClear::Name"), vec);
+	EXPECT_EQ(sr, S_OK);
+	EXPECT_GE(vec.size(), 2U);
+
+	// Clear all and verify removal
+	sr = m_oAppOptions.ClearAllSpecifiedValues();
+	EXPECT_EQ(sr, SResult::Success);
+
+	// Using normalized lookup to ensure no leftovers
+	std::vector<SPCAppOptionSpecifiedValue> vecAfter;
+	sr = m_oAppOptions.FindSpecifiedValuesMatchingNormalizedName(_T("Options::ToClear::Name"), vecAfter);
+	EXPECT_EQ(sr, S_OK);
+	EXPECT_EQ(vecAfter.size(), 0U);
+}

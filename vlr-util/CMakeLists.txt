@@ -215,7 +215,9 @@ if(MSVC)
         /sdl;
         /W4;
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
-        ${DEFAULT_CXX_EXCEPTION_HANDLING}
+        ${DEFAULT_CXX_EXCEPTION_HANDLING};
+        /utf-8;
+        /Zc:__cplusplus
     )
     target_link_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Release>:

@@ -18,8 +18,13 @@ public:
 
 protected:
 	mutable std::mutex m_mutexDataAccess;
+
+	// This is the collection of specified values, based on specified option name. This is the "source of truth" 
+	// for specified values; the other collections are effectively caches for access patterns.
 	std::unordered_map<vlr::tstring, SPCAppOptionSpecifiedValue> m_mapSpecifiedNameToSpecifiedValue;
 
+	// This is the collection of specified values, based on normalized option name, for accessed options. This is 
+	// populated on access, and is effectively a cache to optimize subsequent accesses.
 	// Note: We will populate nullptr values in this map for accessed values.
 	// This will eliminate needing to keep a separate set of accessed values; can be implicit in this map.
 	std::unordered_map<vlr::tstring, SPCAppOptionSpecifiedValue> m_mapNormalizedNameToSpecifiedValue;
@@ -64,6 +69,9 @@ public:
 
 	SResult FindSpecifiedValueByName(const vlr::tstring& sSpecifiedName, SPCAppOptionSpecifiedValue& spAppOptionSpecifiedValue) const;
 
+	// Note: This will find all specified values matching the normalized name, even if they have not been accessed yet. 
+	// This is effectively a search of the "source of truth" collection of specified values, and is not optimized for 
+	// access patterns. Also note that there may be multiple specified values matching the normalized name.
 	SResult FindSpecifiedValuesMatchingNormalizedName(
 		const vlr::tstring& sNormalizedName,
 		std::vector<SPCAppOptionSpecifiedValue>& vecSpecifiedValues);
@@ -89,6 +97,12 @@ public:
 	SResult SetAppOptionQualifiers(
 		const vlr::tstring& sNormalizedName,
 		const SPCAppOptionQualifiers& spAppOptionQualifiers);
+
+	// Note: This will clear the specified value. Note that any set value here is ignored.
+	SResult ClearSpecifiedValue(
+		const SPCAppOptionSpecifiedValue& spAppOptionSpecifiedValue);
+	// This will clear all specified values, and reset the internal cache.
+	SResult ClearAllSpecifiedValues();
 
 };
 
