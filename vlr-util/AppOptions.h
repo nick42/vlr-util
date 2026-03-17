@@ -19,19 +19,23 @@ public:
 protected:
 	mutable std::mutex m_mutexDataAccess;
 
-	// This is the collection of specified values, based on specified option name. This is the "source of truth" 
-	// for specified values; the other collections are effectively caches for access patterns.
+	// The primary collection of all specified option values, keyed by their original/native name.
+	// This is the "source of truth" for all specified values (which may not correlate to defined AppOptions).
+	// Other collections derive or cache from this collection for optimized access patterns.
 	std::unordered_map<vlr::tstring, SPCAppOptionSpecifiedValue> m_mapSpecifiedNameToSpecifiedValue;
 
-	// This is the collection of specified values, based on normalized option name, for accessed options. This is 
-	// populated on access, and is effectively a cache to optimize subsequent accesses.
-	// Note: We will populate nullptr values in this map for accessed values.
-	// This will eliminate needing to keep a separate set of accessed values; can be implicit in this map.
+	// Cache of specified values keyed by normalized option name, populated on-demand during first access.
+	// Stores nullptr for options that were accessed but not specified (to avoid repeated lookups).
+	// This optimizes repeated accesses to the same normalized option name. Keys in this map represent
+	// all defined AppOptions that have been referenced at least once.
 	std::unordered_map<vlr::tstring, SPCAppOptionSpecifiedValue> m_mapNormalizedNameToSpecifiedValue;
 
-	// This is the set of specified qualifiers, based on normalized option name.
-	// This is set separately, so that qualifiers can be set before options are accessed and/or populated with specified values.
+	// Option qualifiers, keyed by normalized option name.
+	// May be set independently of option values (e.g., before the option is specified or accessed).
 	std::unordered_map<vlr::tstring, SPCAppOptionQualifiers> m_mapNormalizedNameToQualifiers;
+
+	// Custom metadata for options, keyed by normalized option name.
+	std::unordered_map<vlr::tstring, vlr::tstring> m_mapNormalizedNameToMetadata;
 
 protected:
 	// Note: For protected methods, they assume data access mutex is already acquired
@@ -52,9 +56,21 @@ protected:
 public:
 	SResult AddSpecifiedValue(const SPCAppOptionSpecifiedValue& spAppOptionSpecifiedValue);
 
+	// Returns a const reference to all specified values by their original/native name.
+	// WARNING: This is not thread-safe for concurrent modifications. Do not hold this reference
+	// across other code or function calls. For thread-safe lookups, use FindSpecifiedValueByName()
+	// or PopulateSpecifiedValueForOption() instead.
 	inline const auto& GetMap_SpecifiedValues() const
 	{
 		return m_mapSpecifiedNameToSpecifiedValue;
+	}
+	// Returns a const reference to the cache of values keyed by normalized name (for accessed options).
+	// WARNING: This is not thread-safe for concurrent modifications. Do not hold this reference
+	// across other code or function calls. For thread-safe lookups, use PopulateSpecifiedValueForOption()
+	// or PopulatePrePreparedSpecifiedValueForOption() instead.
+	inline const auto& GetMap_NormalizedNameToSpecifiedValue() const
+	{
+		return m_mapNormalizedNameToSpecifiedValue;
 	}
 	inline auto GetCount_SpecifiedValues() const
 	{
@@ -69,24 +85,26 @@ public:
 
 	SResult FindSpecifiedValueByName(const vlr::tstring& sSpecifiedName, SPCAppOptionSpecifiedValue& spAppOptionSpecifiedValue) const;
 
-	// Note: This will find all specified values matching the normalized name, even if they have not been accessed yet. 
-	// This is effectively a search of the "source of truth" collection of specified values, and is not optimized for 
-	// access patterns. Also note that there may be multiple specified values matching the normalized name.
+	// Finds all specified values matching the normalized name, including those not yet accessed.
+	// Searches the "source of truth" collection and is not optimized for repeated access patterns.
+	// Note: May return multiple specified values for the same normalized name.
 	SResult FindSpecifiedValuesMatchingNormalizedName(
 		const vlr::tstring& sNormalizedName,
 		std::vector<SPCAppOptionSpecifiedValue>& vecSpecifiedValues);
 
-	// This method does a couple things:
-	// - Find the value if specified (and resolve any potential ambiguity in specification)
-	// - Move the value to the collection for "accessed" options
-	// - Pre-populate the TValue type in the specified value, for future access without conversion
-	// Note: Returns S_FALSE if the value is not specified
+	// Populates a specified value for the given normalized option name with the following behaviors:
+	// - Finds the value if specified (resolving any potential ambiguity in specification)
+	// - Moves the value to the access cache for subsequent quick lookups
+	// - Pre-populates the TValue type in the specified value to avoid conversion on later accesses
+	// Returns: S_OK if value found, S_FALSE if not specified
 	template <typename TValue>
 	SResult PopulateSpecifiedValueForOption(
 		const vlr::tstring& sNormalizedName,
 		SPCAppOptionSpecifiedValue& spAppOptionSpecifiedValue);
 
-	// Note: Only returns values which have been previously prepared
+	// Populates a pre-cached specified value for the given normalized option name.
+	// Only returns values which have been previously prepared (via PopulateSpecifiedValueForOption).
+	// Returns: S_OK if value exists in cache, S_FALSE if not previously accessed
 	SResult PopulatePrePreparedSpecifiedValueForOption(
 		const vlr::tstring& sNormalizedName,
 		SPCAppOptionSpecifiedValue& spAppOptionSpecifiedValue) const;
@@ -97,11 +115,24 @@ public:
 	SResult SetAppOptionQualifiers(
 		const vlr::tstring& sNormalizedName,
 		const SPCAppOptionQualifiers& spAppOptionQualifiers);
+	SResult ClearAppOptionQualifiers(
+		const vlr::tstring& sNormalizedName);
 
-	// Note: This will clear the specified value. Note that any set value here is ignored.
+	SResult SetAppOptionMetadata(
+		const vlr::tstring& sNormalizedName,
+		const vlr::tstring& sMetadata);
+	SResult PopulateAppOptionMetadata(
+		const vlr::tstring& sNormalizedName,
+		vlr::tstring& sMetadata) const;
+	SResult ClearAppOptionMetadata(
+		const vlr::tstring& sNormalizedName);
+
+	// Clears the specified value. The value stored in the parameter is ignored; identification
+	// is based on the value's internal name.
 	SResult ClearSpecifiedValue(
 		const SPCAppOptionSpecifiedValue& spAppOptionSpecifiedValue);
-	// This will clear all specified values, and reset the internal cache.
+
+	// Clears all specified values and resets the internal access cache.
 	SResult ClearAllSpecifiedValues();
 
 };

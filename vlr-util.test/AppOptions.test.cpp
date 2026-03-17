@@ -302,3 +302,121 @@ TEST_F(AppOptions, ClearAllSpecifiedValues)
 	EXPECT_EQ(sr, S_OK);
 	EXPECT_EQ(vecAfter.size(), 0U);
 }
+
+TEST_F(AppOptions, SetAndPopulateAppOptionMetadata)
+{
+	SResult sr;
+
+	static const vlr::tstring sAppOptionName = _T("Options::Metadata::Test");
+	static const vlr::tstring sMetadataValue = _T("TestMetadata");
+
+	// Set metadata
+	sr = m_oAppOptions.SetAppOptionMetadata(sAppOptionName, sMetadataValue);
+	EXPECT_EQ(sr, S_OK);
+
+	// Populate and verify
+	vlr::tstring sRetrievedMetadata;
+	sr = m_oAppOptions.PopulateAppOptionMetadata(sAppOptionName, sRetrievedMetadata);
+	EXPECT_EQ(sr, S_OK);
+	EXPECT_EQ(sRetrievedMetadata, sMetadataValue);
+}
+
+TEST_F(AppOptions, SetAppOptionMetadata_UpdateExisting)
+{
+	SResult sr;
+
+	static const vlr::tstring sAppOptionName = _T("Options::Metadata::Update");
+	static const vlr::tstring sMetadataValue1 = _T("FirstValue");
+	static const vlr::tstring sMetadataValue2 = _T("UpdatedValue");
+
+	// Set initial metadata
+	sr = m_oAppOptions.SetAppOptionMetadata(sAppOptionName, sMetadataValue1);
+	EXPECT_EQ(sr, S_OK);
+
+	// Update metadata
+	sr = m_oAppOptions.SetAppOptionMetadata(sAppOptionName, sMetadataValue2);
+	EXPECT_EQ(sr, S_OK);
+
+	// Verify updated value
+	vlr::tstring sRetrievedMetadata;
+	sr = m_oAppOptions.PopulateAppOptionMetadata(sAppOptionName, sRetrievedMetadata);
+	EXPECT_EQ(sr, S_OK);
+	EXPECT_EQ(sRetrievedMetadata, sMetadataValue2);
+}
+
+TEST_F(AppOptions, PopulateAppOptionMetadata_NotSet)
+{
+	SResult sr;
+
+	static const vlr::tstring sAppOptionName = _T("Options::Metadata::NotSet");
+
+	vlr::tstring sRetrievedMetadata;
+	sr = m_oAppOptions.PopulateAppOptionMetadata(sAppOptionName, sRetrievedMetadata);
+	// Should return S_FALSE when metadata has not been set
+	EXPECT_EQ(sr, S_FALSE);
+}
+
+TEST_F(AppOptions, ClearAppOptionMetadata)
+{
+	SResult sr;
+
+	static const vlr::tstring sAppOptionName = _T("Options::Metadata::ToClear");
+	static const vlr::tstring sMetadataValue = _T("ClearableMetadata");
+
+	// Set metadata
+	sr = m_oAppOptions.SetAppOptionMetadata(sAppOptionName, sMetadataValue);
+	EXPECT_EQ(sr, S_OK);
+
+	// Verify it's set
+	vlr::tstring sRetrievedMetadata;
+	sr = m_oAppOptions.PopulateAppOptionMetadata(sAppOptionName, sRetrievedMetadata);
+	EXPECT_EQ(sr, S_OK);
+	EXPECT_EQ(sRetrievedMetadata, sMetadataValue);
+
+	// Clear the metadata
+	sr = m_oAppOptions.ClearAppOptionMetadata(sAppOptionName);
+	EXPECT_EQ(sr, S_OK);
+
+	// Verify it's cleared
+	sr = m_oAppOptions.PopulateAppOptionMetadata(sAppOptionName, sRetrievedMetadata);
+	EXPECT_EQ(sr, S_FALSE);
+}
+
+TEST_F(AppOptions, ClearAppOptionMetadata_NotSet)
+{
+	SResult sr;
+
+	static const vlr::tstring sAppOptionName = _T("Options::Metadata::NeverSet");
+
+	sr = m_oAppOptions.ClearAppOptionMetadata(sAppOptionName);
+	// Note: Clearing metadata that was never set should still succeed (idempotent)
+	EXPECT_TRUE(sr.isSuccess());
+}
+
+TEST_F(AppOptions, AppOptionMetadata_MultipleOptions)
+{
+	SResult sr;
+
+	static const vlr::tstring sOptionNameA = _T("Options::Metadata::OptionA");
+	static const vlr::tstring sOptionNameB = _T("Options::Metadata::OptionB");
+	static const vlr::tstring sMetadataA = _T("MetadataA");
+	static const vlr::tstring sMetadataB = _T("MetadataB");
+
+	// Set metadata for different options
+	sr = m_oAppOptions.SetAppOptionMetadata(sOptionNameA, sMetadataA);
+	EXPECT_EQ(sr, S_OK);
+
+	sr = m_oAppOptions.SetAppOptionMetadata(sOptionNameB, sMetadataB);
+	EXPECT_EQ(sr, S_OK);
+
+	// Verify each retrieves correct metadata
+	vlr::tstring sRetrievedA, sRetrievedB;
+
+	sr = m_oAppOptions.PopulateAppOptionMetadata(sOptionNameA, sRetrievedA);
+	EXPECT_EQ(sr, S_OK);
+	EXPECT_EQ(sRetrievedA, sMetadataA);
+
+	sr = m_oAppOptions.PopulateAppOptionMetadata(sOptionNameB, sRetrievedB);
+	EXPECT_EQ(sr, S_OK);
+	EXPECT_EQ(sRetrievedB, sMetadataB);
+}

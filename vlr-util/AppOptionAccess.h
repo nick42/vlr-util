@@ -34,6 +34,9 @@ public:
 		const TValue& tValue,
 		const CAppOptionSourceInfo& oAppOptionSourceInfo = CAppOptionSourceInfo::ExplicitViaCode()) const;
 
+	SResult EnsureMetadataInStore(
+		vlr::tzstring_view svzMetadata) const;
+
 public:
 	CAppOptionAccess(
 		vlr::tzstring_view svzNormalizedOptionName,
@@ -118,6 +121,15 @@ SResult CAppOptionAccess<TValue>::SetSpecifiedValue(
 	return oAppOptions.AddSpecifiedValue(spAppOptionSpecifiedValue);
 }
 
+template <typename TValue>
+SResult CAppOptionAccess<TValue>::EnsureMetadataInStore(
+	vlr::tzstring_view svzMetadata) const
+{
+	auto& oAppOptions = CAppOptions::GetSharedInstance();
+
+	return oAppOptions.SetAppOptionMetadata(m_sNormalizedOptionName, svzMetadata);
+}
+
 // Note: This should compile IFF DefaultValue is convertable to ValueType
 
 #define VLR_DEFINE_APP_OPTION(StructName, ValueType, DefaultValue) \
@@ -132,6 +144,28 @@ public: \
 	StructName() \
 		: ::vlr::CAppOptionAccess<ValueType>{ GetOptionName(), (DefaultValue) } \
 	{} \
+};
+
+// Note: This alternative construction/macro exists to allow metadata in AppOption definitions. It's less efficient 
+// than the version without metadata, since it requires an extra call to the options store to ensure the metadata is 
+// present, but this is only at construction time, and allows metadata to be associated with options without needing 
+// to maintain a separate collection of option metadata in the code.
+
+#define VLR_DEFINE_APP_OPTION_WITH_METADATA(StructName, ValueType, DefaultValue, sMetadata) \
+struct StructName \
+	: public ::vlr::CAppOptionAccess<ValueType> \
+{ \
+public: \
+	static constexpr decltype(auto) GetDefaultValue() { return (DefaultValue); } \
+	static auto GetOptionName() { return fmt::format(_T("{}::{}"), GetNamespacePath(), _T(#StructName)); } \
+	static auto GetMetadata() { return (sMetadata); } \
+\
+	/*template <typename TDefaultValue, typename std::enable_if_t<std::is_convertible_v<TDefaultValue, ValueType>>* = nullptr>*/ \
+	StructName() \
+		: ::vlr::CAppOptionAccess<ValueType>{ GetOptionName(), (DefaultValue) } \
+	{ \
+		EnsureMetadataInStore(GetMetadata()); \
+	} \
 };
 
 } // namespace vlr

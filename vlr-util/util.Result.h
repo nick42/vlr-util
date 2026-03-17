@@ -60,6 +60,8 @@ public:
 	{
 		return m_nResultCode;
 	}
+	// Note: Block implicit conversion to bool, as this is a potential pitfall
+	explicit operator bool() const = delete;
 
 public:
 	static constexpr auto ForGeneralSuccess() noexcept
@@ -132,18 +134,21 @@ public:
 	}
 
 public:
+	[[nodiscard]]
 	constexpr bool isSuccess() const noexcept
 	{
 		return true
 			&& isSet()
 			&& (!IsBitSet(m_nResultCode, 0x80000000));
 	}
+	[[nodiscard]]
 	constexpr bool isFailure() const noexcept
 	{
 		return true
 			&& isSet()
 			&& IsBitSet(m_nResultCode, 0x80000000);
 	}
+	[[nodiscard]]
 	constexpr bool isSet() const noexcept
 	{
 		return (m_nResultCode != Uninitialized);

@@ -156,6 +156,65 @@ SResult CAppOptions::SetAppOptionQualifiers(
 	return S_OK;
 }
 
+SResult CAppOptions::ClearAppOptionQualifiers(
+	const vlr::tstring& sNormalizedName)
+{
+	auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+	m_mapNormalizedNameToQualifiers.erase(sNormalizedName);
+
+	// If we have accessed this app option, then clear the qualifiers in that structure as well
+	do
+	{
+		auto iterIndex = m_mapNormalizedNameToSpecifiedValue.find(sNormalizedName);
+		if (iterIndex == m_mapNormalizedNameToSpecifiedValue.end())
+		{
+			break;
+		}
+		auto spSpecifiedValue = iterIndex->second;
+		spSpecifiedValue->withAppOptionQualifiers(nullptr);
+	} while (false);
+
+	return S_OK;
+}
+
+SResult CAppOptions::SetAppOptionMetadata(
+	const vlr::tstring& sNormalizedName,
+	const vlr::tstring& sMetadata)
+{
+	auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+	m_mapNormalizedNameToMetadata[sNormalizedName] = sMetadata;
+
+	return S_OK;
+}
+
+SResult CAppOptions::PopulateAppOptionMetadata(
+	const vlr::tstring& sNormalizedName,
+	vlr::tstring& sMetadata) const
+{
+	auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+	auto iterIndex = m_mapNormalizedNameToMetadata.find(sNormalizedName);
+	if (iterIndex == m_mapNormalizedNameToMetadata.end())
+	{
+		return S_FALSE;
+	}
+	sMetadata = iterIndex->second;
+
+	return S_OK;
+}
+
+SResult CAppOptions::ClearAppOptionMetadata(
+	const vlr::tstring& sNormalizedName)
+{
+	auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
+
+	m_mapNormalizedNameToMetadata.erase(sNormalizedName);
+
+	return S_OK;
+}
+
 SResult CAppOptions::ClearSpecifiedValue(
 	const SPCAppOptionSpecifiedValue& spAppOptionSpecifiedValue)
 {
