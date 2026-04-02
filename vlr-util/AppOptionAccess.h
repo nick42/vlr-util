@@ -127,7 +127,7 @@ SResult CAppOptionAccess<TValue>::EnsureMetadataInStore(
 {
 	auto& oAppOptions = CAppOptions::GetSharedInstance();
 
-	return oAppOptions.SetAppOptionMetadata(m_sNormalizedOptionName, svzMetadata);
+	return oAppOptions.SetAppOptionMetadata(m_sNormalizedOptionName, svzMetadata.toStdString());
 }
 
 // Note: This should compile IFF DefaultValue is convertable to ValueType
