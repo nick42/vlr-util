@@ -8,6 +8,88 @@
 #include <vlr-util/ActionOnDestruction.h>
 
 using namespace vlr::util;
+using namespace vlr::util::Convert;
+
+TEST(StringConversion, ToStdStringA_Nullptr_And_Pointer)
+{
+	// nullptr_t overload
+	std::string s1 = ToStdStringA(nullptr);
+	EXPECT_EQ(s1, "");
+
+	// const char* null
+	const char* pNull = nullptr;
+	std::string s2 = ToStdStringA(pNull);
+	EXPECT_EQ(s2, "");
+
+	// const char* non-null
+	const char* pStr = "abc";
+	std::string s3 = ToStdStringA(pStr);
+	EXPECT_EQ(s3, "abc");
+
+	// std::string_view null pointer (should not compile, so not tested)
+}
+
+TEST(StringConversion, ToStdStringW_Nullptr_And_Pointer)
+{
+	// nullptr_t overload
+	std::wstring s1 = ToStdStringW(nullptr);
+	EXPECT_EQ(s1, L"");
+
+	// const wchar_t* null
+	const wchar_t* pNull = nullptr;
+	std::wstring s2 = ToStdStringW(pNull);
+	EXPECT_EQ(s2, L"");
+
+	// const wchar_t* non-null
+	const wchar_t* pStr = L"xyz";
+	std::wstring s3 = ToStdStringW(pStr);
+	EXPECT_EQ(s3, L"xyz");
+}
+
+TEST(StringConversion, ToStdStringA_OverloadResolution)
+{
+	// Should resolve to std::string_view overload
+	std::string_view sv = "hello";
+	std::string s1 = ToStdStringA(sv);
+	EXPECT_EQ(s1, "hello");
+
+	// Should resolve to std::string overload
+	std::string s2 = ToStdStringA(std::string("world"));
+	EXPECT_EQ(s2, "world");
+
+	// Should resolve to const char* overload
+	const char* cstr = "test";
+	std::string s3 = ToStdStringA(cstr);
+	EXPECT_EQ(s3, "test");
+
+	// Should resolve to nullptr_t overload
+	std::string s4 = ToStdStringA(nullptr);
+	EXPECT_EQ(s4, "");
+}
+
+TEST(StringConversion, ToStdStringW_OverloadResolution)
+{
+	// Should resolve to std::wstring_view overload
+	std::wstring_view sv = L"wide";
+	std::wstring s1 = ToStdStringW(sv);
+	EXPECT_EQ(s1, L"wide");
+
+	// Should resolve to std::wstring overload
+	std::wstring s2 = ToStdStringW(std::wstring(L"string"));
+	EXPECT_EQ(s2, L"string");
+
+	// Should resolve to const wchar_t* overload
+	const wchar_t* wcstr = L"testw";
+	std::wstring s3 = ToStdStringW(wcstr);
+	EXPECT_EQ(s3, L"testw");
+
+	// Should resolve to nullptr_t overload
+	std::wstring s4 = ToStdStringW(nullptr);
+	EXPECT_EQ(s4, L"");
+}
+
+// Optionally, test that ambiguous calls do not compile (static_asserts or SFINAE)
+// but this is not possible in a runtime test; compilation will fail if ambiguous.
 
 struct Test_util_convert_StringConversion
 	: public testing::Test

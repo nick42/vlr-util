@@ -20,6 +20,28 @@ namespace util {
 
 namespace Convert {
 
+// --- Nullptr and pointer overloads for ToStdStringA/W ---
+
+inline std::string ToStdStringA(std::nullptr_t, const StringConversionOptions& = {}) noexcept
+{
+    return std::string{};
+}
+
+inline std::wstring ToStdStringW(std::nullptr_t, const StringConversionOptions& = {}) noexcept
+{
+    return std::wstring{};
+}
+
+inline std::string ToStdStringA(const char* s, const StringConversionOptions& = {})
+{
+    return s ? std::string{s} : std::string{};
+}
+
+inline std::wstring ToStdStringW(const wchar_t* s, const StringConversionOptions& = {})
+{
+    return s ? std::wstring{s} : std::wstring{};
+}
+
 // std::string <- std::string_view
 
 inline auto ToStdStringA(std::string_view svValue, const StringConversionOptions& /*oConversionOptions*/ = {})
