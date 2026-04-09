@@ -20,6 +20,22 @@ namespace util {
 
 namespace Convert {
 
+namespace detail {
+
+inline auto ToStdStringA_from_wstring_view(std::wstring_view svValue, const StringConversionOptions& oConversionOptions = {})
+noexcept(noexcept(CStringConversion{}.Inline_UTF16_to_MultiByte_StdString(svValue, oConversionOptions)))
+{
+	return CStringConversion{}.Inline_UTF16_to_MultiByte_StdString(svValue, oConversionOptions);
+}
+
+inline auto ToStdStringW_from_string_view(std::string_view svValue, const StringConversionOptions& oConversionOptions = {})
+noexcept(noexcept(CStringConversion{}.Inline_MultiByte_to_UTF16_StdString(svValue, oConversionOptions)))
+{
+	return CStringConversion{}.Inline_MultiByte_to_UTF16_StdString(svValue, oConversionOptions);
+}
+
+} // namespace detail
+
 // --- Nullptr and pointer overloads for ToStdStringA/W ---
 
 inline std::string ToStdStringA(std::nullptr_t, const StringConversionOptions& = {}) noexcept
@@ -34,12 +50,36 @@ inline std::wstring ToStdStringW(std::nullptr_t, const StringConversionOptions& 
 
 inline std::string ToStdStringA(const char* s, const StringConversionOptions& = {})
 {
-    return s ? std::string{s} : std::string{};
+	if (!s)
+	{
+		return std::string{};
+	}
+	return std::string{ s };
+}
+inline std::string ToStdStringA(const wchar_t* s, const StringConversionOptions& oConversionOptions = {})
+{
+	if (!s)
+	{
+		return std::string{};
+	}
+	return detail::ToStdStringA_from_wstring_view(std::wstring_view{ s }, oConversionOptions);
 }
 
+inline std::wstring ToStdStringW(const char* s, const StringConversionOptions& oConversionOptions = {})
+{
+	if (!s)
+	{
+		return std::wstring{};
+	}
+	return detail::ToStdStringW_from_string_view(std::string_view{ s }, oConversionOptions);
+}
 inline std::wstring ToStdStringW(const wchar_t* s, const StringConversionOptions& = {})
 {
-    return s ? std::wstring{s} : std::wstring{};
+	if (!s)
+	{
+		return std::wstring{};
+	}
+	return std::wstring{ s };
 }
 
 // std::string <- std::string_view
@@ -55,13 +95,13 @@ noexcept(noexcept(std::string{svValue}))
 inline auto ToStdStringA(std::wstring_view svValue, const StringConversionOptions& oConversionOptions = {})
 noexcept(noexcept(CStringConversion{}.Inline_UTF16_to_MultiByte_StdString(svValue, oConversionOptions)))
 {
-	return CStringConversion{}.Inline_UTF16_to_MultiByte_StdString(svValue, oConversionOptions);
+	return detail::ToStdStringA_from_wstring_view(svValue, oConversionOptions);
 }
 
 inline auto ToStdStringW(std::string_view svValue, const StringConversionOptions& oConversionOptions = {})
 noexcept(noexcept(CStringConversion{}.Inline_MultiByte_to_UTF16_StdString(svValue, oConversionOptions)))
 {
-	return CStringConversion{}.Inline_MultiByte_to_UTF16_StdString(svValue, oConversionOptions);
+	return detail::ToStdStringW_from_string_view(svValue, oConversionOptions);
 }
 
 inline auto ToStdStringW(std::wstring_view svValue, const StringConversionOptions& /*oConversionOptions*/ = {})

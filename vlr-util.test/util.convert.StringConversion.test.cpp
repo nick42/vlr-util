@@ -17,16 +17,24 @@ TEST(StringConversion, ToStdStringA_Nullptr_And_Pointer)
 	EXPECT_EQ(s1, "");
 
 	// const char* null
-	const char* pNull = nullptr;
-	std::string s2 = ToStdStringA(pNull);
+	const char* psaNull = nullptr;
+	std::string s2 = ToStdStringA(psaNull);
 	EXPECT_EQ(s2, "");
+
+	// const wchar_t* null (cross-width)
+	const wchar_t* pswNull = nullptr;
+	std::string s3 = ToStdStringA(pswNull);
+	EXPECT_EQ(s3, "");
 
 	// const char* non-null
 	const char* pStr = "abc";
-	std::string s3 = ToStdStringA(pStr);
-	EXPECT_EQ(s3, "abc");
+	std::string s4 = ToStdStringA(pStr);
+	EXPECT_EQ(s4, "abc");
 
-	// std::string_view null pointer (should not compile, so not tested)
+	// const wchar_t* non-null (cross-width)
+	const wchar_t* pwStr = L"def";
+	std::string s5 = ToStdStringA(pwStr);
+	EXPECT_EQ(s5, ToStdStringA(std::wstring_view{ pwStr }));
 }
 
 TEST(StringConversion, ToStdStringW_Nullptr_And_Pointer)
@@ -35,15 +43,25 @@ TEST(StringConversion, ToStdStringW_Nullptr_And_Pointer)
 	std::wstring s1 = ToStdStringW(nullptr);
 	EXPECT_EQ(s1, L"");
 
-	// const wchar_t* null
-	const wchar_t* pNull = nullptr;
-	std::wstring s2 = ToStdStringW(pNull);
+	// const char* null (cross-width)
+	const char* psaNull = nullptr;
+	std::wstring s2 = ToStdStringW(psaNull);
 	EXPECT_EQ(s2, L"");
+
+	// const wchar_t* null
+	const wchar_t* pswNull = nullptr;
+	std::wstring s3 = ToStdStringW(pswNull);
+	EXPECT_EQ(s3, L"");
 
 	// const wchar_t* non-null
 	const wchar_t* pStr = L"xyz";
-	std::wstring s3 = ToStdStringW(pStr);
-	EXPECT_EQ(s3, L"xyz");
+	std::wstring s4 = ToStdStringW(pStr);
+	EXPECT_EQ(s4, L"xyz");
+
+	// const char* non-null (cross-width)
+	const char* pcStr = "uvw";
+	std::wstring s5 = ToStdStringW(pcStr);
+	EXPECT_EQ(s5, ToStdStringW(std::string_view{ pcStr }));
 }
 
 TEST(StringConversion, ToStdStringA_OverloadResolution)
