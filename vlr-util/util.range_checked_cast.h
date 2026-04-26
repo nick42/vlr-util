@@ -48,10 +48,23 @@ inline constexpr auto range_checked_cast_choice(TSource nValue, choice<1>&&)
 	{
 		return static_cast<TDest>(nValue);
 	};
-	auto fGetOutOfRangeResult = [](TSource /*nValue*/)
+	auto fGetOutOfRangeResult = [](TSource /*nValue*/, bool bOverflow = false)
 	{
+		// Note: The is intentionally not a static_assert here, because this is a runtime check. 
+		// The static_assert is in the other function, which should have been called if the source was smaller or equal to the dest.
 		ASSERT(0);
-		return TDest{};
+		// Note: This is judged to be the "safest" result to return in the case of an out-of-range value. 
+		// It is up to the caller to handle the error as appropriate.
+		if (bOverflow)
+		{
+			// Overflow
+			return std::numeric_limits<TDest>().max();
+		}
+		else
+		{
+			// Underflow
+			return std::numeric_limits<TDest>().min();
+		}
 	};
 
 	if constexpr (std::is_unsigned_v<TDest>)

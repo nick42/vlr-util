@@ -257,28 +257,31 @@ namespace detail {
 
 template<typename TChar>
 struct char_traits_ci : public std::char_traits<TChar> {
-	static char to_upper(TChar ch) {
-		return std::toupper(ch);
+	// Note: This is a workaround for the fact that std::toupper is not guaranteed to work with char types, 
+	// and may cause undefined behavior.
+	using TCharUnsigned = std::make_unsigned_t<TChar>;
+	static TChar to_upper(TChar ch) {
+		return std::toupper(static_cast<TCharUnsigned>(ch));
 	}
 	static bool eq(TChar c1, TChar c2) {
-		return to_upper(c1) == to_upper(c2);
+		return to_upper(static_cast<TCharUnsigned>(c1)) == to_upper(static_cast<TCharUnsigned>(c2));
 	}
 	static bool lt(TChar c1, TChar c2) {
-		return to_upper(c1) < to_upper(c2);
+		return to_upper(static_cast<TCharUnsigned>(c1)) < to_upper(static_cast<TCharUnsigned>(c2));
 	}
 	static int compare(const TChar* s1, const TChar* s2, std::size_t n) {
 		while (n-- != 0) {
-			if (to_upper(*s1) < to_upper(*s2)) return -1;
-			if (to_upper(*s1) > to_upper(*s2)) return 1;
+			if (to_upper(static_cast<TCharUnsigned>(*s1)) < to_upper(static_cast<TCharUnsigned>(*s2))) return -1;
+			if (to_upper(static_cast<TCharUnsigned>(*s1)) > to_upper(static_cast<TCharUnsigned>(*s2))) return 1;
 			++s1; ++s2;
 		}
 		return 0;
 	}
 	static const TChar* find(const TChar* s, std::size_t n, TChar a) {
-		auto const ua(to_upper(a));
+		auto const ua(to_upper(static_cast<TCharUnsigned>(a)));
 		while (n-- != 0)
 		{
-			if (to_upper(*s) == ua)
+			if (to_upper(static_cast<TCharUnsigned>(*s)) == ua)
 				return s;
 			s++;
 		}
@@ -465,8 +468,8 @@ auto StringViewCompareCI(TStringView svlhs, TStringView svrhs)
 template<typename TStringView>
 constexpr auto AreEqualStringViews(const CompareSettings& oCompareSettings, const TStringView& svlhs, const TStringView& svrhs)
 {
-	// Short-circuit for same buffer
-	if (svlhs.data() == svrhs.data())
+	// Short-circuit for same buffer. Note that size must be included, because the same buffer may be used for different length strings (eg: substrings)
+	if ((svlhs.data() == svrhs.data()) && (svlhs.size() == svrhs.size()))
 	{
 		return true;
 	}

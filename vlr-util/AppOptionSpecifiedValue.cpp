@@ -120,7 +120,8 @@ SResult CAppOptionSpecifiedValue::CheckOptionNameMatch(
 	std::vector<vlr::tstring_view> vecNormalizedOptionNameElements;
 	PopulateOptionNameElements_DefaultDelimiters(sNormalizedOptionName, vecNormalizedOptionNameElements);
 
-	return CheckOptionNameMatch(vecNormalizedOptionNameElements, vecNormalizedOptionNameElements);
+	// FIX: Compare specified vs normalized, not normalized vs normalized
+	return CheckOptionNameMatch(vecSpecifiedOptionNameElements, vecNormalizedOptionNameElements);
 }
 
 // Note: Fallthrough is unreachable code in the cases where we return early, for all these methods;

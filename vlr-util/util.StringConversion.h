@@ -145,7 +145,7 @@ protected:
 				pStringConversionResults);
 		}
 
-		if (nOutputBufferLengthBytes < swValue.length() + sizeof(wchar_t))
+		if (nOutputBufferLengthBytes < (swValue.length() + 1) * sizeof(wchar_t))
 		{
 			return E_FAIL;
 		}
@@ -388,7 +388,15 @@ protected:
 		SResult sr;
 
 		std::wstring swValue;
-		sr = StringConversion::CExternalImpl::GetSharedInstance().Call_MultiByte_to_UTF16_StdString(svValue, swValue, oStringConversionOptions);
+		try
+		{
+			sr = StringConversion::CExternalImpl::GetSharedInstance().Call_MultiByte_to_UTF16_StdString(svValue, swValue, oStringConversionOptions);
+		}
+		// Note: Catch all exceptions, since we don't know what the external implementation might throw
+		catch (...)
+		{
+			sr = SResult::Failure;
+		}
 		if (sr != SResult::Success)
 		{
 			// Call the next potential conversion explicitly
@@ -410,7 +418,15 @@ protected:
 		SResult sr;
 
 		std::string saValue;
-		sr = StringConversion::CExternalImpl::GetSharedInstance().Call_UTF16_to_MultiByte_StdString(svValue, saValue, oStringConversionOptions);
+		try
+		{
+			sr = StringConversion::CExternalImpl::GetSharedInstance().Call_UTF16_to_MultiByte_StdString(svValue, saValue, oStringConversionOptions);
+		}
+		// Note: Catch all exceptions, since we don't know what the external implementation might throw
+		catch (...)
+		{
+			sr = SResult::Failure;
+		}
 		if (sr != SResult::Success)
 		{
 			// Call the next potential conversion explicitly

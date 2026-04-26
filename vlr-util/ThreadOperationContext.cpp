@@ -109,7 +109,7 @@ SResult CPerThreadContext::PopContext(vlr::tzstring_view svzName, const SPCGener
 			_T("Attempted to remove operation context, but context stack for context key was empty."));
 		return SResult::Success_WithNuance;
 	}
-	VLR_ASSERT_COMPARE_OR_RETURN_EUNEXPECTED(pActiveContext, != , nullptr);
+	VLR_ASSERT_NONZERO_OR_RETURN_EUNEXPECTED(pActiveContext);
 
 	auto& oActiveContext = *pActiveContext;
 	auto& vecContextStack = oActiveContext.m_vecContextStack;
@@ -173,16 +173,15 @@ SResult CPerThreadContext::PopulateThreadOperationContext(std::vector<ThreadOper
 		// Iterate in reverse order of the stack, to find the last valid context
 		// Note: Under normal operations, this would be the last context entry, but we allow for the possibility that
 		// items may be invalidated outside of a pop call.
-		for (auto iterIndex = vecContextStack_Current.rbegin(); iterIndex != vecContextStack_Current.rend();)
+		// Note: We need to be careful with reverse iterators and erasing from the vector, so 
+		size_t nCountToTruncateFromCurrentStack = 0;
+		for (auto iterIndex = vecContextStack_Current.rbegin(); iterIndex != vecContextStack_Current.rend(); ++iterIndex)
 		{
 			auto wpContext = *iterIndex;
 			auto spContext = wpContext.lock();
 			if (!spContext)
 			{
-				logging::LogMessageFmt(VLR_LOG_CONTEXT_VERBOSE,
-					_T("Operation context invalid, but not properly removed; cleaning from context stack."));
-				auto iterContextInvalid = iterIndex++;
-				vecContextStack_Current.erase(std::next(iterContextInvalid).base());
+				nCountToTruncateFromCurrentStack++;
 				continue;
 			}
 
@@ -192,6 +191,9 @@ SResult CPerThreadContext::PopulateThreadOperationContext(std::vector<ThreadOper
 			// We ignore any other "previous" values for this context item, as they are not active
 			break;
 		}
+
+		// Truncate any invalidated contexts from the current stack
+		vecContextStack_Current.resize(vecContextStack_Current.size() - nCountToTruncateFromCurrentStack);
 	}
 
 	// Clean up any no longer active contexts
