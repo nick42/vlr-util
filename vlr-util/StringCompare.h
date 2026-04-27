@@ -10,6 +10,7 @@
 #include "util.choice.h"
 #include "util.static_assert.h"
 #include "util.types.h"
+#include "util.convert.StringConversion.h"
 
 namespace vlr {
 
@@ -298,57 +299,7 @@ constexpr auto cast_string_view_with_traits(const std::basic_string_view<CharT, 
 template<typename TString>
 std::wstring GetAsWString(const TString& tValue)
 {
-	if constexpr (isCompatTypeFor_astring_view<TString>())
-	{
-		const auto& saValue = asAStringViewCompatType(tValue);
-		const auto svaValue = static_cast<std::string_view>(saValue);
-		if (svaValue.size() == 0)
-		{
-			return {};
-		}
-
-		std::wstring swResult;
-		swResult.resize(saValue.length());
-		size_t nResultLength = 0;
-
-		size_t nSourceIndex = 0;
-		std::mbstate_t state = std::mbstate_t();
-		for (size_t nResultIndex = 0; nResultIndex < swResult.size(); ++nResultIndex)
-		{
-			auto nRemainingSourceSize = svaValue.size() - nSourceIndex;
-			if (nRemainingSourceSize <= 0)
-			{
-				break;
-			}
-
-			auto nConversionResult = std::mbrtowc(swResult.data() + nResultIndex, svaValue.data() + nSourceIndex, nRemainingSourceSize, &state);
-			if (nConversionResult == 0)
-			{
-				break;
-			}
-			if (nConversionResult == static_cast<size_t>(-1))
-			{
-				// Encoding error
-				break;
-			}
-			if (nConversionResult == static_cast<size_t>(-2))
-			{
-				// Partial read, then ran out of characters
-				break;
-			}
-			nSourceIndex += nConversionResult;
-			nResultLength++;
-		}
-		swResult.resize(nResultLength);
-
-		return swResult;
-	}
-	else
-	{
-		VLR_TYPE_DEPENDENT_STATIC_FAIL(TString, "Unhandled conversion case");
-	}
-
-	//return {};
+	return vlr::util::Convert::ToStdStringW(tValue);
 }
 
 template<typename TStringView>

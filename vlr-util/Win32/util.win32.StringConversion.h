@@ -6,8 +6,6 @@
 
 #include "config.h"
 
-#include <cstringt.h>
-
 #include "util.StringConversion.base.h"
 
 namespace vlr {

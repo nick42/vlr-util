@@ -25,14 +25,14 @@ HRESULT MultiByte_to_UTF16(
 
 	auto nOutputBufferLengthChars = (nOutputBufferLengthBytes / sizeof(wchar_t));
 
-	bool bNeedAdditionalSpaceInOutputBufferToAddNullTerminator = true
+	bool bAddAdditionalSpaceInOutputBufferToAddNullTerminator = true
 		&& (!bInputBufferShouldIncludeNullTerminator)
 		&& (!oStringConversionOptions.m_bGenerateResultNotNullTerminated)
 		&& (!oStringConversionOptions.m_bInputStringIsNullTerminated)
 		;
-	size_t nOutputBufferLengthAdjustmentBytes = bNeedAdditionalSpaceInOutputBufferToAddNullTerminator ? sizeof(wchar_t) : 0;
+	size_t nOutputBufferLengthAdjustmentChars = bAddAdditionalSpaceInOutputBufferToAddNullTerminator ? 1 : 0;
 	// Be sure we don't underflow, if we passed a zero for buffer length
-	auto nUsableOutputBufferLengthChars = (nOutputBufferLengthChars == 0) ? 0 : nOutputBufferLengthChars - nOutputBufferLengthAdjustmentBytes;
+	auto nUsableOutputBufferLengthChars = (nOutputBufferLengthChars == 0) ? 0 : nOutputBufferLengthChars - nOutputBufferLengthAdjustmentChars;
 
 	auto nResult = ::MultiByteToWideChar(
 		oStringConversionOptions.GetCodePageIdentifier(),
@@ -41,19 +41,21 @@ HRESULT MultiByte_to_UTF16(
 		range_checked_cast<int>(nEffectiveInputBufferLengthChars),
 		pOutputBuffer,
 		range_checked_cast<int>(nUsableOutputBufferLengthChars));
-	if (nResult == 0)
+	// A 0 result is an error IFF the input string had any length
+	if ((nResult == 0) && (svValue.size() > 0))
 	{
 		return HRESULT_FROM_WIN32(GetLastError());
 	}
-	VLR_IF_NOT_NULL(pStringConversionResults)->m_nOuputSizeBytes = (range_checked_cast<size_t>(nResult) * sizeof(wchar_t)) + nOutputBufferLengthAdjustmentBytes;
+	VLR_IF_NOT_NULL(pStringConversionResults)->m_nOuputSizeBytes = 
+		(range_checked_cast<size_t>(nResult) + nOutputBufferLengthAdjustmentChars) * sizeof(wchar_t);
 	if (range_checked_cast<size_t>(nResult) > nUsableOutputBufferLengthChars)
 	{
 		return S_FALSE;
 	}
 
-	if (bNeedAdditionalSpaceInOutputBufferToAddNullTerminator)
+	if (bAddAdditionalSpaceInOutputBufferToAddNullTerminator)
 	{
-		ASSERT(range_checked_cast<size_t>(nResult) < nOutputBufferLengthChars);
+		VLR_ASSERT_COMPARE_OR_RETURN_EUNEXPECTED(range_checked_cast<size_t>(nResult), < , nOutputBufferLengthChars);
 		pOutputBuffer[nResult] = L'\0';
 	}
 
@@ -93,7 +95,8 @@ HRESULT UTF16_to_MultiByte(
 		range_checked_cast<int>(nUsableOutputBufferLengthChars),
 		oStringConversionOptions.OnWideCharToMultiByte_GetDefaultChar(),
 		oStringConversionOptions.OnWideCharToMultiByte_GetUsedDefaultChar(pStringConversionResults));
-	if (nResult == 0)
+	// A 0 result is an error IFF the input string had any length
+	if ((nResult == 0) && (svValue.size() > 0))
 	{
 		return HRESULT_FROM_WIN32(GetLastError());
 	}

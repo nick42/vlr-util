@@ -74,7 +74,18 @@ public:
         const size_type _Count,
         StringIsNullTerminated&& ) noexcept
         : base_type{ _Cts, _Count }
-    {}
+    {
+		if constexpr (vlr::ModuleContext::Compilation::IsBuildType_Debug())
+        {
+            // Note: This is a debug-only check, since it is not guaranteed that the string is null-terminated
+            // (eg: if the string is a substring of a larger string, it may not be null-terminated)
+            if (_Cts != nullptr && _Cts[_Count] != _Elem{ 0 })
+            {
+                //vlr::assert::HandleCheckFailure(VLR_CODE_CONTEXT, VLR_ASSERTION_FUNCTION_NAME _T("Assertion failed (general)"));
+				*this = {}; // Reset to empty, since we cannot guarantee that the string is null-terminated
+            }
+        }
+    }
 
     // Note: Basically, we'll allow any string with the same element size to be converted to a zstring_view.
     // This allows wstring and u16string to both convert to wzstring_view, for example, IFF wchar_t is 16 bits.
@@ -83,10 +94,16 @@ public:
         : base_type{ reinterpret_cast<const_pointer>(strValue.c_str()), strValue.length() }
     {}
 
+	// Delete the rvalue constructor, since it would be unsafe to allow a temporary string to be used as a zstring_view 
+    // (since the string would be destroyed at the end of the full expression, leaving a dangling pointer)
+    template< typename TBasicStringElem, typename std::enable_if_t<(sizeof(TBasicStringElem) == sizeof(_Elem))>* = nullptr >
+    constexpr basic_zstring_view(const std::basic_string<TBasicStringElem>&&) = delete;
+
 #if VLR_CONFIG_INCLUDE_ATL_CString
     constexpr basic_zstring_view( const TCStringT& sValue ) noexcept
         : base_type{ static_cast<const const_pointer>(sValue.GetString()), static_cast<const size_type>(sValue.GetLength()) }
     {}
+    constexpr basic_zstring_view(const TCStringT&&) = delete;
 #endif
 
 public:
@@ -162,11 +179,7 @@ protected:
     }
 
     [[noreturn]] static void _Xran() {
-#ifdef _WIN32
-        std::_Xout_of_range( "invalid string_view position" );
-#else
-        std::__throw_out_of_range( "invalid string_view position" );
-#endif
+        throw std::out_of_range("invalid string_view position");
     }
 };
 

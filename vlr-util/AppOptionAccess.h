@@ -38,17 +38,22 @@ public:
 		vlr::tzstring_view svzMetadata) const;
 
 public:
+	// Constructors note: We anticipate that the most common use-case will be to construct an instance of 
+	// this class with a normalized option name and a default value, and then use that instance to access 
+	// the option value. Therefore, we provide constructors that take rvalue references for the normalized 
+	// option name and the default value, to allow for efficient move semantics.
+
 	CAppOptionAccess(
-		vlr::tzstring_view svzNormalizedOptionName,
+		vlr::tstring&& sNormalizedOptionName,
 		const TValue& tValue_Default)
-		: m_sNormalizedOptionName{ svzNormalizedOptionName.toStdString() }
+		: m_sNormalizedOptionName{ std::move(sNormalizedOptionName) }
 		, m_tValue_Default{ tValue_Default }
 	{}
 	// Note: Anticipating normal use-case, with prvalue instances for params
 	CAppOptionAccess(
-		vlr::tzstring_view svzNormalizedOptionName,
+		vlr::tstring&& sNormalizedOptionName,
 		TValue&& tValue_Default)
-		: m_sNormalizedOptionName{ svzNormalizedOptionName.toStdString() }
+		: m_sNormalizedOptionName{ std::move(sNormalizedOptionName) }
 		, m_tValue_Default{ std::move(tValue_Default) }
 	{}
 };

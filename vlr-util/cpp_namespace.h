@@ -6,7 +6,7 @@
 #include <memory>
 #include <functional>
 
-#if __has_include(<span>) && (__cplusplus >= 202002L)
+#if __has_include(<span>)
 #define VLR_HAS_INCLUDE_STD_SPAN 1
 #include <span>
 #else
