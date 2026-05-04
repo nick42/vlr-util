@@ -109,12 +109,18 @@ HRESULT HelperFor_MultiSZ<TChar>::ToStructuredData(
 	size_t nCurrentReadIndex = 0;
 	size_t nSpanSize = spanMultiSZ.size();
 
+	// A valid MultiSZ must have at least 2 characters for the double null terminator
+	if (nSpanSize < 2)
+	{
+		return E_FAIL;
+	}
+
 	do
 	{
 		if (nCurrentReadIndex >= nSpanSize)
 		{
 			// Exhausted span without finding double null terminator
-			// Note: Enpty MultiSZ is invalid, because it must be double null terminated, so we should have 
+			// Note: Empty MultiSZ is invalid, because it must be double null terminated, so we should have 
 			// found a null terminator before exhausting the span.
 			return E_FAIL;
 		}

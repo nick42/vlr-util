@@ -64,8 +64,14 @@ public:
     constexpr basic_zstring_view& operator=( const basic_zstring_view& ) noexcept = default;
 
     constexpr basic_zstring_view( _In_z_ const const_pointer _Ntcts ) noexcept
-        : base_type{ _Ntcts }
-    {}
+        : base_type{}
+    {
+        if (_Ntcts != nullptr)
+        {
+            base_type::operator=(base_type{ _Ntcts });
+        }
+    }
+
     // Note: We only allow initialization from a string pointer if you explicitly indicate that the 
     // string is null-terminated.
     struct StringIsNullTerminated {};
@@ -183,9 +189,126 @@ protected:
     }
 };
 
+// Note: This class is intended to be used for function parameters, where the parameter is expected to be a null-terminated string.
+// It is different from basic_zstring_view in that it allows construction from rvalue references to std::basic_string, which is 
+// not safe for basic_zstring_view (since the string would be destroyed at the end of the full expression, leaving a dangling pointer).
+
+template<class _Elem, class _Traits = std::char_traits<_Elem>>
+class basic_zstring_view_param
+	: public basic_zstring_view<_Elem, _Traits>
+{
+private:
+    using base_type = basic_zstring_view<_Elem, _Traits>;
+
+public:
+    using typename base_type::traits_type;
+    using typename base_type::value_type;
+    using typename base_type::pointer;
+    using typename base_type::const_pointer;
+    using typename base_type::reference;
+    using typename base_type::const_reference;
+    using typename base_type::const_iterator;
+    using typename base_type::iterator;
+    using typename base_type::const_reverse_iterator;
+    using typename base_type::reverse_iterator;
+    using typename base_type::size_type;
+    using typename base_type::difference_type;
+
+#if VLR_CONFIG_INCLUDE_ATL_CString
+    using typename base_type::TCStringT;
+    using typename base_type::TCStringT_length;
+#endif
+
+public:
+    constexpr basic_zstring_view_param() noexcept = default;
+
+    constexpr basic_zstring_view_param( const basic_zstring_view_param& ) noexcept = default;
+    constexpr basic_zstring_view_param& operator=( const basic_zstring_view_param& ) noexcept = default;
+
+    constexpr basic_zstring_view_param( _In_z_ const const_pointer _Ntcts ) noexcept
+        : base_type{}
+    {
+		if (_Ntcts != nullptr)
+        {
+            base_type::operator=(base_type{ _Ntcts });
+        }
+    }
+
+    explicit constexpr basic_zstring_view_param(
+        _In_reads_( _Count ) const const_pointer _Cts,
+        const size_type _Count,
+        typename base_type::StringIsNullTerminated&& ) noexcept
+        : base_type{ _Cts, _Count, typename base_type::StringIsNullTerminated{} }
+    {}
+
+    template< typename TBasicStringElem, typename std::enable_if_t<(sizeof( TBasicStringElem ) == sizeof( _Elem ))>* = nullptr >
+    constexpr basic_zstring_view_param( const std::basic_string<TBasicStringElem>& strValue ) noexcept
+        : base_type{ strValue }
+    {}
+
+    // Allow construction from rvalue reference to std::basic_string (unlike base class)
+    template< typename TBasicStringElem, typename std::enable_if_t<(sizeof(TBasicStringElem) == sizeof(_Elem))>* = nullptr >
+    constexpr basic_zstring_view_param(const std::basic_string<TBasicStringElem>&& strValue) noexcept
+        : base_type{ strValue.c_str(), strValue.length(), typename base_type::StringIsNullTerminated{} }
+    {}
+
+#if VLR_CONFIG_INCLUDE_ATL_CString
+    constexpr basic_zstring_view_param( const TCStringT& sValue ) noexcept
+        : base_type{ sValue }
+    {}
+
+    constexpr basic_zstring_view_param(const TCStringT&& sValue) noexcept
+        : base_type{ sValue.GetString(), static_cast<size_type>(sValue.GetLength()), typename base_type::StringIsNullTerminated{} }
+    {}
+#endif
+
+public:
+    [[nodiscard]] constexpr basic_zstring_view_param trailing_end( const size_type _Off = 0 ) const
+    {
+        base_type::_Check_offset( _Off );
+        auto _Count = base_type::_Clamp_suffix_size( _Off, base_type::npos );
+        return basic_zstring_view_param{ base_type::data() + _Off, _Count, typename base_type::StringIsNullTerminated{} };
+    }
+
+    [[nodiscard]] constexpr auto asStringView() const
+    {
+        return static_cast<const std::basic_string_view<_Elem, _Traits>&>(*this);
+    }
+
+    [[nodiscard]] constexpr operator const_pointer() const
+    {
+        return base_type::data();
+    }
+
+    [[nodiscard]] constexpr auto asConstPtr() const
+    {
+        return base_type::data();
+    }
+
+#if VLR_CONFIG_INCLUDE_ATL_CString
+    [[nodiscard]] explicit inline operator TCStringT() const
+    {
+        if (base_type::data() == nullptr)
+        {
+            return TCStringT{};
+        }
+        return TCStringT{ base_type::data(), static_cast<TCStringT_length>(base_type::length()) };
+    }
+#endif
+
+    inline auto toStdString() const
+    {
+        return std::basic_string<_Elem>{ static_cast<const std::basic_string_view<_Elem, _Traits>&>(*this) };
+    }
+};
+
 using zstring_view = basic_zstring_view<char>;
 using wzstring_view = basic_zstring_view<wchar_t>;
 using tzstring_view = basic_zstring_view<TCHAR>;
+
+using zstring_view_param = basic_zstring_view_param<char>;
+using wzstring_view_param = basic_zstring_view_param<wchar_t>;
+using tzstring_view_param = basic_zstring_view_param<TCHAR>;
 
 using tstring_view = std::basic_string_view<TCHAR>;
 
