@@ -225,23 +225,23 @@ public:
     constexpr basic_zstring_view_param( const basic_zstring_view_param& ) noexcept = default;
     constexpr basic_zstring_view_param& operator=( const basic_zstring_view_param& ) noexcept = default;
 
-    constexpr basic_zstring_view_param(const typename base_type& svzValue) noexcept
+    constexpr basic_zstring_view_param(const basic_zstring_view<_Elem, _Traits>& svzValue) noexcept
         : base_type{ svzValue }
     {
     }
-    constexpr basic_zstring_view_param(typename base_type&& svzValue) noexcept
+    constexpr basic_zstring_view_param(basic_zstring_view<_Elem, _Traits>&& svzValue) noexcept
         : base_type{ std::move(svzValue) }
     {
     }
-    constexpr basic_zstring_view_param& operator=(const typename base_type& svzValue) noexcept
+    constexpr basic_zstring_view_param& operator=(const basic_zstring_view<_Elem, _Traits>& svzValue) noexcept
     {
-		base_type::operator=(svzValue);
-		return *this;
+        base_type::operator=(svzValue);
+        return *this;
     }
-    constexpr basic_zstring_view_param& operator=(typename base_type&& svzValue) noexcept
+    constexpr basic_zstring_view_param& operator=(basic_zstring_view<_Elem, _Traits>&& svzValue) noexcept
     {
-		base_type::operator=(std::move(svzValue));
-		return *this;
+        base_type::operator=(std::move(svzValue));
+        return *this;
     }
 
     constexpr basic_zstring_view_param( _In_z_ const const_pointer _Ntcts ) noexcept

@@ -11,7 +11,7 @@ struct choice : public choice<nIndex + 1> {};
 
 // An arbitrary cutoff...
 template<>
-struct choice<10> {};
+struct choice<20> {};
 
 } // namespace util
 
