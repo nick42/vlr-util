@@ -14,7 +14,7 @@ class CSourceContext
 public:
 	vlr::tstring m_sFilePath;
 
-	inline auto& withFilePath(vlr::tzstring_view svzFilePath)
+	inline auto& withFilePath(vlr::tzstring_view_param svzFilePath)
 	{
 		m_sFilePath = svzFilePath;
 		return *this;
@@ -65,7 +65,7 @@ protected:
 	// very possible, because it would require using something like boost, which I cannot add as a dependency.
 
 	SResult ReadAllValuesFromFile_WithinTryCatch(
-		vlr::tzstring_view svzFilePath);
+		vlr::tzstring_view_param svzFilePath);
 	SResult EnsureRegexMembersInitialized();
 	SResult ParseFileLine(
 		const AppOptionSource_File::CSourceContext& oSourceContext,
@@ -81,7 +81,7 @@ protected:
 
 public:
 	SResult ReadAllValuesFromFile(
-		vlr::tzstring_view svzFilePath);
+		vlr::tzstring_view_param svzFilePath);
 
 };
 

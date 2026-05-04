@@ -86,7 +86,7 @@ HRESULT CConfigOptionsBase::ParseOptions_CommandLine_withBoost(
 }
 
 HRESULT CConfigOptionsBase::AddOptionMapping_Basic_Flag(
-	vlr::zstring_view svzOptionName,
+	vlr::zstring_view_param svzOptionName,
 	std::optional<bool>& obValue )
 {
 	auto fAction = [svzOptionName, &obValue]( const boost::program_options::variable_value& /*oValue*/ )
@@ -100,7 +100,7 @@ HRESULT CConfigOptionsBase::AddOptionMapping_Basic_Flag(
 }
 
 HRESULT CConfigOptionsBase::AddOptionMapping_Basic_StringValue(
-	vlr::zstring_view svzOptionName,
+	vlr::zstring_view_param svzOptionName,
 	std::optional<vlr::tstring>& osValue )
 {
 	auto fAction = [svzOptionName, &osValue]( const boost::program_options::variable_value& oValue )

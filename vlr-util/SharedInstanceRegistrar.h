@@ -21,7 +21,7 @@ public:
 	// Note: Intent here is for the child class to potentially add a static method which calls this, with name/template auto populated
 	template <typename TSharedInstance>
 	static std::shared_ptr<TSharedInstance> GetTypedSharedInstanceMutableSP(
-		tzstring_view svzSharedInstanceName,
+		tzstring_view_param svzSharedInstanceName,
 		CSharedInstanceRegistrar* pSharedInstanceRegistrar = nullptr);
 
 public:
@@ -46,33 +46,33 @@ protected:
 public:
 	template <typename TSharedInstance>
 	SResult PopulateSharedInstance(
-		tzstring_view svzSharedInstanceName,
+		tzstring_view_param svzSharedInstanceName,
 		std::shared_ptr<TSharedInstance>& spSharedInstance_Result);
 
 	SResult SetSharedInstance(
-		tzstring_view svzSharedInstanceName,
+		tzstring_view_param svzSharedInstanceName,
 		const SPCSharedInstanceBase& spSharedInstanceBase);
 	SResult ClearSharedInstance(
-		tzstring_view svzSharedInstanceName);
+		tzstring_view_param svzSharedInstanceName);
 	SResult ClearAllSharedInstances();
 	// On cached, will populate; else will populate as nullptr, without modifying the cache
 	SResult CheckSharedInstanceCached(
-		tzstring_view svzSharedInstanceName,
+		tzstring_view_param svzSharedInstanceName,
 		SPCSharedInstanceBase& spSharedInstance_Result) const;
 	size_t GetSharedInstanceCount() const;
 
 protected:
 	SResult EnsureSharedInstanceInOrderedCollection_UnderLock(
-		tzstring_view svzSharedInstanceName,
+		tzstring_view_param svzSharedInstanceName,
 		const SPCSharedInstanceBase& spSharedInstanceBase);
 	SResult RemoveSharedInstanceFromOrderedCollection_UnderLock(
-		tzstring_view svzSharedInstanceName,
+		tzstring_view_param svzSharedInstanceName,
 		SPCSharedInstanceBase& spSharedInstanceBase_Result);
 
 };
 
 template <typename TSharedInstance>
-std::shared_ptr<TSharedInstance> CSharedInstanceBase::GetTypedSharedInstanceMutableSP(tzstring_view svzSharedInstanceName, CSharedInstanceRegistrar* pSharedInstanceRegistrar /*= nullptr*/)
+std::shared_ptr<TSharedInstance> CSharedInstanceBase::GetTypedSharedInstanceMutableSP(tzstring_view_param svzSharedInstanceName, CSharedInstanceRegistrar* pSharedInstanceRegistrar /*= nullptr*/)
 {
 	auto& oSharedInstanceRegistrar = pSharedInstanceRegistrar ? *pSharedInstanceRegistrar : CSharedInstanceRegistrar::GetSharedInstance();
 
@@ -102,7 +102,7 @@ std::shared_ptr<TSharedInstance> CSharedInstanceBase::GetTypedSharedInstanceMuta
 
 template <typename TSharedInstance>
 SResult CSharedInstanceRegistrar::PopulateSharedInstance(
-	tzstring_view svzSharedInstanceName,
+	tzstring_view_param svzSharedInstanceName,
 	std::shared_ptr<TSharedInstance>& spSharedInstance_Result)
 {
 	auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };

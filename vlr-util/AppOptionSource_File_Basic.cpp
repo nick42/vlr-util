@@ -9,7 +9,7 @@
 namespace vlr {
 
 SResult CAppOptionSource_File_Basic::ReadAllValuesFromFile_WithinTryCatch(
-	vlr::tzstring_view svzFilePath)
+	vlr::tzstring_view_param svzFilePath)
 {
 	auto oFileInputStream = std::ifstream{ svzFilePath };
 	if (!oFileInputStream.is_open())
@@ -176,7 +176,7 @@ SResult CAppOptionSource_File_Basic::AddSpecifiedOptionValueFromFile(
 }
 
 SResult CAppOptionSource_File_Basic::ReadAllValuesFromFile(
-	vlr::tzstring_view svzFilePath)
+	vlr::tzstring_view_param svzFilePath)
 {
 	try
 	{

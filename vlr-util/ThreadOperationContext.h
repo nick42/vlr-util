@@ -36,7 +36,7 @@ public:
 
 public:
 	CGenericContext() = default;
-	CGenericContext(vlr::tzstring_view svzName, vlr::tzstring_view svzValue)
+	CGenericContext(vlr::tzstring_view_param svzName, vlr::tzstring_view_param svzValue)
 		: m_sName{ svzName.toStdString() }
 		, m_sValue{ svzValue.toStdString() }
 	{}
@@ -59,14 +59,14 @@ public:
 
 protected:
 	SResult FindActiveContext(
-		vlr::tzstring_view svzName,
+		vlr::tzstring_view_param svzName,
 		CActiveContext*& pContextStack,
 		bool bEnsureExists = false);
 
 public:
 	SResult PushContext(const SPCGenericContext& spContext);
 	SResult PopContext(const SPCGenericContext& spContext);
-	SResult PopContext(vlr::tzstring_view svzName, const SPCGenericContext& spContextToPop = {});
+	SResult PopContext(vlr::tzstring_view_param svzName, const SPCGenericContext& spContextToPop = {});
 
 	SResult PopulateThreadOperationContext(std::vector<ThreadOperationContext::SPCGenericContext>& vecContextStack);
 
@@ -94,7 +94,7 @@ using SPCContextLifetime = std::shared_ptr<CContextLifetime>;
 
 // Adds an operation context to the stack for the current thread, returning the context lifetime ptr.
 // When the context lifetime goes out of scope, the destructor will pop the context automatically.
-SPCContextLifetime AddOperationContext(vlr::tzstring_view svzName, vlr::tzstring_view svzValue);
+SPCContextLifetime AddOperationContext(vlr::tzstring_view_param svzName, vlr::tzstring_view_param svzValue);
 
 } // namespace ThreadOperationContext
 
@@ -113,9 +113,9 @@ protected:
 	SResult ClearCurrentThreadContext();
 
 public:
-	SResult PushContext(vlr::tzstring_view svzName, vlr::tzstring_view svzValue, ThreadOperationContext::SPCGenericContext& spContext_Result);
+	SResult PushContext(vlr::tzstring_view_param svzName, vlr::tzstring_view_param svzValue, ThreadOperationContext::SPCGenericContext& spContext_Result);
 	SResult PopContext(const ThreadOperationContext::SPCGenericContext& spContext);
-	SResult PopContext(vlr::tzstring_view svzName, const ThreadOperationContext::SPCGenericContext& spContextToPop = {});
+	SResult PopContext(vlr::tzstring_view_param svzName, const ThreadOperationContext::SPCGenericContext& spContextToPop = {});
 
 	// Returns S_FALSE if there is no context for the current thread
 	SResult PopulateThreadOperationContext(std::vector<ThreadOperationContext::SPCGenericContext>& vecContextStack);

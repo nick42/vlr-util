@@ -16,7 +16,7 @@ namespace Convert {
 
 auto ToDisplay_ApproxDataSize( LONGLONG nSize )
 {
-	auto fFormatAsSizeType = []( auto nSize, auto nCountForOneOfSizeType, vlr::tzstring_view svzSizeType )
+	auto fFormatAsSizeType = []( auto nSize, auto nCountForOneOfSizeType, vlr::tzstring_view_param svzSizeType )
 		-> std::optional<vlr::tstring>
 	{
 		if (nSize > (nCountForOneOfSizeType * 1024LL))

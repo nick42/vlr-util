@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 
 #include "vlr-util/zstring_view.h"
+#include "vlr-util/util.convert.StringConversion.h"
 
 static constexpr auto pcszTestStringA = "test";
 static constexpr auto pcszTestStringW = L"test";
@@ -309,7 +310,7 @@ TEST(zstring_view, string_with_special_characters)
 
 TEST(zstring_view, string_with_whitespace)
 {
-	static constexpr auto pcszTestString = _T("  tabs\t\there  \n\nnewlines  ");
+	static constexpr auto pcszTestString = _T("  tabs\t\here  \n\nnewlines  ");
 	constexpr auto svzTest = vlr::tzstring_view{ pcszTestString };
 
 	EXPECT_GT(svzTest.length(), 0);
@@ -381,3 +382,61 @@ TEST(zstring_view, string_with_embedded_nulls)
 	auto svzPointerOnly = vlr::tzstring_view{ pcszTestString };
 	EXPECT_EQ(svzPointerOnly.length(), 3);  // Only "hel"
 }
+
+// Conversion tests for zstring_view_param and wzstring_view_param
+
+TEST(zstring_view_param, ToStdStringA_conversion)
+{
+    vlr::zstring_view_param svz{"abc123"};
+    std::string s = vlr::util::Convert::ToStdStringA(svz);
+    EXPECT_EQ(s, "abc123");
+}
+
+TEST(zstring_view_param, ToStdStringW_conversion)
+{
+    vlr::wzstring_view_param svz{L"abc123"};
+    std::wstring ws = vlr::util::Convert::ToStdStringW(svz);
+    EXPECT_EQ(ws, L"abc123");
+}
+
+TEST(zstring_view_param, ToStdStringA_conversion_rvalue)
+{
+    std::string s = vlr::util::Convert::ToStdStringA(vlr::zstring_view_param{"rvalue"});
+    EXPECT_EQ(s, "rvalue");
+}
+
+TEST(zstring_view_param, ToStdStringW_conversion_rvalue)
+{
+    std::wstring ws = vlr::util::Convert::ToStdStringW(vlr::wzstring_view_param{L"rvalue"});
+    EXPECT_EQ(ws, L"rvalue");
+}
+
+// Ambiguity check: static_assert that the call is not ambiguous
+namespace {
+    template<typename T>
+    std::string test_no_ambiguity_ToStdStringA(const T& t) {
+        return vlr::util::Convert::ToStdStringA(t);
+    }
+    template<typename T>
+    std::wstring test_no_ambiguity_ToStdStringW(const T& t) {
+        return vlr::util::Convert::ToStdStringW(t);
+    }
+}
+
+TEST(zstring_view_param, ToStdStringA_no_ambiguity)
+{
+    vlr::zstring_view_param svz{"noambig"};
+    auto s = test_no_ambiguity_ToStdStringA(svz);
+    EXPECT_EQ(s, "noambig");
+}
+
+TEST(zstring_view_param, ToStdStringW_no_ambiguity)
+{
+    vlr::wzstring_view_param svz{L"noambig"};
+    auto ws = test_no_ambiguity_ToStdStringW(svz);
+    EXPECT_EQ(ws, L"noambig");
+}
+
+// Compile-time ambiguity check (should compile, or fail if ambiguous)
+static_assert(std::is_same_v<decltype(vlr::util::Convert::ToStdStringA(vlr::zstring_view_param{"foo"})), std::string>, "ToStdStringA(zstring_view_param) should return std::string");
+static_assert(std::is_same_v<decltype(vlr::util::Convert::ToStdStringW(vlr::wzstring_view_param{L"foo"})), std::wstring>, "ToStdStringW(wzstring_view_param) should return std::wstring");

@@ -13,7 +13,7 @@ public:
 
 	inline auto& withAppOptionSourceInfo(
 		SEAppOptionSource eAppOptionSource,
-		vlr::tzstring_view svzSourceIdentifier = {})
+		vlr::tzstring_view_param svzSourceIdentifier = {})
 	{
 		m_eAppOptionSource = eAppOptionSource;
 		m_sSourceIndentifier = svzSourceIdentifier.toStdString();
@@ -28,7 +28,7 @@ public:
 	CAppOptionSourceInfo() = default;
 	CAppOptionSourceInfo(
 		SEAppOptionSource eAppOptionSource,
-		vlr::tzstring_view svzSourceIdentifier = {})
+		vlr::tzstring_view_param svzSourceIdentifier = {})
 		: m_eAppOptionSource{ eAppOptionSource }
 		, m_sSourceIndentifier{ svzSourceIdentifier.toStdString() }
 	{}

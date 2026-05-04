@@ -35,7 +35,7 @@ public:
 		const CAppOptionSourceInfo& oAppOptionSourceInfo = CAppOptionSourceInfo::ExplicitViaCode()) const;
 
 	SResult EnsureMetadataInStore(
-		vlr::tzstring_view svzMetadata) const;
+		vlr::tzstring_view_param svzMetadata) const;
 
 public:
 	// Constructors note: We anticipate that the most common use-case will be to construct an instance of 
@@ -128,7 +128,7 @@ SResult CAppOptionAccess<TValue>::SetSpecifiedValue(
 
 template <typename TValue>
 SResult CAppOptionAccess<TValue>::EnsureMetadataInStore(
-	vlr::tzstring_view svzMetadata) const
+	vlr::tzstring_view_param svzMetadata) const
 {
 	auto& oAppOptions = CAppOptions::GetSharedInstance();
 

@@ -284,7 +284,7 @@ public:
 	}
 
 	inline HRESULT MultiByte_to_UTF16(
-		vlr::zstring_view svValue,
+		vlr::zstring_view_param svValue,
 		wchar_t* pOutputBuffer,
 		size_t nOutputBufferLengthBytes,
 		const StringConversionOptions& oStringConversionOptions = {},
@@ -300,7 +300,7 @@ public:
 			pStringConversionResults);
 	}
 	inline HRESULT UTF16_to_MultiByte(
-		vlr::wzstring_view svValue,
+		vlr::wzstring_view_param svValue,
 		char* pOutputBuffer,
 		size_t nOutputBufferLengthBytes,
 		const StringConversionOptions& oStringConversionOptions = {},

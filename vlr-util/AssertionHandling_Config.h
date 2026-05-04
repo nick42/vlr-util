@@ -30,7 +30,7 @@ public:
 	}
 
 public:
-	inline void DefaultHandler(const vlr::logging::CMessageContext& /*oMessageContext*/, vlr::tzstring_view /*svzFailureMessage*/) const
+	inline void DefaultHandler(const vlr::logging::CMessageContext& /*oMessageContext*/, vlr::tzstring_view_param /*svzFailureMessage*/) const
 	{
 		if (m_bOnDefaultHandler_TriggerDebugBreak)
 		{
@@ -39,7 +39,7 @@ public:
 	}
 };
 
-inline void HandleCheckFailure(const vlr::logging::CMessageContext& oMessageContext, vlr::tzstring_view svzFailureMessage)
+inline void HandleCheckFailure(const vlr::logging::CMessageContext& oMessageContext, vlr::tzstring_view_param svzFailureMessage)
 {
 	const auto& fHandleCheckFailure = Callbacks::getSharedInstance().m_fHandleCheckFailure;
 	if (fHandleCheckFailure)

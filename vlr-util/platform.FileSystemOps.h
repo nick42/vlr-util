@@ -19,12 +19,11 @@ public:
 		VLR_DEFINE_DEFAULT_CONSTRUCTOR_CONSTEXPR_NOEXCEPT(Options_DeleteFile);
 	};
 	SResult DeleteFile(
-		vlr::tzstring_view svzFilePath,
+		vlr::tzstring_view_param svzFilePath,
 		const Options_DeleteFile& options = {});
 
-	SResult CheckFileExists(vlr::tzstring_view svzFilePath);
-	SResult CheckDirectoryExists(vlr::tzstring_view svzFilePath);
-
+	SResult CheckFileExists(vlr::tzstring_view_param svzFilePath);
+	SResult CheckDirectoryExists(vlr::tzstring_view_param svzFilePath);
 	SResult PopulateSystemPath_TempDir(vlr::tstring& sPath);
 
 };

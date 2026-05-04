@@ -18,7 +18,7 @@ SResult CContextLifetime::OnDestroy_PopContext()
 	return CThreadOperationContext::GetSharedInstance().PopContext(m_spContext);
 }
 
-SPCContextLifetime AddOperationContext(vlr::tzstring_view svzName, vlr::tzstring_view svzValue)
+SPCContextLifetime AddOperationContext(vlr::tzstring_view_param svzName, vlr::tzstring_view_param svzValue)
 {
 	static const auto _tFailureValue = SPCContextLifetime{};
 
@@ -38,7 +38,7 @@ SPCContextLifetime AddOperationContext(vlr::tzstring_view svzName, vlr::tzstring
 }
 
 SResult CPerThreadContext::FindActiveContext(
-	vlr::tzstring_view svzName,
+	vlr::tzstring_view_param svzName,
 	CActiveContext*& pActiveContext,
 	bool bEnsureExists /*= false*/)
 {
@@ -96,7 +96,7 @@ SResult CPerThreadContext::PopContext(const SPCGenericContext& spContext)
 	return PopContext(spContext->GetName(), spContext);
 }
 
-SResult CPerThreadContext::PopContext(vlr::tzstring_view svzName, const SPCGenericContext& spContextToPop /*= {}*/)
+SResult CPerThreadContext::PopContext(vlr::tzstring_view_param svzName, const SPCGenericContext& spContextToPop /*= {}*/)
 {
 	SResult sr;
 
@@ -285,7 +285,7 @@ SResult CThreadOperationContext::PopulateThreadOperationContext(std::vector<Thre
 	return SResult::Success;
 }
 
-SResult CThreadOperationContext::PushContext(vlr::tzstring_view svzName, vlr::tzstring_view svzValue, ThreadOperationContext::SPCGenericContext& spContext_Result)
+SResult CThreadOperationContext::PushContext(vlr::tzstring_view_param svzName, vlr::tzstring_view_param svzValue, ThreadOperationContext::SPCGenericContext& spContext_Result)
 {
 	SResult sr;
 
@@ -312,7 +312,7 @@ SResult CThreadOperationContext::PopContext(const ThreadOperationContext::SPCGen
 	return PopContext(spContext->GetName(), spContext);
 }
 
-SResult CThreadOperationContext::PopContext(vlr::tzstring_view svzName, const ThreadOperationContext::SPCGenericContext& spContext /*= {}*/)
+SResult CThreadOperationContext::PopContext(vlr::tzstring_view_param svzName, const ThreadOperationContext::SPCGenericContext& spContext /*= {}*/)
 {
 	ThreadOperationContext::SPCPerThreadContext spPerThreadContext;
 	GetCurrentThreadContext(spPerThreadContext);

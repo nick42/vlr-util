@@ -10,12 +10,12 @@ namespace vlr {
 class CResourceStringLookupValue
 {
 public:
-	vlr::tzstring_view m_svzFormatValue;
+	vlr::tzstring_view_param m_svzFormatValue;
 	uint32_t m_nHashCRC{};
 
 public:
 	constexpr CResourceStringLookupValue(
-		vlr::tzstring_view svzFormatValue)
+		vlr::tzstring_view_param svzFormatValue)
 		: m_svzFormatValue{ svzFormatValue }
 		, m_nHashCRC{ util::crc32(svzFormatValue) }
 	{}

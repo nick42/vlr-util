@@ -49,12 +49,12 @@ constexpr bool IsNotBlank_choice(const TValue& tValue, choice<1>&&)
 
 } // namespace detail
 
-constexpr bool IsNotBlank(vlr::zstring_view svzValue)
+constexpr bool IsNotBlank(vlr::zstring_view_param svzValue)
 {
 	return (svzValue.length() > 0);
 }
 
-constexpr bool IsNotBlank(vlr::wzstring_view svzValue)
+constexpr bool IsNotBlank(vlr::wzstring_view_param svzValue)
 {
 	return (svzValue.length() > 0);
 }

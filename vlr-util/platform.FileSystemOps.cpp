@@ -11,7 +11,7 @@ namespace vlr {
 namespace platform {
 
 SResult CFileSystmOps::DeleteFile(
-	vlr::tzstring_view svzFilePath,
+	vlr::tzstring_view_param svzFilePath,
 	const Options_DeleteFile& options /*= {}*/)
 {
 	auto oFilePath = std::filesystem::path{ svzFilePath.toStdString() };
@@ -50,7 +50,7 @@ SResult CFileSystmOps::DeleteFile(
 	return SResult::Success;
 }
 
-SResult CFileSystmOps::CheckFileExists(vlr::tzstring_view svzFilePath)
+SResult CFileSystmOps::CheckFileExists(vlr::tzstring_view_param svzFilePath)
 {
 	auto oFilePath = std::filesystem::path{ svzFilePath.toStdString() };
 
@@ -82,7 +82,7 @@ SResult CFileSystmOps::CheckFileExists(vlr::tzstring_view svzFilePath)
 	return SResult::Success;
 }
 
-SResult CFileSystmOps::CheckDirectoryExists(vlr::tzstring_view svzFilePath)
+SResult CFileSystmOps::CheckDirectoryExists(vlr::tzstring_view_param svzFilePath)
 {
 	auto oFilePath = std::filesystem::path{ svzFilePath.toStdString() };
 

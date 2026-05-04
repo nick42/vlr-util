@@ -10,7 +10,7 @@ CSharedInstanceRegistrar& CSharedInstanceRegistrar::GetSharedInstance()
 }
 
 SResult CSharedInstanceRegistrar::SetSharedInstance(
-	tzstring_view svzSharedInstanceName,
+	tzstring_view_param svzSharedInstanceName,
 	const SPCSharedInstanceBase& spSharedInstanceBase)
 {
 	auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
@@ -21,7 +21,7 @@ SResult CSharedInstanceRegistrar::SetSharedInstance(
 }
 
 SResult CSharedInstanceRegistrar::ClearSharedInstance(
-	tzstring_view svzSharedInstanceName)
+	tzstring_view_param svzSharedInstanceName)
 {
 	// Note: We're being a bit careful here. It's _possible_ that the destructor for a shared instance 
 	// will invoke other functionality in the registrar. If we are holding the mutex at that time, we 
@@ -64,7 +64,7 @@ SResult CSharedInstanceRegistrar::ClearAllSharedInstances()
 }
 
 SResult CSharedInstanceRegistrar::CheckSharedInstanceCached(
-	tzstring_view svzSharedInstanceName,
+	tzstring_view_param svzSharedInstanceName,
 	SPCSharedInstanceBase& spSharedInstance_Result) const
 {
 	auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
@@ -89,7 +89,7 @@ size_t CSharedInstanceRegistrar::GetSharedInstanceCount() const
 }
 
 SResult CSharedInstanceRegistrar::EnsureSharedInstanceInOrderedCollection_UnderLock(
-	tzstring_view svzSharedInstanceName,
+	tzstring_view_param svzSharedInstanceName,
 	const SPCSharedInstanceBase& spSharedInstanceBase)
 {
 	for (auto& oSharedInstanceTuple : m_vecSharedInstanceCollection)
@@ -114,7 +114,7 @@ SResult CSharedInstanceRegistrar::EnsureSharedInstanceInOrderedCollection_UnderL
 }
 
 SResult CSharedInstanceRegistrar::RemoveSharedInstanceFromOrderedCollection_UnderLock(
-	tzstring_view svzSharedInstanceName,
+	tzstring_view_param svzSharedInstanceName,
 	SPCSharedInstanceBase& spSharedInstanceBase_Result)
 {
 	for (auto iterIndex = m_vecSharedInstanceCollection.begin(); iterIndex != m_vecSharedInstanceCollection.end(); ++iterIndex)
