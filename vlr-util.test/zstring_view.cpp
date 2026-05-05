@@ -310,7 +310,7 @@ TEST(zstring_view, string_with_special_characters)
 
 TEST(zstring_view, string_with_whitespace)
 {
-	static constexpr auto pcszTestString = _T("  tabs\t\here  \n\nnewlines  ");
+	static constexpr auto pcszTestString = _T("  tabs\t\there  \n\nnewlines  ");
 	constexpr auto svzTest = vlr::tzstring_view{ pcszTestString };
 
 	EXPECT_GT(svzTest.length(), 0);

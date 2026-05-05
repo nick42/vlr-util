@@ -1,5 +1,10 @@
 #pragma once
 
+// Logical library versioning for the vlr-util library; to be incremented when new breaking changes are added 
+// to the library, so that dependent code can conditionally compile based on the library version.
+#define VLR_UTIL_LIBRARY_VERSION_MAJOR 1
+#define VLR_UTIL_LIBRARY_VERSION_MINOR 1
+
 #if (__cplusplus >= 202002L)
 #define VLR_CPP20_OR_LATER 1
 #else
@@ -110,6 +115,9 @@
 #define VLR_HASDEP_SPDLOG 0
 
 #endif // __has_include
+
+// Added when this feature was added to the library, to allow for conditional compilation of code which uses this feature
+#define VLR_HAS_FEATURE_ZSTRING_VIEW_PARAM 1
 
 #include "typeshim.win32.h"
 #include "util.types.h"
