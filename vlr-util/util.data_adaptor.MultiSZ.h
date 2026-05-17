@@ -203,7 +203,7 @@ HRESULT HelperFor_MultiSZ<TChar>::ToMultiSz(
 	}
 	// Add extra NULL terminator
 	//VLR_ASSERT_COMPARE_OR_RETURN_EUNEXPECTED(arrData.size() - nCountWrittenBytes, == , 1);
-	*pDataWritePoint = 0;
+	*reinterpret_cast<TChar*>(pDataWritePoint) = TChar{ 0 };
 
 	return S_OK;
 }

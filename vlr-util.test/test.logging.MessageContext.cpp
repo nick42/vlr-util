@@ -16,6 +16,6 @@ TEST( logging_MessageContext, general )
 		EXPECT_NE(oMessageContext.m_oCodeContext.m_svzFile.empty(), true);
 		EXPECT_NE(oMessageContext.m_oCodeContext.m_nLineNumber, 0);
 		EXPECT_NE(oMessageContext.m_oCodeContext.m_svzFunction.empty(), true);
-		EXPECT_STREQ(oMessageContext.m_oCodeContext.GetFileNameOnly(), _T("logging.MessageContext.cpp"));
+		EXPECT_STREQ(oMessageContext.m_oCodeContext.GetFileNameOnly(), _T("test.logging.MessageContext.cpp"));
 	}
 }

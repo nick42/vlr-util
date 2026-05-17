@@ -147,6 +147,11 @@ SResult CAppOptions::SetAppOptionQualifiers(
 			break;
 		}
 		auto spSpecifiedValue = iterIndex->second;
+		// Note: This can be nullptr if we accessed the option but it was not specified, in which case we would have cached a nullptr value
+		if (!spSpecifiedValue)
+		{
+			break;
+		}
 
 		spSpecifiedValue->withAppOptionQualifiers(spAppOptionQualifiers);
 	} while (false);
@@ -172,6 +177,12 @@ SResult CAppOptions::ClearAppOptionQualifiers(
 			break;
 		}
 		auto spSpecifiedValue = iterIndex->second;
+		// Note: This can be nullptr if we accessed the option but it was not specified, in which case we would have cached a nullptr value
+		if (!spSpecifiedValue)
+		{
+			break;
+		}
+
 		spSpecifiedValue->withAppOptionQualifiers(nullptr);
 	} while (false);
 

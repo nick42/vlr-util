@@ -21,18 +21,15 @@ namespace logging {
 
 inline void BootstrapCallbacksOnce()
 {
-	static std::atomic<bool> atomicRunThisTime = false;
-	if (atomicRunThisTime.exchange(true))
-	{
-		// Already ran
-		return;
-	}
+	static std::once_flag flagBootstrap;
+	std::call_once(flagBootstrap, []() {
 #ifndef VLR_CONSUMER_IMPL_LOGGING_CALLBACKS
-	Callbacks::getSharedInstanceMutable().m_fCheckCouldMessageBeLogged = &DefaultImpl::CheckCouldMessageBeLogged;
-	Callbacks::getSharedInstanceMutable().m_fLogMessage = &DefaultImpl::LogMessage;
+		Callbacks::getSharedInstanceMutable().m_fCheckCouldMessageBeLogged = &DefaultImpl::CheckCouldMessageBeLogged;
+		Callbacks::getSharedInstanceMutable().m_fLogMessage = &DefaultImpl::LogMessage;
 #elif defined(VLR_CONSUMER_BOOTSTRAP_LOGGING_CALLBACKS)
-	VLR_CONSUMER_BOOTSTRAP_LOGGING_CALLBACKS;
+		VLR_CONSUMER_BOOTSTRAP_LOGGING_CALLBACKS;
 #endif
+	});
 }
 
 // Note: Not returning the formatted message eliminates some potential (spurious) static analysis warnings, if not utilized

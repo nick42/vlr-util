@@ -3,8 +3,9 @@
 #include <memory>
 #include <mutex>
 #include <unordered_map>
+#include <vector>
+#include <tuple>
 
-#include "StringCompare.h"
 #include "zstring_view.h"
 #include "util.Result.h"
 #include "ModuleContext.LogicalState.h"
@@ -38,7 +39,7 @@ public:
 	static CSharedInstanceRegistrar& GetSharedInstance();
 
 protected:
-	mutable std::mutex m_mutexDataAccess;
+	mutable std::recursive_mutex m_mutexDataAccess;
 	std::unordered_map<tstring, SPCSharedInstanceBase> m_mapInstanceNameToInstance;
 	// Note: We maintain an ordered vector of instances, so that we can destruct in reverse order
 	std::vector<std::tuple<tstring, SPCSharedInstanceBase>> m_vecSharedInstanceCollection;
@@ -76,28 +77,12 @@ std::shared_ptr<TSharedInstance> CSharedInstanceBase::GetTypedSharedInstanceMuta
 {
 	auto& oSharedInstanceRegistrar = pSharedInstanceRegistrar ? *pSharedInstanceRegistrar : CSharedInstanceRegistrar::GetSharedInstance();
 
-	static auto wpSharedInstance = [&]() -> std::weak_ptr<TSharedInstance>
-	{
-		std::shared_ptr<TSharedInstance> spSharedInstance;
-		oSharedInstanceRegistrar.PopulateSharedInstance<TSharedInstance>(svzSharedInstanceName, spSharedInstance);
-		return spSharedInstance;
-	}();
+	// Note: I'm unsure if it's possible to optimize this lookup further, with thread correctness; to be investigated later.
 
-	auto spSharedInstance = wpSharedInstance.lock();
-	if (spSharedInstance)
-	{
-		return spSharedInstance;
-	}
+	std::shared_ptr<TSharedInstance> spSharedInstance;
+	oSharedInstanceRegistrar.PopulateSharedInstance<TSharedInstance>(svzSharedInstanceName, spSharedInstance);
 
-	// Note: We try again here, because the instance in the registrar may have been updated
-	std::shared_ptr<TSharedInstance> spSharedInstance_PossibleUpdate;
-	oSharedInstanceRegistrar.PopulateSharedInstance<TSharedInstance>(svzSharedInstanceName, spSharedInstance_PossibleUpdate);
-
-	// We store and return this result regardless of validity
-	// Note: This corner-case is not necessarily thread safe (I'm unsure); unsure if this is worth the trade-off of having a mutex here
-	wpSharedInstance = spSharedInstance_PossibleUpdate;
-
-	return spSharedInstance_PossibleUpdate;
+	return spSharedInstance;
 }
 
 template <typename TSharedInstance>

@@ -9,7 +9,7 @@ TEST(util_NonOwningSharedPtr, general)
 	auto oOnDestroy_ClearValue = vlr::MakeActionOnDestruction([&] { nValue = 0; });
 
 	{
-		auto spNonOwningOnDestroy = vlr::MakeNonOwningSharedPtr(&oOnDestroy_ClearValue);
+		auto spNonOwningOnDestroy = vlr::MakeNonOwningSharedPtr_Caution(&oOnDestroy_ClearValue);
 		ASSERT_NE(spNonOwningOnDestroy, nullptr);
 		ASSERT_EQ(spNonOwningOnDestroy.get(), &oOnDestroy_ClearValue);
 	}

@@ -18,149 +18,146 @@
     <ClCompile Include="vlr-util.test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="zstring_view.cpp">
+    <ClCompile Include="test.zstring_view.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AutoFreeResource.cpp">
+    <ClCompile Include="test.AutoFreeResource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.IsNotBlank.cpp">
+    <ClCompile Include="test.util.IsNotBlank.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.IsNonZero.cpp">
+    <ClCompile Include="test.util.IsNonZero.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Assertions.test.cpp">
+    <ClCompile Include="test.Assertions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AutoRevertingAssignment.cpp">
+    <ClCompile Include="test.AutoRevertingAssignment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="enums.RangeInfo.cpp">
+    <ClCompile Include="test.enums.RangeInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.IsBitValue.cpp">
+    <ClCompile Include="test.util.IsBitValue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="formatpf.cpp">
+    <ClCompile Include="test.formatpf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.IsBitSet.cpp">
+    <ClCompile Include="test.util.IsBitSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.choice.cpp">
+    <ClCompile Include="test.util.choice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.range_checked_cast.cpp">
+    <ClCompile Include="test.test.util.range_checked_cast.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.convert.StringConversion.test.cpp">
+    <ClCompile Include="test.util.convert.StringConversion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.api_adaptor.OutString.cpp">
+    <ClCompile Include="test.util.api_adaptor.OutString.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="win32.filesystem.enum_volumes.cpp">
+    <ClCompile Include="test.win32.filesystem.enum_volumes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.data_adaptor.MultiSZ.cpp">
+    <ClCompile Include="test.util.data_adaptor.MultiSZ.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="win32.filesystem.enum_files.cpp">
+    <ClCompile Include="test.win32.filesystem.enum_files.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="win32.structure.WIN32_FIND_DATA.cpp">
+    <ClCompile Include="test.win32.structure.WIN32_FIND_DATA.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="logging.MessageContext.cpp">
+    <ClCompile Include="test.logging.MessageContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="logging.LogMessage.cpp">
+    <ClCompile Include="test.logging.LogMessage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="as_span.cpp">
+    <ClCompile Include="test.as_span.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="win32.registry.RegKey.cpp">
+    <ClCompile Include="test.win32.registry.RegKey.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ThreadPool.cpp">
+    <ClCompile Include="test.ThreadPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.logical_zstring_view.cpp">
+    <ClCompile Include="test.util.logical_zstring_view.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RegexCache.cpp">
+    <ClCompile Include="test.RegexCache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ActionOnDestruction.cpp">
+    <ClCompile Include="test.ActionOnDestruction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StringCompare.test.cpp">
+    <ClCompile Include="test.StringCompare.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.NonOwningSharedPtr.cpp">
+    <ClCompile Include="test.util.NonOwningSharedPtr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CloseEnough.cpp">
+    <ClCompile Include="test.CloseEnough.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="strings.split.test.cpp">
+    <ClCompile Include="test.strings.split.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.MRUCache.cpp">
+    <ClCompile Include="test.util.MRUCache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CaptureConsoleOutput.cpp">
+    <ClCompile Include="test.CaptureConsoleOutput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="enums.SmartEnum.test.cpp">
+    <ClCompile Include="test.enums.SmartEnum.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestAssignment.cpp">
+    <ClCompile Include="test.Assignment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AppOptionSpecifiedValue.test.cpp">
+    <ClCompile Include="test.AppOptionSpecifiedValue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AppOptions.test.cpp">
+    <ClCompile Include="test.AppOptions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AppOptionAccess.test.cpp">
+    <ClCompile Include="test.AppOptionAccess.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AppOptionSource_File_Basic.test.cpp">
+    <ClCompile Include="test.AppOptionSource_File_Basic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.MakeResultCode.test.cpp">
+    <ClCompile Include="test.util.MakeResultCode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceStringLookupValue.test.cpp">
+    <ClCompile Include="test.ResourceStringLookupValue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ThreadOperationContext.test.cpp">
+    <ClCompile Include="test.ThreadOperationContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="platform.FileSystemOps.test.cpp">
+    <ClCompile Include="test.platform.FileSystemOps.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.Result.test.cpp">
+    <ClCompile Include="test.util.Result.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SharedInstanceRegistrar.test.cpp">
+    <ClCompile Include="test.SharedInstanceRegistrar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="util.StringConversion.test.cpp">
+    <ClCompile Include="test.util.StringConversion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="zstring_view.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>

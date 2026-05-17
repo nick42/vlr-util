@@ -2,8 +2,10 @@
 
 #include "config.h"
 
+#include "include.fmt.h"
 #include "util.choice.h"
 #include "util.static_assert.h"
+#include "ModuleContext.Compilation.h"
 
 #undef min
 #undef max
@@ -33,6 +35,8 @@ constexpr bool SourceAlwaysFitsInDest()
 	return false;
 }
 
+void HandleOutOfRangeAssertionFailure(std::string_view svFailureMessage);
+
 template< typename TDest, typename TSource, typename std::enable_if_t<detail::SourceAlwaysFitsInDest<TDest, TSource>()>* = nullptr >
 constexpr auto range_checked_cast_choice(const TSource& nValue, choice<0>&&)
 {
@@ -48,11 +52,14 @@ inline constexpr auto range_checked_cast_choice(TSource nValue, choice<1>&&)
 	{
 		return static_cast<TDest>(nValue);
 	};
-	auto fGetOutOfRangeResult = [](TSource /*nValue*/, bool bOverflow = false)
+	auto fGetOutOfRangeResult = [](TSource nValue, bool bOverflow = false)
 	{
 		// Note: The is intentionally not a static_assert here, because this is a runtime check. 
 		// The static_assert is in the other function, which should have been called if the source was smaller or equal to the dest.
-		ASSERT(0);
+		auto sAssertionFailureMessage = fmt::format("Out of range cast detected, dest type '{}', value '{}'",
+			typeid(TDest).name(), nValue);
+		HandleOutOfRangeAssertionFailure(sAssertionFailureMessage);
+
 		// Note: This is judged to be the "safest" result to return in the case of an out-of-range value. 
 		// It is up to the caller to handle the error as appropriate.
 		if (bOverflow)

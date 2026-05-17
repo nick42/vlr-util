@@ -9,6 +9,10 @@
 #include "util.Result.h"
 #include "zstring_view.h"
 
+// Note for users: This class imposes no restrictions on the regex syntax used, so it is possible to pass expressions
+// which may cause unbounded compilation time or memory usage. It is the caller's responsibility to ensure that the 
+// regexes passed in are well-formed and won't cause issues.
+
 namespace vlr {
 
 #ifdef UNICODE

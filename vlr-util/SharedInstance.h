@@ -44,9 +44,13 @@ public:
 
 protected:
 	virtual HRESULT OnCreate_DoInit()
-	{}
+	{
+		return S_FALSE;
+	}
 	virtual HRESULT OnDestroy_DoCleanup()
-	{}
+	{
+		return S_FALSE;
+	}
 
 public:
 	CSharedInstanceBase()

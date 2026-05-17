@@ -149,6 +149,7 @@
     <ClCompile Include="ThreadOperationContext.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="util.AutoCleanupBase.cpp" />
+    <ClCompile Include="util.range_checked_cast.cpp" />
     <ClCompile Include="util.Result.cpp" />
     <ClCompile Include="util.StringConversion.cpp" />
     <ClCompile Include="Win32\util.win32.StringConversion.cpp" />

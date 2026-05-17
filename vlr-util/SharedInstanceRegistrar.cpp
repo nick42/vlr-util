@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "SharedInstanceRegistrar.h"
 
+#include "StringCompare.h"
+
 namespace vlr {
 
 CSharedInstanceRegistrar& CSharedInstanceRegistrar::GetSharedInstance()
@@ -13,9 +15,16 @@ SResult CSharedInstanceRegistrar::SetSharedInstance(
 	tzstring_view_param svzSharedInstanceName,
 	const SPCSharedInstanceBase& spSharedInstanceBase)
 {
+	if (!spSharedInstanceBase)
+	{
+		return E_INVALIDARG;
+	}
+
 	auto slDataAccess = std::scoped_lock{ m_mutexDataAccess };
 
 	m_mapInstanceNameToInstance[svzSharedInstanceName.toStdString()] = spSharedInstanceBase;
+
+	EnsureSharedInstanceInOrderedCollection_UnderLock(svzSharedInstanceName, spSharedInstanceBase);
 
 	return SResult::Success;
 }

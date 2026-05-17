@@ -12,9 +12,12 @@ namespace util {
 
 namespace detail {
 
+static constexpr size_t g_nMaxPipeCreationAttempts = 5;
+
 int secure_dup(int src)
 {
 	int ret = -1;
+	size_t nAttempts = 0;
 	bool fd_blocked = false;
 	do
 	{
@@ -22,13 +25,14 @@ int secure_dup(int src)
 		fd_blocked = (errno == EINTR || errno == EBUSY);
 		if (fd_blocked)
 			std::this_thread::sleep_for(std::chrono::milliseconds(10));
-	} while (ret < 0);
+	} while (ret < 0 && ++nAttempts < g_nMaxPipeCreationAttempts);
 	return ret;
 }
 
 void secure_pipe(int* pipes)
 {
 	int ret = -1;
+	size_t nAttempts = 0;
 	bool fd_blocked = false;
 	do
 	{
@@ -40,12 +44,13 @@ void secure_pipe(int* pipes)
 		fd_blocked = (errno == EINTR || errno == EBUSY);
 		if (fd_blocked)
 			std::this_thread::sleep_for(std::chrono::milliseconds(10));
-	} while (ret < 0);
+	} while (ret < 0 && ++nAttempts < g_nMaxPipeCreationAttempts);
 }
 
 void secure_dup2(int src, int dest)
 {
 	int ret = -1;
+	size_t nAttempts = 0;
 	bool fd_blocked = false;
 	do
 	{
@@ -53,12 +58,13 @@ void secure_dup2(int src, int dest)
 		fd_blocked = (errno == EINTR || errno == EBUSY);
 		if (fd_blocked)
 			std::this_thread::sleep_for(std::chrono::milliseconds(10));
-	} while (ret < 0);
+	} while (ret < 0 && ++nAttempts < g_nMaxPipeCreationAttempts);
 }
 
 void secure_close(int& fd)
 {
 	int ret = -1;
+	size_t nAttempts = 0;
 	bool fd_blocked = false;
 	do
 	{
@@ -66,7 +72,7 @@ void secure_close(int& fd)
 		fd_blocked = (errno == EINTR);
 		if (fd_blocked)
 			std::this_thread::sleep_for(std::chrono::milliseconds(10));
-	} while (ret < 0);
+	} while (ret < 0 && ++nAttempts < g_nMaxPipeCreationAttempts);
 
 	fd = -1;
 }

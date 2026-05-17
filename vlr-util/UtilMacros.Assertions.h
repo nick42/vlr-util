@@ -16,7 +16,7 @@ namespace detail {
 template <typename TResult>
 constexpr bool ResultIsSuccess(const TResult& tResult)
 {
-	if constexpr (std::is_same_v<std::decay_t<TResult>, SResult>)
+	if constexpr (std::is_same_v<std::decay_t<TResult>, util::SResult>)
 	{
 		return tResult.isSuccess();
 	}

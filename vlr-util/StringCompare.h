@@ -522,7 +522,7 @@ template<typename TStringView>
 constexpr auto CompareStringViews(const CompareSettings& oCompareSettings, const TStringView& svlhs, const TStringView& svrhs)
 {
 	// Short-circuit for same buffer
-	if (svlhs.data() == svrhs.data())
+	if (svlhs.data() == svrhs.data() && svlhs.data() == svrhs.data())
 	{
 		return 0;
 	}

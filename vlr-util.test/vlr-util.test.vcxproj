@@ -227,22 +227,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ActionOnDestruction.cpp" />
-    <ClCompile Include="AppOptionAccess.test.cpp" />
-    <ClCompile Include="AppOptions.test.cpp" />
-    <ClCompile Include="AppOptionSource_File_Basic.test.cpp" />
-    <ClCompile Include="AppOptionSpecifiedValue.test.cpp" />
-    <ClCompile Include="Assertions.test.cpp" />
-    <ClCompile Include="as_span.cpp" />
-    <ClCompile Include="AutoFreeResource.cpp" />
-    <ClCompile Include="AutoRevertingAssignment.cpp" />
-    <ClCompile Include="CaptureConsoleOutput.cpp" />
-    <ClCompile Include="CloseEnough.cpp" />
-    <ClCompile Include="enums.RangeInfo.cpp" />
-    <ClCompile Include="enums.SmartEnum.test.cpp" />
-    <ClCompile Include="formatpf.cpp" />
-    <ClCompile Include="logging.LogMessage.cpp" />
-    <ClCompile Include="logging.MessageContext.cpp" />
+    <ClCompile Include="test.ActionOnDestruction.cpp" />
+    <ClCompile Include="test.AppOptionAccess.cpp" />
+    <ClCompile Include="test.AppOptions.cpp" />
+    <ClCompile Include="test.AppOptionSource_File_Basic.cpp" />
+    <ClCompile Include="test.AppOptionSpecifiedValue.cpp" />
+    <ClCompile Include="test.Assertions.cpp" />
+    <ClCompile Include="test.as_span.cpp" />
+    <ClCompile Include="test.AutoFreeResource.cpp" />
+    <ClCompile Include="test.AutoRevertingAssignment.cpp" />
+    <ClCompile Include="test.CaptureConsoleOutput.cpp" />
+    <ClCompile Include="test.CloseEnough.cpp" />
+    <ClCompile Include="test.enums.RangeInfo.cpp" />
+    <ClCompile Include="test.enums.SmartEnum.cpp" />
+    <ClCompile Include="test.formatpf.cpp" />
+    <ClCompile Include="test.logging.LogMessage.cpp" />
+    <ClCompile Include="test.logging.MessageContext.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -251,32 +251,32 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="platform.FileSystemOps.test.cpp" />
-    <ClCompile Include="RegexCache.cpp" />
-    <ClCompile Include="ResourceStringLookupValue.test.cpp" />
-    <ClCompile Include="SharedInstanceRegistrar.test.cpp" />
-    <ClCompile Include="strings.split.test.cpp" />
-    <ClCompile Include="StringCompare.test.cpp" />
-    <ClCompile Include="TestAssignment.cpp" />
-    <ClCompile Include="ThreadOperationContext.test.cpp" />
-    <ClCompile Include="ThreadPool.cpp" />
-    <ClCompile Include="util.api_adaptor.OutString.cpp" />
-    <ClCompile Include="util.choice.cpp" />
-    <ClCompile Include="util.convert.StringConversion.test.cpp" />
-    <ClCompile Include="util.data_adaptor.MultiSZ.cpp" />
-    <ClCompile Include="util.IsBitSet.cpp" />
-    <ClCompile Include="util.IsBitValue.cpp" />
-    <ClCompile Include="util.IsNonZero.cpp" />
-    <ClCompile Include="util.IsNotBlank.cpp" />
-    <ClCompile Include="util.logical_zstring_view.cpp" />
-    <ClCompile Include="util.MakeResultCode.test.cpp" />
-    <ClCompile Include="util.MRUCache.cpp" />
-    <ClCompile Include="util.NonOwningSharedPtr.cpp" />
-    <ClCompile Include="util.range_checked_cast.cpp" />
-    <ClCompile Include="util.Result.test.cpp" />
-    <ClCompile Include="util.StringConversion.test.cpp" />
+    <ClCompile Include="test.platform.FileSystemOps.cpp" />
+    <ClCompile Include="test.RegexCache.cpp" />
+    <ClCompile Include="test.ResourceStringLookupValue.cpp" />
+    <ClCompile Include="test.SharedInstanceRegistrar.cpp" />
+    <ClCompile Include="test.strings.split.cpp" />
+    <ClCompile Include="test.StringCompare.cpp" />
+    <ClCompile Include="test.Assignment.cpp" />
+    <ClCompile Include="test.ThreadOperationContext.cpp" />
+    <ClCompile Include="test.ThreadPool.cpp" />
+    <ClCompile Include="test.util.api_adaptor.OutString.cpp" />
+    <ClCompile Include="test.util.choice.cpp" />
+    <ClCompile Include="test.util.convert.StringConversion.cpp" />
+    <ClCompile Include="test.util.data_adaptor.MultiSZ.cpp" />
+    <ClCompile Include="test.util.IsBitSet.cpp" />
+    <ClCompile Include="test.util.IsBitValue.cpp" />
+    <ClCompile Include="test.util.IsNonZero.cpp" />
+    <ClCompile Include="test.util.IsNotBlank.cpp" />
+    <ClCompile Include="test.util.logical_zstring_view.cpp" />
+    <ClCompile Include="test.util.MakeResultCode.cpp" />
+    <ClCompile Include="test.util.MRUCache.cpp" />
+    <ClCompile Include="test.util.NonOwningSharedPtr.cpp" />
+    <ClCompile Include="test.test.util.range_checked_cast.cpp" />
+    <ClCompile Include="test.util.Result.cpp" />
+    <ClCompile Include="test.util.StringConversion.cpp" />
     <ClCompile Include="vlr-util.test.cpp" />
-    <ClCompile Include="win32.filesystem.enum_files.cpp">
+    <ClCompile Include="test.win32.filesystem.enum_files.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -284,7 +284,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="win32.filesystem.enum_volumes.cpp">
+    <ClCompile Include="test.win32.filesystem.enum_volumes.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -292,7 +292,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="win32.registry.RegKey.cpp">
+    <ClCompile Include="test.win32.registry.RegKey.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -300,7 +300,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="win32.structure.WIN32_FIND_DATA.cpp">
+    <ClCompile Include="test.win32.structure.WIN32_FIND_DATA.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -308,7 +308,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="zstring_view.cpp" />
+    <ClCompile Include="test.zstring_view.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\vlr-util\vlr-util.vcxproj">
@@ -317,7 +317,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="zstring_view.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg.json" />

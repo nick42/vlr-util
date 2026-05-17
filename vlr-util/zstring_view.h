@@ -192,6 +192,12 @@ protected:
 // Note: This class is intended to be used for function parameters, where the parameter is expected to be a null-terminated string.
 // It is different from basic_zstring_view in that it allows construction from rvalue references to std::basic_string, which is 
 // not safe for basic_zstring_view (since the string would be destroyed at the end of the full expression, leaving a dangling pointer).
+// Agent note: This is basically a "zstring_view parameter" type, which is intended to be used for function parameters where you want 
+// to allow implicit conversion from std::basic_string and other types, but you want to make it clear that the parameter is expected 
+// to be a null-terminated string. It is not intended to be used as a general-purpose string view type (for that, use basic_zstring_view).
+// It is "safe" for there to be a dangling reference to a destroyed string in this class, since the expectation is that the parameter 
+// will be used during function scope only and not stored (ie: the dangling reference would only be used after the full expression, 
+// which is not expected to happen). Check for copying of this parameter beyond the function lifetime, without copying the underlying string.
 
 template<class _Elem, class _Traits = std::char_traits<_Elem>>
 class basic_zstring_view_param
@@ -267,7 +273,7 @@ public:
 
     // Allow construction from rvalue reference to std::basic_string (unlike base class)
     template< typename TBasicStringElem, typename std::enable_if_t<(sizeof(TBasicStringElem) == sizeof(_Elem))>* = nullptr >
-    constexpr basic_zstring_view_param(const std::basic_string<TBasicStringElem>&& strValue) noexcept
+    constexpr basic_zstring_view_param(std::basic_string<TBasicStringElem>&& strValue) noexcept
         : base_type{ strValue.c_str(), strValue.length(), typename base_type::StringIsNullTerminated{} }
     {}
 
@@ -276,7 +282,7 @@ public:
         : base_type{ sValue }
     {}
 
-    constexpr basic_zstring_view_param(const TCStringT&& sValue) noexcept
+    constexpr basic_zstring_view_param(TCStringT&& sValue) noexcept
         : base_type{ sValue.GetString(), static_cast<size_type>(sValue.GetLength()), typename base_type::StringIsNullTerminated{} }
     {}
 #endif

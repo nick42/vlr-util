@@ -8,6 +8,7 @@
 #include "config.h"
 #include "util.StringConversion.base.h"
 #include "util.choice.h"
+#include "util.Result.h"
 #include "UtilMacros.Assertions.h"
 #include "UtilMacros.General.h"
 
@@ -442,7 +443,10 @@ protected:
 #endif // defined(VLR_CONFIG_ENABLE_CUSTOM_STRING_CONVERSIONS)
 
 	// Note on below: I believe (but have not exhaustively validated) that the only possible exception which might be thrown
-	// from internal and transitive dependency calls are of type std::exception.
+	// from internal and transitive dependency calls are of type std::exception. However, will catch all exceptions here just 
+	// to be safe, since we don't know what the external implementation might throw (and we don't want to allow exceptions to 
+	// propagate out of this method, since it's marked noexcept and may be called in contexts where exceptions must not be 
+	// allowed to propagate).
 
 public:
 	inline auto Inline_MultiByte_to_UTF16_StdString(
@@ -454,7 +458,7 @@ public:
 		{
 			return Inline_MultiByte_to_UTF16_StdString_choice(util::choice<0>{}, svValue, oStringConversionOptions, pStringConversionResults);
 		}
-		catch (const std::exception& /*ex*/)
+		catch (...)
 		{
 			return pStringConversionResults ? pStringConversionResults->m_swResultOnException : std::wstring{};
 		}
@@ -468,7 +472,7 @@ public:
 		{
 			return Inline_UTF16_to_MultiByte_StdString_choice(util::choice<0>{}, svValue, oStringConversionOptions, pStringConversionResults);
 		}
-		catch (const std::exception& /*ex*/)
+		catch (...)
 		{
 			return pStringConversionResults ? pStringConversionResults->m_saResultOnException : std::string{};
 		}

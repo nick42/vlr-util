@@ -40,30 +40,79 @@ protected:
 	std::optional<backing_type_basic_string> m_osValue_string;
 
 public:
-	using base_type::operator const_pointer;
-
-public:
-	inline auto& operator=(const base_type& svzValue)
-	{
-		m_osValue_string = {};
-		*static_cast<base_type*>(this) = svzValue;
-		return *this;
-	}
-	inline auto& operator=(const backing_type_basic_string& sValue)
-	{
-		m_osValue_string = sValue;
-		*static_cast<base_type*>(this) = m_osValue_string.value();
-		return *this;
-	}
-    this_type& operator=( const this_type& ) = default;
-
-public:
-	constexpr logical_zstring_view() = default;
 	using base_type::base_type;
     explicit logical_zstring_view( const backing_type_basic_string& sValue )
     {
         operator=( sValue );
     }
+
+	// Copy constructor: copy optional and re-seat base view to our buffer
+	logical_zstring_view(const logical_zstring_view& other)
+	{
+		m_osValue_string = other.m_osValue_string;
+		if (m_osValue_string.has_value())
+		{
+			// Re-seat base view to point to our copy of the string
+			static_cast<base_type&>(*this) = base_type(m_osValue_string.value());
+		}
+		else
+		{
+			// Copy the base view from other (external view)
+			static_cast<base_type&>(*this) = static_cast<const base_type&>(other);
+		}
+	}
+
+	// Copy assignment: copy optional and re-seat base view to our buffer
+	logical_zstring_view& operator=(const logical_zstring_view& other)
+	{
+		m_osValue_string = other.m_osValue_string;
+		if (m_osValue_string.has_value())
+		{
+			// Re-seat base view to point to our copy of the string
+			static_cast<base_type&>(*this) = base_type(m_osValue_string.value());
+		}
+		else
+		{
+			// Copy the base view from other (external view)
+			static_cast<base_type&>(*this) = static_cast<const base_type&>(other);
+		}
+		return *this;
+	}
+
+	// Move constructor: move optional and re-seat base view to our buffer
+	// (necessary because SSO buffers may not move, or may move to different addresses)
+	logical_zstring_view(logical_zstring_view&& other) noexcept
+	{
+		m_osValue_string = std::move(other.m_osValue_string);
+		if (m_osValue_string.has_value())
+		{
+			// Re-seat base view to point to our moved copy of the string
+			static_cast<base_type&>(*this) = base_type(m_osValue_string.value());
+		}
+		else
+		{
+			// Move the base view from other (external view)
+			static_cast<base_type&>(*this) = static_cast<base_type&&>(std::move(other));
+		}
+	}
+
+	// Move assignment: move optional and re-seat base view to our buffer
+	// (necessary because SSO buffers may not move, or may move to different addresses)
+	logical_zstring_view& operator=(logical_zstring_view&& other) noexcept
+	{
+		m_osValue_string = std::move(other.m_osValue_string);
+		if (m_osValue_string.has_value())
+		{
+			// Re-seat base view to point to our moved copy of the string
+			static_cast<base_type&>(*this) = base_type(m_osValue_string.value());
+		}
+		else
+		{
+			// Move the base view from other (external view)
+			static_cast<base_type&>(*this) = static_cast<base_type&&>(std::move(other));
+		}
+		return *this;
+	}
 };
 
 using logical_azstring_view = logical_zstring_view<char>;
