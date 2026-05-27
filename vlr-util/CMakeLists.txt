@@ -18,104 +18,31 @@ set(no_group_source_files
 )
 source_group("" FILES ${no_group_source_files})
 
-set(VLR_HEADER_FILES
-    "AppOptionAccess.h"
-    "AppOptionQualifiers.h"
-    "AppOptionSource.h"
-    "AppOptionSourceInfo.h"
-    "AppOptionSource_File_Basic.h"
-    "AppOptionSpecifiedValue.h"
-    "AppOptions.h"
-    "ActionOnDestruction.h"
-    "as_span.h"
-    "as_string_view.h"
-    "AssertionHandling_Config.h"
-    "AutoFreeResource.h"
-    "AutoRevertingAssignment.h"
-    "BaseWithVirtualDestructor.h"
-    "c_runtime.StringFunctions.h"
-    "CloseEnough.h"
-    "config.h"
-    "cpp_namespace.h"
-    "enums.FormatEnum.h"
-    "enums.RangeInfo.h"
-    "formatpf.h"
-    "framework.h"
-    "include.fmt.h"
-    "include.spdlog.h"
-    "logging.LogMessage.h"
-    "logging.MessageContext.h"
-    "ModuleContext.Compilation.h"
-    "ModuleContext.Runtime.CommandLine.h"
-    "ModuleContext.Runtime.ConfigOptionsBase.h"
-    "ModuleContext.Runtime.h"
-    "ops.NetworkTargetInfo.h"
-    "pch.h"
-    "platform.FileSystemOps.h"
-    "RegexCache.h"
-    "SharedInstance.h"
-    "StringCompare.h"
-    "strings.split.h"
-    "ThreadOperationContext.h"
-    "ThreadPool.h"
-    "typeshim.win32.h"
-    "util.api_adaptor.OutString.h"
-    "util.AutoCleanupBase.h"
-    "util.choice.h"
-    "util.convert.Arithmetic.h"
-    "util.convert.DateTime.h"
-    "util.convert.StringConversion.h"
-    "util.convert.ToDisplay.h"
-    "util.data_adaptor.MultiSZ.h"
-    "util.includes.h"
-    "util.IsBitSet.h"
-    "util.IsBitValue.h"
-    "util.IsNonZero.h"
-    "util.IsNotBlank.h"
-    "util.LevenshteinDistance.h"
-    "util.logical_zstring_view.h"
-    "util.MathOps.h"
-    "util.NonOwningSharedPtr.h"
-    "util.OnValidAssignTo.h"
-    "util.range_checked_cast.h"
-    "util.Result.h"
-    "util.static_assert.h"
-    "util.std_aliases.h"
-    "util.types.h"
-    "util.types.linux.h"
-    "util.types.win32.h"
-    "util.StringConversion.h"
-    "UtilMacros.Assertions.h"
-    "UtilMacros.General.h"
-    "win32.targetver.WIN2K.h"
-    "win32.targetver.WIN7.h"
-    "win32.targetver.WINXP.h"
-    "zstring_view.h"
-)
+file(GLOB VLR_HEADER_FILES "*.h")
+list(FILTER VLR_HEADER_FILES EXCLUDE REGEX "win32\\.targetver\\.")
 source_group("Header Files" FILES ${VLR_HEADER_FILES})
 
-set(VLR_SOURCE_FILES
-    "AppOptionSource_File_Basic.cpp"
-    "AppOptionSpecifiedValue.cpp"
-    "AppOptions.cpp"
-    "AssertionHandling_Config.cpp"
-    "CloseEnough.cpp"
-    "ModuleContext.Runtime.CommandLine.cpp"
-    "ModuleContext.Runtime.ConfigOptionsBase.cpp"
-    "ModuleContext.Runtime.cpp"
-    "logging.Callbacks.cpp"
-    "ops.NetworkTargetInfo.cpp"
-#    "pch.cpp"
-    "platform.FileSystemOps.cpp"
-    "RegexCache.cpp"
-    "ThreadOperationContext.cpp"
-    "ThreadPool.cpp"
-    "util.AutoCleanupBase.cpp"
-    "util.Result.cpp"
-    "util.StringConversion.cpp"
-#    "vlr-util.cpp"
-)
+file(GLOB VLR_SOURCE_FILES "*.cpp")
 source_group("Source Files" FILES ${VLR_SOURCE_FILES})
+
+################################################################################
+# Platform-specific files
+################################################################################
+if(WIN32)
+    # Include legacy Windows version targeting headers
+    file(GLOB WIN32_TARGETVER_HEADERS "win32.targetver.*.h")
+    list(APPEND VLR_HEADER_FILES ${WIN32_TARGETVER_HEADERS})
+    
+    # Include Win32 subdirectory
+    file(GLOB WIN32_HEADER_FILES "Win32/*.h")
+    file(GLOB WIN32_SOURCE_FILES "Win32/*.cpp")
+    list(APPEND VLR_HEADER_FILES ${WIN32_HEADER_FILES})
+    list(APPEND VLR_SOURCE_FILES ${WIN32_SOURCE_FILES})
+else()
+    # Exclude Windows-only source files from non-Windows builds
+    # ModuleContext.Runtime.CommandLine.cpp is entirely Windows-specific (uses GetCommandLine, CommandLineToArgvW)
+    list(FILTER VLR_SOURCE_FILES EXCLUDE REGEX "ModuleContext\\.Runtime\\.CommandLine\\.cpp")
+endif()
 
 set(ALL_FILES
     ${no_group_source_files}
