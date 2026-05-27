@@ -111,6 +111,7 @@ set(VLR_SOURCE_FILES
     "ThreadOperationContext.cpp"
     "ThreadPool.cpp"
     "util.AutoCleanupBase.cpp"
+    "util.range_checked_cast.cpp"
     "util.Result.cpp"
     "util.StringConversion.cpp"
 #    "vlr-util.cpp"
