@@ -4,11 +4,12 @@
   "dependencies": [
     {
       "name": "fmt",
-      "version>=" : "10.1.0"
+      "version>=": "11.0.0",
+      "version<": "12.0.0"
     },
     "gsl-lite",
-  "gtest",
-  "catch2"
+    "gtest",
+    "catch2"
   ],
   "builtin-baseline": "e113942454e6b829366af7bcf196bbdbccbd6b3c"
 }
