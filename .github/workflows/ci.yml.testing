@@ -16,6 +16,8 @@ jobs:
 
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+      VCPKG_MANIFEST_INSTALL: 'true'
 
     steps:
     - uses: actions/checkout@v4
@@ -23,9 +25,15 @@ jobs:
     - name: Set up CMake
       uses: jwlawson/actions-setup-cmake@v2
 
+    - name: Setup vcpkg
+      uses: lukka/run-vcpkg@v11
+      with:
+        vcpkgJsonGlob: 'vcpkg.json'
+        runVcpkgInstall: true
+
     - name: Configure CMake
-      run: cmake -S . -B build
+      run: cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_MANIFEST_INSTALL=ON
 
     - name: Build
-      run: cmake --build build
+      run: cmake --build build --config Release
       
