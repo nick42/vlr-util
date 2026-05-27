@@ -4,8 +4,7 @@
   "dependencies": [
     {
       "name": "fmt",
-      "version>=": "11.0.0",
-      "version<=": "11.999.999"
+      "version>=": "11.2.0"
     },
     "gsl-lite",
     "gtest",
