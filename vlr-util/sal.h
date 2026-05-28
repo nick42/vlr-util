@@ -2603,6 +2603,8 @@ extern "C" {
 #ifndef PAL_STDCPP_COMPAT
 #ifdef __APPLE__
     // Apple compiler defines this, apparently...
+#elif defined(__GNUC__) || defined(__clang__)
+    // __null is a compiler builtin on GCC/Clang; do not redefine it
 #else
     #define __null
 #endif
