@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <mutex>
 #include <functional>
+#include <memory>
 
 #ifndef STD_OUT_FD 
 #define STD_OUT_FD (fileno(stdout)) 
