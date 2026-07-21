@@ -64,6 +64,112 @@ TEST(StringConversion, ToStdStringW_Nullptr_And_Pointer)
 	EXPECT_EQ(s5, ToStdStringW(std::string_view{ pcStr }));
 }
 
+TEST(StringConversion, ToFmtArg_StringA_Nullptr_And_Pointer)
+{
+	// nullptr_t overload
+	auto s1 = ToFmtArg_StringA(nullptr);
+	EXPECT_EQ(std::string_view{ s1 }.length(), 0u);
+
+	// const char* null (same-width)
+	const char* psaNull = nullptr;
+	auto s2 = ToFmtArg_StringA(psaNull);
+	EXPECT_EQ(std::string_view{ s2 }.length(), 0u);
+
+	// const wchar_t* null (cross-width)
+	const wchar_t* pswNull = nullptr;
+	auto s3 = ToFmtArg_StringA(pswNull);
+	EXPECT_EQ(std::string{ s3 }.length(), 0u);
+
+	// const char* non-null passes through as a valid view
+	const char* pStr = "abc";
+	auto s4 = ToFmtArg_StringA(pStr);
+	EXPECT_STREQ(std::string{ s4 }.c_str(), "abc");
+
+	// Also verify usage in fmt::format does not crash
+	auto sFormatted = fmt::format("[{}]", ToFmtArg_StringA(psaNull));
+	EXPECT_EQ(sFormatted, "[]");
+}
+
+TEST(StringConversion, ToFmtArg_StringW_Nullptr_And_Pointer)
+{
+	// nullptr_t overload
+	auto s1 = ToFmtArg_StringW(nullptr);
+	EXPECT_EQ(std::wstring_view{ s1 }.length(), 0u);
+
+	// const wchar_t* null (same-width)
+	const wchar_t* pswNull = nullptr;
+	auto s2 = ToFmtArg_StringW(pswNull);
+	EXPECT_EQ(std::wstring_view{ s2 }.length(), 0u);
+
+	// const char* null (cross-width)
+	const char* psaNull = nullptr;
+	auto s3 = ToFmtArg_StringW(psaNull);
+	EXPECT_EQ(std::wstring{ s3 }.length(), 0u);
+
+	// const wchar_t* non-null passes through
+	const wchar_t* pStr = L"abc";
+	auto s4 = ToFmtArg_StringW(pStr);
+	EXPECT_STREQ(std::wstring{ s4 }.c_str(), L"abc");
+
+	auto sFormatted = fmt::format(L"[{}]", ToFmtArg_StringW(pswNull));
+	EXPECT_EQ(sFormatted, L"[]");
+}
+
+TEST(StringConversion, ToCStringA_Nullptr_And_Pointer)
+{
+	auto s1 = ToCStringA(nullptr);
+	EXPECT_EQ(s1.GetLength(), 0);
+
+	const char* psaNull = nullptr;
+	auto s2 = ToCStringA(psaNull);
+	EXPECT_EQ(s2.GetLength(), 0);
+
+	const wchar_t* pswNull = nullptr;
+	auto s3 = ToCStringA(pswNull);
+	EXPECT_EQ(s3.GetLength(), 0);
+
+	const char* pStr = "abc";
+	auto s4 = ToCStringA(pStr);
+	EXPECT_STREQ(s4, "abc");
+}
+
+TEST(StringConversion, ToCStringW_Nullptr_And_Pointer)
+{
+	auto s1 = ToCStringW(nullptr);
+	EXPECT_EQ(s1.GetLength(), 0);
+
+	const wchar_t* pswNull = nullptr;
+	auto s2 = ToCStringW(pswNull);
+	EXPECT_EQ(s2.GetLength(), 0);
+
+	const char* psaNull = nullptr;
+	auto s3 = ToCStringW(psaNull);
+	EXPECT_EQ(s3.GetLength(), 0);
+
+	const wchar_t* pStr = L"abc";
+	auto s4 = ToCStringW(pStr);
+	EXPECT_STREQ(s4, L"abc");
+}
+
+TEST(StringConversion, To_bstr_t_Nullptr_And_Pointer)
+{
+	auto s1 = Convert::To_bstr_t(nullptr);
+	EXPECT_EQ(s1.length(), 0u);
+
+	const wchar_t* pswNull = nullptr;
+	auto s2 = Convert::To_bstr_t(pswNull);
+	EXPECT_EQ(s2.length(), 0u);
+
+	const char* psaNull = nullptr;
+	auto s3 = Convert::To_bstr_t(psaNull);
+	EXPECT_EQ(s3.length(), 0u);
+
+	const wchar_t* pStr = L"abc";
+	auto s4 = Convert::To_bstr_t(pStr);
+	EXPECT_EQ(s4.length(), 3u);
+	EXPECT_STREQ(static_cast<const wchar_t*>(s4), L"abc");
+}
+
 TEST(StringConversion, ToStdStringA_OverloadResolution)
 {
 	// Should resolve to std::string_view overload

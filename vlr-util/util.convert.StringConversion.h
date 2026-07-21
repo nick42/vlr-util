@@ -324,6 +324,41 @@ inline decltype(auto) ToStdStringW_FromSystemDefaultASCII(const TString& tString
 
 #if VLR_CONFIG_INCLUDE_ATL_CString
 
+// Nullptr and pointer overloads for ToCStringA/W
+// Without these, passing a nullptr C-string would implicitly construct a
+// std::string_view from nullptr, invoking strlen(nullptr) and crashing.
+
+inline CStringA ToCStringA(std::nullptr_t, const StringConversionOptions& = {}) noexcept
+{
+	return CStringA{};
+}
+inline CStringW ToCStringW(std::nullptr_t, const StringConversionOptions& = {}) noexcept
+{
+	return CStringW{};
+}
+
+inline CStringA ToCStringA(const char* s, const StringConversionOptions& = {})
+{
+	if (!s) { return CStringA{}; }
+	return CStringA{ s };
+}
+inline CStringA ToCStringA(const wchar_t* s, const StringConversionOptions& oConversionOptions = {})
+{
+	if (!s) { return CStringA{}; }
+	return CStringConversion{}.Inline_UTF16_to_MultiByte_CString(std::wstring_view{ s }, oConversionOptions);
+}
+
+inline CStringW ToCStringW(const wchar_t* s, const StringConversionOptions& = {})
+{
+	if (!s) { return CStringW{}; }
+	return CStringW{ s };
+}
+inline CStringW ToCStringW(const char* s, const StringConversionOptions& oConversionOptions = {})
+{
+	if (!s) { return CStringW{}; }
+	return CStringConversion{}.Inline_MultiByte_to_UTF16_CString(std::string_view{ s }, oConversionOptions);
+}
+
 inline auto ToCStringA(std::string_view svValue, const StringConversionOptions& /*oConversionOptions*/ = {})
 {
 	return CStringA{ svValue.data(), range_checked_cast<int>(svValue.length()) };
@@ -473,6 +508,25 @@ inline auto To_bstr_t_choice(const TString& tString, const StringConversionOptio
 
 } // namespace detail
 
+// Nullptr and pointer overloads for To_bstr_t
+// Without these, the choice<1> template matches wstring_view-convertible types
+// (including const wchar_t*), and a nullptr triggers wcslen(nullptr).
+
+inline _bstr_t To_bstr_t(std::nullptr_t, const StringConversionOptions& = {}) noexcept
+{
+	return _bstr_t{};
+}
+inline _bstr_t To_bstr_t(const wchar_t* s, const StringConversionOptions& = {})
+{
+	if (!s) { return _bstr_t{}; }
+	return _bstr_t{ s };
+}
+inline _bstr_t To_bstr_t(const char* s, const StringConversionOptions& = {})
+{
+	if (!s) { return _bstr_t{}; }
+	return _bstr_t{ s };
+}
+
 template <typename TString>
 inline auto To_bstr_t(const TString& tString, const StringConversionOptions& oConversionOptions = {})
 {
@@ -551,6 +605,45 @@ constexpr decltype(auto) ToFmtArg_StringW_choice(TString&& tString, const String
 }
 
 } // namespace detail
+
+// Nullptr and pointer overloads for ToFmtArg_StringA/W
+// These take precedence over the template forms below, so that a nullptr
+// C-string argument returns an empty view instead of triggering UB inside
+// std::string_view/std::wstring_view construction (strlen/wcslen on nullptr).
+
+constexpr std::string_view ToFmtArg_StringA(std::nullptr_t, const StringConversionOptions& = {}) noexcept
+{
+	return std::string_view{};
+}
+constexpr std::wstring_view ToFmtArg_StringW(std::nullptr_t, const StringConversionOptions& = {}) noexcept
+{
+	return std::wstring_view{};
+}
+
+constexpr std::string_view ToFmtArg_StringA(const char* s, const StringConversionOptions& = {}) noexcept
+{
+	return s ? std::string_view{ s } : std::string_view{};
+}
+constexpr std::wstring_view ToFmtArg_StringW(const wchar_t* s, const StringConversionOptions& = {}) noexcept
+{
+	return s ? std::wstring_view{ s } : std::wstring_view{};
+}
+
+// Cross-width pointer overloads: the fallback (ToStdString[A/W]) already
+// handles nullptr correctly, but we route through it explicitly so the
+// choice-based dispatch cannot accidentally match a string_view overload
+// for a nullptr input in the future.
+
+inline std::string ToFmtArg_StringA(const wchar_t* s, const StringConversionOptions& oConversionOptions = {})
+{
+	if (!s) { return std::string{}; }
+	return ToStdStringA(std::wstring_view{ s }, oConversionOptions);
+}
+inline std::wstring ToFmtArg_StringW(const char* s, const StringConversionOptions& oConversionOptions = {})
+{
+	if (!s) { return std::wstring{}; }
+	return ToStdStringW(std::string_view{ s }, oConversionOptions);
+}
 
 template <typename TString>
 constexpr decltype(auto) ToFmtArg_StringA(TString&& tString, const StringConversionOptions& oConversionOptions = {})
