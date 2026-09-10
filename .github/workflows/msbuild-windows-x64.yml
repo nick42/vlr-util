@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         build_configuration: [Release, Debug]
-        build_platform: [x86, x64, ARM64]
+        build_platform: [Win32, x64, ARM64]
 
     steps:
       # Step 1: Check out the code from the repo
@@ -55,7 +55,7 @@ jobs:
 
       # Step 6: Run unit tests and emit per-matrix XML report
       - name: Run unit tests and collect results (gtest)
-        if: matrix.build_platform == 'x86' || matrix.build_platform == 'x64'
+        if: matrix.build_platform == 'Win32' || matrix.build_platform == 'x64'
         run: |
           .\${{ env.BUILD_DIR }}\${{ matrix.build_configuration }}\${{ matrix.build_platform }}\vlr-util.test.exe --gtest_output=xml:${{ env.TEST_ARTIFACT_PREFIX }}${{ matrix.build_platform }}_${{ matrix.build_configuration }}.xml
         continue-on-error: false

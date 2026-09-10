@@ -1,3 +1,5 @@
+[![Build and Test](https://github.com/nick42/vlr-util/actions/workflows/msbuild-windows-x64.yml/badge.svg)](https://github.com/nick42/vlr-util/actions/workflows/msbuild-windows-x64.yml)
+
 # vlr-util
 Some general, modular, C++ utility code
 
