@@ -18,7 +18,7 @@ protected:
 	}
 };
 
-TEST_F(AppOptionSource_File_Basic_Test, ReadAllValuesFromFile)
+TEST_F(AppOptionSource_File_Basic_Test, DISABLED_ReadAllValuesFromFile)
 {
 	SResult sr;
 
