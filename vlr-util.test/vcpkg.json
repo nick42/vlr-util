@@ -5,7 +5,6 @@
     {
       "name": "fmt"
     },
-    "gsl-lite",
     "gtest",
     "catch2"
   ]

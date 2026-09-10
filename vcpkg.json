@@ -6,7 +6,6 @@
       "name": "fmt",
       "version>=": "11.2.0"
     },
-    "gsl-lite",
     "gtest",
     "catch2"
   ],
