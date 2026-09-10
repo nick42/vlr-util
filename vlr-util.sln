@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30406.217
+# Visual Studio Version 18
+VisualStudioVersion = 18.10.12201.205 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vlr-util", "vlr-util\vlr-util.vcxproj", "{40ACED1C-610A-4A7E-AF26-4966B4091C5E}"
 EndProject
@@ -17,24 +17,34 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{52C5409C-4
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM64 = Debug|ARM64
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release|ARM64 = Release|ARM64
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{40ACED1C-610A-4A7E-AF26-4966B4091C5E}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{40ACED1C-610A-4A7E-AF26-4966B4091C5E}.Debug|ARM64.Build.0 = Debug|ARM64
 		{40ACED1C-610A-4A7E-AF26-4966B4091C5E}.Debug|x64.ActiveCfg = Debug|x64
 		{40ACED1C-610A-4A7E-AF26-4966B4091C5E}.Debug|x64.Build.0 = Debug|x64
 		{40ACED1C-610A-4A7E-AF26-4966B4091C5E}.Debug|x86.ActiveCfg = Debug|Win32
 		{40ACED1C-610A-4A7E-AF26-4966B4091C5E}.Debug|x86.Build.0 = Debug|Win32
+		{40ACED1C-610A-4A7E-AF26-4966B4091C5E}.Release|ARM64.ActiveCfg = Release|ARM64
+		{40ACED1C-610A-4A7E-AF26-4966B4091C5E}.Release|ARM64.Build.0 = Release|ARM64
 		{40ACED1C-610A-4A7E-AF26-4966B4091C5E}.Release|x64.ActiveCfg = Release|x64
 		{40ACED1C-610A-4A7E-AF26-4966B4091C5E}.Release|x64.Build.0 = Release|x64
 		{40ACED1C-610A-4A7E-AF26-4966B4091C5E}.Release|x86.ActiveCfg = Release|Win32
 		{40ACED1C-610A-4A7E-AF26-4966B4091C5E}.Release|x86.Build.0 = Release|Win32
+		{E5AF1303-2FE8-433A-893E-1B217169E1B8}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{E5AF1303-2FE8-433A-893E-1B217169E1B8}.Debug|ARM64.Build.0 = Debug|ARM64
 		{E5AF1303-2FE8-433A-893E-1B217169E1B8}.Debug|x64.ActiveCfg = Debug|x64
 		{E5AF1303-2FE8-433A-893E-1B217169E1B8}.Debug|x64.Build.0 = Debug|x64
 		{E5AF1303-2FE8-433A-893E-1B217169E1B8}.Debug|x86.ActiveCfg = Debug|Win32
 		{E5AF1303-2FE8-433A-893E-1B217169E1B8}.Debug|x86.Build.0 = Debug|Win32
+		{E5AF1303-2FE8-433A-893E-1B217169E1B8}.Release|ARM64.ActiveCfg = Release|ARM64
+		{E5AF1303-2FE8-433A-893E-1B217169E1B8}.Release|ARM64.Build.0 = Release|ARM64
 		{E5AF1303-2FE8-433A-893E-1B217169E1B8}.Release|x64.ActiveCfg = Release|x64
 		{E5AF1303-2FE8-433A-893E-1B217169E1B8}.Release|x64.Build.0 = Release|x64
 		{E5AF1303-2FE8-433A-893E-1B217169E1B8}.Release|x86.ActiveCfg = Release|Win32
