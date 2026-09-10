@@ -294,8 +294,8 @@ TEST(zstring_view, very_long_string)
 	auto svzTest = vlr::tzstring_view{ sLongString };
 
 	EXPECT_EQ(svzTest.length(), 1000);
-	EXPECT_EQ(svzTest[0], _T('a'));
-	EXPECT_EQ(svzTest[999], _T('a'));
+	EXPECT_EQ(svzTest[size_t{0}], _T('a'));
+	EXPECT_EQ(svzTest[size_t{999}], _T('a'));
 }
 
 TEST(zstring_view, string_with_special_characters)
